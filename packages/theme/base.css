@@ -1,0 +1,28 @@
+/* FirstPet shared base styles and component classes.
+   Import after the Tailwind directives in each app's index.css. */
+
+@layer base {
+  body {
+    @apply bg-canvas font-sans text-body antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-navy;
+  }
+}
+
+@layer components {
+  /* Rounded card with a thin border */
+  .fp-card {
+    @apply rounded-card border border-line bg-white shadow-card;
+  }
+  /* Small icon circle, teal or orange */
+  .fp-icon-teal {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-teal-light text-teal;
+  }
+  .fp-icon-orange {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-peach text-orange;
+  }
+}

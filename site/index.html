@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FirstPet Prototypes</title>
+    <link rel="icon" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #1f2e4d;
+        --teal: #1f9ba6;
+        --orange: #f0a43c;
+        --body: #3b475e;
+        --border: #dde3e8;
+        --bg: #fafbf9;
+        --teal-light: #e6f0ef;
+        --peach: #fff3e0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--body);
+        font-family: 'Nunito Sans', system-ui, sans-serif;
+        line-height: 1.5;
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 56px 20px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+      header img {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+      }
+      h1,
+      h2 {
+        font-family: 'Nunito', system-ui, sans-serif;
+        color: var(--navy);
+        margin: 0;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .intro {
+        margin: 0 0 32px;
+      }
+      .card {
+        display: block;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+        color: inherit;
+        text-decoration: none;
+        transition: border-color 0.15s;
+      }
+      .card:hover,
+      .card:focus-visible {
+        border-color: var(--teal);
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        font-family: 'Nunito', system-ui, sans-serif;
+        font-weight: 800;
+        background: var(--teal-light);
+        color: var(--teal);
+      }
+      .badge.orange {
+        background: var(--peach);
+        color: var(--orange);
+      }
+      .card p {
+        margin: 4px 0;
+      }
+      .label {
+        font-weight: 700;
+        color: var(--navy);
+      }
+      footer {
+        margin-top: 32px;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="logo.png" alt="FirstPet logo" />
+        <h1>FirstPet Prototypes</h1>
+      </header>
+      <p class="intro">
+        FirstPet is a readiness check for first-time pet adopters. We built three prototypes, each
+        testing a different hypothesis with a different persona. Pick one and click through, no tour
+        needed.
+      </p>
+
+      <a class="card" href="a/">
+        <div class="card-head">
+          <span class="badge">A</span>
+          <h2>Shared Check</h2>
+        </div>
+        <p>
+          <span class="label">Persona:</span> Priya and Marcus, first-time adopters with two kids.
+        </p>
+        <p>
+          <span class="label">Hypothesis:</span> A couple will finish the check together if one
+          person can start alone and invite the other by link.
+        </p>
+        <p>
+          <span class="label">Try:</span> Start a check as Priya, then open the invite as Marcus.
+        </p>
+      </a>
+
+      <a class="card" href="b/">
+        <div class="card-head">
+          <span class="badge orange">B</span>
+          <h2>The Number</h2>
+        </div>
+        <p>
+          <span class="label">Persona:</span> Vicky's future clients, owners who want the cost
+          first.
+        </p>
+        <p>
+          <span class="label">Hypothesis:</span> Leading with a local first-year cost and emergency
+          cushion moves the skeptic from "no" to "ready once X changes."
+        </p>
+        <p>
+          <span class="label">Try:</span> Enter a ZIP code and see the number before anything else.
+        </p>
+      </a>
+
+      <a class="card" href="c/">
+        <div class="card-head">
+          <span class="badge">C</span>
+          <h2>Shelter Hand-off</h2>
+        </div>
+        <p><span class="label">Persona:</span> Carla, a shelter adoption counselor.</p>
+        <p>
+          <span class="label">Hypothesis:</span> Adopters will finish the check when a shelter asks
+          for it as step one, and counselors will use the summary and week-two check-in.
+        </p>
+        <p>
+          <span class="label">Try:</span> Complete the check as an adopter, then view the counselor
+          summary.
+        </p>
+      </a>
+
+      <footer>
+        Duke AIPI, PM Coding course. Prototypes are works in progress and all data is mock data.
+      </footer>
+    </main>
+  </body>
+</html>

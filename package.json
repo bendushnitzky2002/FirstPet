@@ -1,0 +1,27 @@
+{
+  "name": "firstpet-prototypes",
+  "private": true,
+  "description": "FirstPet prototype assignment: three clickable prototypes and a landing page.",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "prototypes/*"
+  ],
+  "scripts": {
+    "dev:a": "npm run dev -w @firstpet/a-shared-check",
+    "dev:b": "npm run dev -w @firstpet/b-the-number",
+    "dev:c": "npm run dev -w @firstpet/c-shelter-handoff",
+    "build:a": "npm run build -w @firstpet/a-shared-check",
+    "build:b": "npm run build -w @firstpet/b-the-number",
+    "build:c": "npm run build -w @firstpet/c-shelter-handoff",
+    "build:all": "npm run build:a && npm run build:b && npm run build:c && node scripts/assemble-site.mjs",
+    "preview:all": "npx --yes serve _site",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
