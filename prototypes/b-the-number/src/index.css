@@ -3,3 +3,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* A line that just appeared on the receipt gets a short highlight. */
+@keyframes fp-flash {
+  from {
+    background-color: #fff3e0;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+.fp-flash {
+  animation: fp-flash 1.6s ease-out;
+}
+
+/* The change badge on the tune screen pops in. */
+@keyframes fp-pop {
+  from {
+    transform: scale(1.25);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.fp-pop {
+  animation: fp-pop 0.3s ease-out;
+}
+
+/* Keep the cushion and verdict colors on the printed summary. */
+@media print {
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body {
+    background: white;
+  }
+  @page {
+    margin: 0.5in;
+  }
+}
