@@ -3,3 +3,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Keep the verdict and cushion colors on the printed summary. */
+@media print {
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body {
+    background: white;
+  }
+  @page {
+    margin: 0.5in;
+  }
+}
