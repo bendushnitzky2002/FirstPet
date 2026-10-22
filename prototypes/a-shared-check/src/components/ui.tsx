@@ -24,7 +24,7 @@ export function Page({
   return (
     <div className="min-h-screen">
       <AppBar stage={stage} />
-      <main className="fp-page">
+      <main className="fp-page pb-24">
         {aside ? (
           <div className="fp-layout pt-8 sm:pt-10">
             <div className="flex min-w-0 flex-col">{children}</div>

@@ -11,13 +11,14 @@ export function Results() {
   const no = entries.filter((e) => e.premium === 'no').length
   const share = completed ? yes / completed : 0
   const pct = Math.round(share * 100)
+  const answers = entries.filter((e) => e.worthIt)
 
   return (
     <Page>
       <TopBar onBack={() => navigate('/')} />
       <PageHead
         eyebrow="Team view"
-        title="Premium survey results"
+        title="Premium fake door results"
         action={
           <Button
             variant="secondary"
@@ -31,13 +32,13 @@ export function Results() {
           </Button>
         }
       >
-        Every check that reached a verdict in this browser. Our hypothesis holds if at least{' '}
-        {PREMIUM_THRESHOLD * 100}% say yes.
+        Every check that reached a verdict in this browser counts as completed. Our hypothesis holds
+        if at least {PREMIUM_THRESHOLD * 100}% of completed checks pick Premium.
       </PageHead>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Stat label="Completed" value={completed} />
-        <Stat label="Said yes" value={yes} />
+        <Stat label="Picked Premium" value={yes} />
         <Stat label="Said no" value={no} />
       </section>
 
@@ -55,6 +56,26 @@ export function Results() {
             : 'Run a check to the verdict to see results here.'}
           {completed > yes + no ? ` ${completed - yes - no} did not answer.` : ''}
         </p>
+      </section>
+
+      <section className="fp-card mt-4 p-5">
+        <h2 className="text-lg">What would make Premium worth it</h2>
+        {answers.length ? (
+          <ul className="mt-3 divide-y divide-line">
+            {answers.map((e) => (
+              <li key={e.code} className="flex gap-3 py-2 text-sm">
+                <span
+                  className={`fp-pill ${e.premium === 'yes' ? 'bg-teal-light text-teal' : 'bg-canvas text-muted'}`}
+                >
+                  {e.premium === 'yes' ? 'Yes' : 'No'}
+                </span>
+                <span className="text-navy">{e.worthIt}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-muted">No written answers yet.</p>
+        )}
       </section>
     </Page>
   )

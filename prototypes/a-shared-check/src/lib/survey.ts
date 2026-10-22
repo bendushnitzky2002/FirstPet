@@ -12,6 +12,7 @@ export type SurveyEntry = {
   // When the verdict was first shown, which counts as a completed check.
   completedAt: string
   premium?: PremiumAnswer
+  worthIt?: string
 }
 
 export function loadSurvey(): SurveyEntry[] {
@@ -41,6 +42,14 @@ export function recordPremium(code: string, premium: PremiumAnswer) {
   const existing = entries.find((e) => e.code === code)
   if (existing) existing.premium = premium
   else entries.push({ code, completedAt: new Date().toISOString(), premium })
+  write(entries)
+}
+
+export function recordWorthIt(code: string, worthIt: string) {
+  const entries = loadSurvey()
+  const existing = entries.find((e) => e.code === code)
+  if (existing) existing.worthIt = worthIt
+  else entries.push({ code, completedAt: new Date().toISOString(), worthIt })
   write(entries)
 }
 

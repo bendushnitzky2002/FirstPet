@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import type { Check } from '../types'
 import { getVerdict, type Verdict as VerdictData } from '../data/verdict'
+import { firstYear, money } from '../data/costs'
 import { AlertIcon, Button, CheckIcon, Page, TopBar } from '../components/ui'
 import { PremiumSurvey } from '../components/PremiumSurvey'
 import { navigate } from '../lib/router'
@@ -24,6 +25,7 @@ export const VERDICT_TONE: Record<
 export function Verdict({ check, save, onReset }: Props) {
   const v = getVerdict(check)
   const tone = VERDICT_TONE[v.kind]
+  const cost = firstYear(check)
 
   // Reaching the verdict counts as a completed check for the premium survey.
   useEffect(() => recordCompleted(check.code), [check.code])
@@ -77,6 +79,21 @@ export function Verdict({ check, save, onReset }: Props) {
         <p className="fp-eyebrow text-muted">{tone.label}</p>
         <h1 className={`text-4xl leading-none sm:text-5xl ${tone.text}`}>{v.title}</h1>
         <p className="mt-4 text-lg text-navy">{v.summary}</p>
+        <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-navy/10 pt-4">
+          <span className="font-heading text-2xl font-extrabold text-navy">
+            {money(cost.total)}
+          </span>
+          <span className="text-navy">
+            to plan for in year one, including the {money(cost.cushion)} required cushion.
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/compare')}
+            className="text-sm font-bold text-teal underline-offset-4 hover:underline"
+          >
+            See the breakdown
+          </button>
+        </div>
       </section>
 
       <div className="mt-5 grid gap-5 xl:grid-cols-2">

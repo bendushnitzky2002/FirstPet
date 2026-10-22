@@ -33,6 +33,8 @@ export type Check = {
   checked: string[]
   // Answer to the premium plan survey under the verdict.
   premium?: PremiumAnswer
+  // Optional answer to "What would make Premium worth it to you?"
+  worthIt?: string
 }
 
 export type PremiumAnswer = 'yes' | 'no'

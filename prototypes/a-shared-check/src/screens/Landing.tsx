@@ -117,7 +117,10 @@ export function Landing({ check, onStart, onSeed, onReset }: Props) {
             'Local cost',
             'A first-year cost for your ZIP code, with an emergency cushion built in.',
           ],
-          ['Care plan', 'Who does the walks, the meals, and the vet visits, with names on it.'],
+          [
+            'Side by side',
+            'Your partner answers four questions, and we show where you agree before the verdict.',
+          ],
           ['Honest verdict', 'Ready, ready once a few things change, or not yet.'],
         ].map(([title, text]) => (
           <section key={title} className="fp-card p-5">
