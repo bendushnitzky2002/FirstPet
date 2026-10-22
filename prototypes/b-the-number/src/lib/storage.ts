@@ -1,41 +1,24 @@
-import type { Answers, Check, Pet } from '../types'
+import type { State } from '../types'
 
-// One check per browser, saved so the demo survives a refresh.
-const KEY = 'firstpet-b-check'
+// Decisions and join clicks for this browser, so a test session survives a
+// refresh and can be read back on #/log.
+const KEY = 'firstpet-b-network'
 
-// Where the levers start on the tune screen. Shown as "our guess" until moved.
-export const DEFAULT_ANSWERS: Answers = {
-  hoursAway: 4,
-  overnights: '0',
-  saved: 0,
-  monthlyRoom: 150,
-}
+export const emptyState = (): State => ({ decisions: {}, joins: [] })
 
-export function newCheck(zip: string, pet: Pet): Check {
-  return { zip, pet, answers: { ...DEFAULT_ANSWERS }, touched: [] }
-}
-
-export function loadCheck(): Check | null {
+export function loadState(): State {
   try {
     const raw = window.localStorage.getItem(KEY)
-    return raw ? (JSON.parse(raw) as Check) : null
+    return raw ? { ...emptyState(), ...(JSON.parse(raw) as State) } : emptyState()
   } catch {
-    return null
+    return emptyState()
   }
 }
 
-export function saveCheck(check: Check) {
+export function saveState(state: State) {
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(check))
+    window.localStorage.setItem(KEY, JSON.stringify(state))
   } catch {
-    // Private mode or storage full: the check still works for this visit.
-  }
-}
-
-export function clearCheck() {
-  try {
-    window.localStorage.removeItem(KEY)
-  } catch {
-    // Nothing to clear.
+    // Private mode or storage full: the demo still works for this visit.
   }
 }

@@ -1,53 +1,54 @@
 import { useCallback, useState } from 'react'
-import type { Check, Pet } from './types'
-import { demoCheck } from './data/demo'
-import { clearCheck, loadCheck, newCheck, saveCheck } from './lib/storage'
+import type { State } from './types'
+import { INTRODUCTIONS } from './data/introductions'
+import { demoState } from './data/demo'
+import { emptyState, loadState, saveState } from './lib/storage'
 import { navigate, useHashRoute } from './lib/router'
-import { Landing } from './screens/Landing'
-import { TheNumber } from './screens/TheNumber'
-import { Tune } from './screens/Tune'
-import { Verdict } from './screens/Verdict'
-import { Summary } from './screens/Summary'
+import { Shell } from './components/ui'
+import { Profile } from './screens/Profile'
+import { Introductions } from './screens/Introductions'
+import { Membership } from './screens/Membership'
+import { Log } from './screens/Log'
 
 export default function App() {
   const path = useHashRoute()
-  const [check, setCheck] = useState<Check | null>(loadCheck)
+  const [state, setState] = useState<State>(loadState)
 
-  const save = useCallback((next: Check) => {
-    saveCheck(next)
-    setCheck(next)
+  const save = useCallback((next: State) => {
+    saveState(next)
+    setState(next)
   }, [])
-
-  const reset = useCallback(() => {
-    clearCheck()
-    setCheck(null)
-    navigate('/')
-  }, [])
-
-  const start = (zip: string, pet: Pet) => {
-    save(newCheck(zip, pet))
-    navigate('/number')
-  }
 
   const seed = useCallback(() => {
-    save(demoCheck())
-    navigate('/number')
+    save(demoState())
+    navigate('/intros')
   }, [save])
 
-  if (!check || path === '/') {
-    return <Landing check={check} onStart={start} onSeed={seed} onReset={reset} />
+  const reset = useCallback(() => {
+    save(emptyState())
+    navigate('/')
+  }, [save])
+
+  const pending = INTRODUCTIONS.filter((i) => !state.decisions[i.id]).length
+
+  let screen
+  switch (path) {
+    case '/intros':
+      screen = <Introductions state={state} save={save} />
+      break
+    case '/membership':
+      screen = <Membership state={state} save={save} />
+      break
+    case '/log':
+      screen = <Log state={state} onReset={reset} />
+      break
+    default:
+      screen = <Profile pending={pending} onSeed={seed} />
   }
 
-  switch (path) {
-    case '/number':
-      return <TheNumber check={check} save={save} />
-    case '/tune':
-      return <Tune check={check} save={save} />
-    case '/verdict':
-      return <Verdict check={check} save={save} onReset={reset} />
-    case '/summary':
-      return <Summary check={check} />
-    default:
-      return <Landing check={check} onStart={start} onSeed={seed} onReset={reset} />
-  }
+  return (
+    <Shell path={path === '/log' ? '' : path} pending={pending}>
+      {screen}
+    </Shell>
+  )
 }

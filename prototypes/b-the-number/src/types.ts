@@ -1,27 +1,38 @@
-export type Pet = 'dog' | 'cat'
+export type Verdict = 'ready' | 'ready-once'
 
-// The gut check right after the number, before any household questions.
-export type FirstTake = 'yes' | 'unsure' | 'no'
-
-// The same person, after the verdict. This pair is what the hypothesis is
-// about: does seeing the number first move "no" to "ready once X changes"?
-export type LastTake = 'ready' | 'ready-once' | 'no'
-
-export type Overnights = '0' | '1-3' | '4-8' | 'more'
-
-export type Answers = {
-  hoursAway: number // weekday hours nobody is home, 0 to 12
-  overnights: Overnights // nights a month nobody is home
-  saved: number // dollars already set aside for a surprise vet bill
-  monthlyRoom: number // dollars a month the household could put toward a pet
+// One thing a household chose to share with a professional. Anything the
+// household did not share is listed by label only, so the pro sees it exists.
+export type SharedItem = {
+  key: 'verdict' | 'budget' | 'schedule' | 'carePlan' | 'notes'
+  label: string
+  shared: boolean
+  value?: string[] // lines to show when shared
 }
 
-export type Check = {
-  zip: string
-  pet: Pet
-  firstTake?: FirstTake
-  answers: Answers
-  // Levers the person has moved. Untouched ones show "our guess".
-  touched: (keyof Answers)[]
-  lastTake?: LastTake
+export type Introduction = {
+  id: string
+  household: string // first names only
+  area: string // neighborhood and distance, never a street address
+  pet: string
+  timing: string
+  verdict: Verdict
+  need: string // what they asked for help with, in their words
+  consentedOn: string
+  items: SharedItem[]
+}
+
+export type PassReason = 'not-my-service' | 'outside-area' | 'fully-booked' | 'need-more'
+
+export type Decision =
+  | { kind: 'accepted'; at: string }
+  | { kind: 'passed'; at: string; reason: PassReason; detail?: string }
+
+export type Tier = 'solo' | 'clinic' | 'per-intro'
+
+// What a test session records. Read it back on the hidden #/log screen.
+export type JoinClick = { tier: Tier; at: string; answer?: string }
+
+export type State = {
+  decisions: Record<string, Decision>
+  joins: JoinClick[]
 }
