@@ -34,9 +34,7 @@ export function PrintSummary({ id }: { id: string }) {
           <div className="flex items-center gap-3">
             <LogoMark />
             <div>
-              <p className="font-heading text-sm font-bold uppercase tracking-wide text-teal">
-                Readiness summary
-              </p>
+              <p className="fp-eyebrow">Readiness summary</p>
               <h1 className="text-2xl font-extrabold leading-tight">
                 {a.answers.name} and {pet.name}
               </h1>

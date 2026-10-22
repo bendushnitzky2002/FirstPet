@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import logo from '@firstpet/theme/logo.png'
 import { navigate } from '../lib/router'
 
 const TABS = [
@@ -20,12 +19,17 @@ export function Shell({
 }) {
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-10 border-b border-line bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 pt-3 sm:px-5">
-          <img src={logo} alt="FirstPet" className="h-8 w-8 rounded-lg" />
-          <p className="font-heading text-sm font-extrabold text-navy">
-            FirstPet <span className="font-semibold text-teal">for professionals</span>
-          </p>
+      <header className="fp-topbar">
+        <div className="fp-topbar-inner max-w-3xl">
+          <button type="button" onClick={() => navigate('/')} className="fp-brand">
+            <span className="fp-brand-mark" aria-hidden="true" />
+            <span>
+              <span className="fp-brand-name">
+                First<span className="text-orange">Pet</span>
+              </span>
+              <span className="fp-brand-sub">For professionals</span>
+            </span>
+          </button>
         </div>
         <nav className="mx-auto flex max-w-3xl gap-1 px-2 sm:px-3" aria-label="Main">
           {TABS.map((t) => {
@@ -36,9 +40,7 @@ export function Shell({
                 type="button"
                 onClick={() => navigate(t.path)}
                 aria-current={active ? 'page' : undefined}
-                className={`flex min-h-[44px] items-center gap-2 border-b-[3px] px-3 text-sm font-bold ${
-                  active ? 'border-teal text-navy' : 'border-transparent text-body hover:text-navy'
-                }`}
+                className="fp-nav-tab"
               >
                 {t.label}
                 {t.path === '/intros' && pending > 0 && (
@@ -72,15 +74,15 @@ export function Button({
   full = true,
 }: ButtonProps) {
   const styles = {
-    primary: 'bg-teal text-white hover:bg-[#1a8790] disabled:bg-line disabled:text-body/60',
-    secondary: 'border-2 border-teal bg-white text-teal hover:bg-teal-light',
+    primary: 'fp-btn fp-btn-primary',
+    secondary: 'fp-btn fp-btn-secondary',
   }[variant]
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`min-h-[48px] rounded-full px-6 py-2.5 font-heading text-base font-bold transition-colors disabled:cursor-not-allowed ${full ? 'w-full' : ''} ${styles}`}
+      className={`min-h-[48px] px-6 py-2.5 text-base ${full ? 'w-full' : ''} ${styles}`}
     >
       {children}
     </button>

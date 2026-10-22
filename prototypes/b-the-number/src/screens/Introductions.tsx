@@ -21,9 +21,7 @@ export function Introductions({ state, save }: Props) {
 
   return (
     <>
-      <p className="font-heading text-sm font-bold uppercase tracking-wide text-teal">
-        Pending introductions
-      </p>
+      <p className="fp-eyebrow">Pending introductions</p>
       <h1 className="mt-1 text-3xl font-extrabold">
         {pending.length > 0
           ? `${pending.length} ${pending.length === 1 ? 'household wants' : 'households want'} to meet you`
@@ -150,9 +148,7 @@ function IntroCard({
           {intro.items.map((item) =>
             item.shared ? (
               <div key={item.key}>
-                <dt className="text-xs font-bold uppercase tracking-wide text-teal">
-                  {item.label}
-                </dt>
+                <dt className="fp-eyebrow">{item.label}</dt>
                 <dd>
                   <ul className="mt-1 space-y-0.5 text-sm">
                     {item.value!.map((v) => (

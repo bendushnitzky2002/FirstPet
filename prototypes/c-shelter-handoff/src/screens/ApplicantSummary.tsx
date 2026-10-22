@@ -47,11 +47,7 @@ export function ApplicantSummary({ id }: { id: string }) {
           <p>
             for {pet.name}, {pet.description}. Check {a.id}, {when(a.submittedAt).toLowerCase()}.
           </p>
-          {a.visitAt && !a.adoptedAt && (
-            <p className="font-heading text-sm font-extrabold uppercase tracking-wide text-teal">
-              Visit: {visitTime(a.visitAt)}
-            </p>
-          )}
+          {a.visitAt && !a.adoptedAt && <p className="fp-eyebrow">Visit: {visitTime(a.visitAt)}</p>}
         </div>
         <VerdictChip kind={verdict.kind} />
       </header>

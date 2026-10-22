@@ -4,7 +4,6 @@ import {
   Avatar,
   BackLink,
   ChevronRight,
-  LogoMark,
   Page,
   SampleNote,
   StatusChip,
@@ -47,14 +46,9 @@ export function Counselor({ tab }: { tab: Tab }) {
     <Page wide>
       <BackLink onClick={() => navigate('/')}>Home</BackLink>
       <header className="mt-2 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <LogoMark />
-          <div>
-            <p className="font-heading text-sm font-bold uppercase tracking-wide text-teal">
-              Adoption counter
-            </p>
-            <h1 className="text-2xl font-extrabold leading-tight sm:text-3xl">{shelter.name}</h1>
-          </div>
+        <div>
+          <p className="fp-eyebrow">Adoption counter</p>
+          <h1 className="text-3xl leading-tight sm:text-[34px]">{shelter.name}</h1>
         </div>
       </header>
 
@@ -85,13 +79,13 @@ export function Counselor({ tab }: { tab: Tab }) {
         <button
           type="button"
           onClick={() => navigate(`/counselor/a/${toCall[0].a.id}`)}
-          className="mt-6 flex w-full items-center gap-4 rounded-card border-2 border-orange bg-peach p-4 text-left"
+          className="mt-6 flex w-full items-center gap-4 rounded-[11px] border border-[#F0B99C] bg-[#FFF6F0] p-4 text-left hover:border-orange hover:bg-[#FFEFE5]"
         >
-          <span className="fp-icon-orange shrink-0 bg-white">
+          <span className="fp-icon-orange shrink-0 bg-[#FFDDCB]">
             <AlertIcon />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-xs font-bold uppercase tracking-wide text-[#9a5b06]">
+            <span className="block text-xs font-bold uppercase tracking-wide text-orange-ink">
               Call this week
             </span>
             <span className="block font-heading font-extrabold text-navy">
@@ -128,8 +122,8 @@ function TabLink({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className={`-mb-px inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 font-heading text-sm font-bold sm:text-base ${
-        active ? 'border-teal text-navy' : 'border-transparent text-body/70 hover:text-navy'
+      className={`-mb-px inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b-[3px] px-3 py-3 text-sm font-extrabold sm:text-[15px] ${
+        active ? 'border-orange text-navy' : 'border-transparent text-muted hover:text-navy'
       }`}
     >
       {children}
@@ -187,13 +181,13 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search adopter or pet"
-            className="min-h-[44px] flex-1 rounded-full border border-line bg-canvas px-4 outline-none focus:border-teal"
+            className="fp-input flex-1 px-4"
           />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as 'all' | VerdictKind)}
             aria-label="Filter by readiness result"
-            className="min-h-[44px] rounded-full border border-line bg-white px-4 font-semibold text-navy"
+            className="fp-input px-4 font-semibold"
           >
             {filters.map((f) => (
               <option key={f.value} value={f.value}>

@@ -10,9 +10,7 @@ export function Profile({ pending, onSeed }: { pending: number; onSeed: () => vo
 
   return (
     <>
-      <p className="font-heading text-sm font-bold uppercase tracking-wide text-teal">
-        Your network profile
-      </p>
+      <p className="fp-eyebrow">Your network profile</p>
       <h1 className="mt-1 text-3xl font-extrabold sm:text-4xl">
         Meet first-time owners before day one.
       </h1>
