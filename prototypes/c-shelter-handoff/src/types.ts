@@ -58,7 +58,11 @@ export type Applicant = {
   // When the adopter is booked to visit the shelter, if a visit is booked.
   visitAt?: string
   adoptedAt?: string
+  // When the counselor asked the adopter about missing items before the visit.
+  askedAt?: string
   checkIn?: CheckIn
+  // When the counselor followed up on a flagged check-in.
+  followedUp?: { at: string; how: 'call' | 'note' }
   note?: string
   activity: Activity[]
 }

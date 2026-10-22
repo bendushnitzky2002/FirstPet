@@ -17,6 +17,7 @@ import { missingBeforeVisit } from '../data/missing'
 import { getPet, shelter } from '../data/shelter'
 import { decideVerdict } from '../data/verdict'
 import { day, visitTime, when } from '../lib/format'
+import { copyText } from '../lib/clipboard'
 import { linkTo, navigate } from '../lib/router'
 import { newId, updateApplicant, useStore } from '../lib/storage'
 import type { Applicant } from '../types'
@@ -67,7 +68,11 @@ export function ApplicantSummary({ id }: { id: string }) {
             </span>
           </p>
 
-          {!a.adoptedAt && <Missing items={missingBeforeVisit(a.answers, pet)} />}
+          {a.adoptedAt ? (
+            <WeekTwo a={a} />
+          ) : (
+            <Missing a={a} items={missingBeforeVisit(a.answers, pet)} />
+          )}
 
           <VerdictBlock verdict={verdict} who="counselor" />
 
@@ -76,7 +81,11 @@ export function ApplicantSummary({ id }: { id: string }) {
               <span className="fp-icon-orange">
                 <ChatIcon />
               </span>
-              <h2 className="text-lg font-extrabold">Talk about these at the counter</h2>
+              <h2 className="text-lg font-extrabold">
+                {a.adoptedAt
+                  ? 'What we talked about at the counter'
+                  : 'Talk about these at the counter'}
+              </h2>
             </div>
             {verdict.talkingPoints.length ? (
               <ol className="mt-3 space-y-2">
@@ -96,7 +105,7 @@ export function ApplicantSummary({ id }: { id: string }) {
 
           <Answers a={a} />
           <CostCard pet={pet} />
-          <WeekTwo a={a} />
+          {!a.adoptedAt && <WeekTwo a={a} />}
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-24">
@@ -134,8 +143,17 @@ export function ApplicantSummary({ id }: { id: string }) {
   )
 }
 
-// What the adopter still needs to bring or settle before the visit.
-function Missing({ items }: { items: string[] }) {
+// What the adopter still needs to bring or settle before the visit, with a
+// way to ask about it ahead of time (Sala's "Ask for clarification").
+function Missing({ a, items }: { a: Applicant; items: string[] }) {
+  const first = a.answers.name.split(' ')[0]
+  const [drafting, setDrafting] = useState(false)
+  const [text, setText] = useState(
+    `Hi ${first}, thanks for taking the readiness check before your visit. ` +
+      `Could you come ready to talk about: ${items.map((m) => m[0].toLowerCase() + m.slice(1)).join(', ')}? ` +
+      `It helps us make the visit about the pet, not paperwork. See you soon, ${shelter.short}`,
+  )
+
   if (!items.length)
     return (
       <p className="flex gap-2 rounded-card border border-teal bg-white px-4 py-3 font-semibold text-navy">
@@ -143,16 +161,75 @@ function Missing({ items }: { items: string[] }) {
         Nothing missing before the visit.
       </p>
     )
+
+  const ask = async () => {
+    await copyText(text)
+    const now = new Date().toISOString()
+    updateApplicant(a.id, (x) => ({
+      ...x,
+      askedAt: now,
+      activity: [
+        ...x.activity,
+        { id: newId(), at: now, title: 'Asked about missing items', detail: items.join(', ') },
+      ],
+    }))
+    setDrafting(false)
+  }
+
   return (
     <section className="rounded-card border-2 border-orange bg-peach p-5">
-      <h2 className="text-lg font-extrabold">Missing before the visit</h2>
-      <ul className="mt-2 flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-extrabold">Missing before the visit</h2>
+          <p className="text-sm">
+            {a.askedAt
+              ? `You asked ${first} about these ${when(a.askedAt).toLowerCase()}. Check them at the visit.`
+              : `Ask ${first} now so the visit can start with the pet.`}
+          </p>
+        </div>
+        {!drafting && (
+          <Button
+            size="sm"
+            full={false}
+            variant={a.askedAt ? 'secondary' : 'primary'}
+            onClick={() => setDrafting(true)}
+          >
+            {a.askedAt ? 'Ask again' : 'Ask before the visit'}
+          </Button>
+        )}
+      </div>
+      <ul className="mt-3 flex flex-wrap gap-2">
         {items.map((m) => (
           <li key={m} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-navy">
             {m}
           </li>
         ))}
       </ul>
+      {drafting && (
+        <div className="mt-4 rounded-xl bg-white p-4">
+          <label htmlFor="ask" className="text-sm font-bold text-navy">
+            Message to {first}
+          </label>
+          <textarea
+            id="ask"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={4}
+            className="fp-input mt-2 w-full"
+          />
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Button size="sm" full={false} disabled={!text.trim()} onClick={ask}>
+              Copy message and log it
+            </Button>
+            <Button size="sm" full={false} variant="secondary" onClick={() => setDrafting(false)}>
+              Cancel
+            </Button>
+          </div>
+          <p className="mt-2 text-xs text-muted">
+            We copy the message for your email or text. Nothing is sent from here.
+          </p>
+        </div>
+      )}
     </section>
   )
 }
@@ -274,9 +351,52 @@ function WeekTwo({ a }: { a: Applicant }) {
             ))}
           </ul>
           <PlanVsNow a={a} />
+          <FollowUp a={a} status={review.status} />
         </div>
       )}
     </section>
+  )
+}
+
+// Closes the loop on a flag: the counselor logs how they reached out, and the
+// adopter drops out of "Call this week".
+function FollowUp({ a, status }: { a: Applicant; status: string }) {
+  const first = a.answers.name.split(' ')[0]
+  if (a.followedUp)
+    return (
+      <p className="flex gap-2 rounded-xl bg-teal-light px-4 py-3 text-sm font-semibold text-navy">
+        <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
+        {a.followedUp.how === 'call' ? 'Called' : 'Sent a note to'} {first}{' '}
+        {when(a.followedUp.at).toLowerCase()}.
+      </p>
+    )
+  if (status !== 'call' && status !== 'message') return null
+  const log = (how: 'call' | 'note') => {
+    const now = new Date().toISOString()
+    updateApplicant(a.id, (x) => ({
+      ...x,
+      followedUp: { at: now, how },
+      activity: [
+        ...x.activity,
+        {
+          id: newId(),
+          at: now,
+          title: how === 'call' ? 'Called after check-in' : 'Sent a note after check-in',
+          detail: 'Flag cleared from the call list.',
+        },
+      ],
+    }))
+  }
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-line p-3">
+      <span className="flex-1 text-sm font-semibold text-navy">Reached out to {first}?</span>
+      <Button size="sm" full={false} onClick={() => log('call')}>
+        I called
+      </Button>
+      <Button size="sm" full={false} variant="secondary" onClick={() => log('note')}>
+        I sent a note
+      </Button>
+    </div>
   )
 }
 

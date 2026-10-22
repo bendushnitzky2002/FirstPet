@@ -200,7 +200,7 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
   )
 }
 
-const statusOrder: CheckInStatus[] = ['call', 'message', 'due', 'upcoming', 'well']
+const statusOrder: CheckInStatus[] = ['call', 'message', 'due', 'upcoming', 'followed', 'well']
 
 function CheckInsTab({
   reviews,

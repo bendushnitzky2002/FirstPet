@@ -2,6 +2,7 @@ import { CostCard, VerdictBlock } from '../components/shelter'
 import { BackLink, Button, LogoMark } from '../components/ui'
 import { checkInDue, reviewCheckIn, statusLabel } from '../data/checkin'
 import { getPet, shelter } from '../data/shelter'
+import { missingBeforeVisit } from '../data/missing'
 import { decideVerdict } from '../data/verdict'
 import { day } from '../lib/format'
 import { navigate } from '../lib/router'
@@ -17,6 +18,7 @@ export function PrintSummary({ id }: { id: string }) {
 
   const pet = getPet(a.petId)
   const verdict = decideVerdict(a.answers, pet)
+  const missing = a.adoptedAt ? [] : missingBeforeVisit(a.answers, pet)
   const due = checkInDue(a)
   const review = reviewCheckIn(a)
 
@@ -49,6 +51,13 @@ export function PrintSummary({ id }: { id: string }) {
         </header>
 
         <VerdictBlock verdict={verdict} who="counselor" />
+
+        {missing.length > 0 && (
+          <section>
+            <h2 className="text-lg font-extrabold">Missing before the visit</h2>
+            <p>{missing.join(', ')}.</p>
+          </section>
+        )}
 
         {verdict.talkingPoints.length > 0 && (
           <section>
