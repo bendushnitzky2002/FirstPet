@@ -8,7 +8,6 @@ import {
   CalendarIcon,
   CheckIcon,
   ChatIcon,
-  Page,
   PrintIcon,
   StatusChip,
   VerdictChip,
@@ -22,6 +21,7 @@ import { linkTo, navigate } from '../lib/router'
 import { newId, updateApplicant, useStore } from '../lib/storage'
 import type { Applicant } from '../types'
 import { NotFound } from './NotFound'
+import { Workspace } from '../components/workspace'
 
 // What the counselor opens at the counter. Layout adapted from the applicant
 // detail screen in Sala's Shelter Workspace prototype: the summary on the
@@ -35,26 +35,30 @@ export function ApplicantSummary({ id }: { id: string }) {
   const verdict = decideVerdict(a.answers, pet)
 
   return (
-    <Page wide>
-      <BackLink onClick={() => navigate(a.adoptedAt ? '/counselor/checkins' : '/counselor')}>
-        {a.adoptedAt ? 'Week-two check-ins' : 'Upcoming visits'}
-      </BackLink>
+    <Workspace section={a.adoptedAt ? 'checkins' : 'visits'}>
+      <div className="pt-6">
+        <BackLink onClick={() => navigate(a.adoptedAt ? '/counselor/checkins' : '/counselor')}>
+          {a.adoptedAt ? 'Week-two check-ins' : 'Upcoming visits'}
+        </BackLink>
+      </div>
 
-      <header className="mt-2 flex flex-wrap items-center gap-4">
+      <header className="flex flex-wrap items-end gap-4 pb-7 pt-3">
         <Avatar name={a.answers.name} tone={verdict.kind === 'ready' ? 'teal' : 'orange'} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-extrabold leading-tight sm:text-3xl">{a.answers.name}</h1>
-          <p>
+          <span className="fp-eyebrow">
+            {a.visitAt && !a.adoptedAt ? `Visit: ${visitTime(a.visitAt)}` : 'Readiness summary'}
+          </span>
+          <h1 className="text-[28px] leading-tight sm:text-[34px]">{a.answers.name}</h1>
+          <p className="text-muted">
             for {pet.name}, {pet.description}. Check {a.id}, {when(a.submittedAt).toLowerCase()}.
           </p>
-          {a.visitAt && !a.adoptedAt && <p className="fp-eyebrow">Visit: {visitTime(a.visitAt)}</p>}
         </div>
         <VerdictChip kind={verdict.kind} />
       </header>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_300px]">
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-4">
-          <p className="flex gap-3 rounded-card bg-teal-light px-4 py-3 text-sm">
+          <p className="flex gap-3 rounded-[11px] bg-[#E3F0EE] px-4 py-3 text-sm text-[#41666C]">
             <AlertIcon className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
             <span>
               <strong className="text-navy">This supports a conversation.</strong> FirstPet does not
@@ -95,7 +99,7 @@ export function ApplicantSummary({ id }: { id: string }) {
           <WeekTwo a={a} />
         </div>
 
-        <aside className="space-y-4">
+        <aside className="space-y-4 lg:sticky lg:top-24">
           <div className="fp-card space-y-2 p-4">
             <Button size="sm" onClick={() => navigate(`/summary/${a.id}`)}>
               <span className="inline-flex items-center gap-2">
@@ -126,7 +130,7 @@ export function ApplicantSummary({ id }: { id: string }) {
           </section>
         </aside>
       </div>
-    </Page>
+    </Workspace>
   )
 }
 

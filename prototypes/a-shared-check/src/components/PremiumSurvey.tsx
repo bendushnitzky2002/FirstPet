@@ -11,10 +11,10 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
   }
 
   return (
-    <section className="mt-6 rounded-card border-2 border-teal bg-white p-5">
-      <p className="fp-eyebrow">One question for us</p>
-      <h2 className="mt-1 text-xl font-extrabold">Want help after adoption day?</h2>
-      <p className="mt-2">
+    <section className="fp-hero p-6">
+      <p className="fp-eyebrow text-[#90D2D0]">One question for us</p>
+      <h2 className="text-lg text-white">Want help after adoption day?</h2>
+      <p className="mt-2 text-sm text-[#B9CAD3]">
         We're considering a premium plan with post-adoption pet care help for the first months with
         your pet. This readiness check stays free either way.
       </p>
@@ -39,19 +39,19 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
         </div>
       ) : (
         <>
-          <p className="mt-4 font-semibold text-navy">Would you consider signing up?</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <p className="mt-4 font-semibold text-white">Would you consider signing up?</p>
+          <div className="mt-3 grid gap-2">
             <button
               type="button"
               onClick={() => answer('yes')}
-              className="fp-btn fp-btn-primary min-h-[52px] px-6 py-3 text-lg"
+              className="fp-btn fp-btn-primary min-h-[46px] px-5"
             >
               Yes, I would
             </button>
             <button
               type="button"
               onClick={() => answer('no')}
-              className="fp-btn fp-btn-secondary min-h-[52px] px-6 py-3 text-lg"
+              className="fp-btn fp-btn-light min-h-[46px] px-5"
             >
               No thanks
             </button>

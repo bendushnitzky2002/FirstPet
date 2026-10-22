@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply bg-canvas font-sans text-body antialiased;
+    @apply bg-canvas font-sans text-[15px] leading-relaxed text-body antialiased;
   }
   h1,
   h2,
@@ -38,7 +38,13 @@
     @apply sticky top-0 z-20 border-b border-white/10 bg-navy text-white print:hidden;
   }
   .fp-topbar-inner {
-    @apply mx-auto flex h-16 w-full items-center gap-3 px-4 sm:px-6;
+    @apply mx-auto flex h-16 items-center gap-3;
+    width: min(1180px, calc(100% - 32px));
+  }
+  @screen sm {
+    .fp-topbar-inner {
+      width: min(1180px, calc(100% - 48px));
+    }
   }
   .fp-brand {
     @apply flex items-center gap-2.5 text-left;
@@ -61,7 +67,14 @@
   }
   /* Tabs in the top bar: orange underline on the active one */
   .fp-nav-tab {
-    @apply flex h-12 items-center gap-2 border-b-[3px] border-transparent px-3 text-sm font-bold text-[#AEBDCA] hover:text-white;
+    @apply flex h-12 shrink-0 items-center gap-2 whitespace-nowrap border-b-[3px] border-transparent px-3 pt-[3px] text-sm font-bold text-[#AEBDCA] hover:text-white;
+  }
+  /* Tabs that sit inside the 64px bar on wide screens */
+  .fp-nav-inline {
+    @apply flex h-full items-stretch gap-0.5;
+  }
+  .fp-nav-inline .fp-nav-tab {
+    @apply h-full;
   }
   .fp-nav-tab[aria-current='page'] {
     @apply border-orange text-white;
@@ -109,5 +122,85 @@
   }
   .fp-warning {
     @apply rounded-[11px] bg-peach text-[#755B4B];
+  }
+
+  /* Page: the same 1180px frame as Sala's apps */
+  .fp-page {
+    @apply mx-auto pb-16;
+    width: min(1180px, calc(100% - 32px));
+  }
+  @screen sm {
+    .fp-page {
+      width: min(1180px, calc(100% - 48px));
+    }
+  }
+  /* Page heading: eyebrow, title and copy on the left, an action on the right */
+  .fp-page-head {
+    @apply flex flex-col gap-4 pb-6 pt-8 sm:flex-row sm:items-end sm:justify-between sm:pb-7 sm:pt-10;
+  }
+  .fp-page-head h1 {
+    @apply text-[28px] leading-[1.15] sm:text-[34px];
+  }
+  .fp-page-head p {
+    @apply mt-1.5 max-w-[680px] text-muted;
+  }
+  /* Main column plus a 340px side column on wide screens */
+  .fp-layout {
+    @apply grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px];
+  }
+  .fp-panel-head {
+    @apply flex items-center justify-between gap-4 border-b border-[#EDF0F3] px-5 py-4 sm:px-6;
+  }
+  .fp-panel-head h2 {
+    @apply text-base;
+  }
+  .fp-panel-head p {
+    @apply mt-0.5 text-[13px] text-muted;
+  }
+  /* A clickable row inside a panel, with a teal edge on hover */
+  .fp-row {
+    @apply w-full border-b border-[#EDF0F3] bg-white text-left last:border-b-0 hover:bg-[#FAFCFC] hover:shadow-[inset_3px_0_#168c91];
+  }
+  /* Navy guide card for the side column */
+  .fp-guide {
+    @apply rounded-card bg-navy p-6 text-[#B9C8D8];
+  }
+  .fp-guide h2,
+  .fp-guide h3 {
+    @apply text-white;
+  }
+  .fp-guide-icon {
+    @apply mb-5 grid h-10 w-10 place-items-center rounded-[10px] bg-teal/35 text-[#75D1D2];
+  }
+  .fp-guide-num {
+    @apply grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/10 text-[11px] font-bold text-[#89D8D7];
+  }
+  /* Metric card with a short teal bar along the bottom */
+  .fp-metric {
+    @apply relative overflow-hidden rounded-[11px] border border-line bg-white px-5 pb-4 pt-[18px];
+  }
+  .fp-metric::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-[3px] w-[36%] rounded-tr bg-teal;
+  }
+  .fp-metric-value {
+    @apply mt-2 block font-heading text-[30px] font-extrabold leading-none text-navy;
+  }
+
+  /* Workspace shell: navy sidebar and a white top bar (Sala's Shelter Workspace) */
+  .fp-sidebar {
+    @apply fixed inset-y-0 left-0 z-30 hidden w-[248px] flex-col bg-navy px-[18px] pb-5 pt-7 text-white lg:flex print:hidden;
+  }
+  .fp-side-item {
+    @apply mb-1 flex w-full items-center gap-3 rounded-[9px] px-3 py-2.5 text-left text-[14px] font-semibold text-[#BFCCDA] transition hover:bg-white/5 hover:text-white;
+  }
+  .fp-side-item[aria-current='page'] {
+    @apply bg-white/10 text-white shadow-[inset_3px_0_#f47b35];
+  }
+  .fp-side-count {
+    @apply ml-auto min-w-[24px] rounded-[10px] bg-white/10 px-1.5 py-0.5 text-center text-[11px] font-bold text-[#D7E3EE];
+  }
+  .fp-workbar {
+    @apply sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b border-line bg-white px-4 sm:px-6 lg:justify-end lg:px-10 print:hidden;
   }
 }

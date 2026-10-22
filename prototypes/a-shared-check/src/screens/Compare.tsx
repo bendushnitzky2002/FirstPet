@@ -2,7 +2,7 @@ import type { Check } from '../types'
 import { compareRows } from '../data/verdict'
 import { CompareTable } from '../components/CompareTable'
 import { CostBlock } from '../components/CostBlock'
-import { AlertIcon, Button, Page, TopBar } from '../components/ui'
+import { AlertIcon, Button, Page, PageHead, TopBar } from '../components/ui'
 import { navigate } from '../lib/router'
 
 export function Compare({ check, fromPartner }: { check: Check; fromPartner: boolean }) {
@@ -17,27 +17,44 @@ export function Compare({ check, fromPartner }: { check: Check; fromPartner: boo
   if (solo) title = "Here's what you told us."
   if (!solo && !partnerDone) title = "Here's your side so far."
 
-  return (
-    <Page wide>
-      <TopBar onBack={() => navigate(solo ? '/' : partnerDone ? '/' : '/invite')} />
-      <p className="fp-eyebrow">{solo ? 'Your answers' : 'Side by side'}</p>
-      <h1 className="mt-1 text-3xl font-extrabold leading-tight sm:text-4xl">{title}</h1>
+  const cta = (
+    <Button full={false} onClick={() => navigate('/verdict')}>
+      {solo ? 'See my verdict' : 'See our verdict'}
+    </Button>
+  )
 
-      {partnerDone && (
-        <p className="mt-3 text-lg">
-          {matches === 0
-            ? 'None of your answers match yet'
-            : `${matches} ${matches === 1 ? 'answer matches' : 'answers match'}`}
-          .{' '}
-          {talks
-            ? `${talks} ${talks === 1 ? 'is' : 'are'} worth a talk before the verdict.`
-            : 'Nothing to argue about.'}
-        </p>
-      )}
+  return (
+    <Page
+      stage="compare"
+      aside={
+        <>
+          <CostBlock check={check} />
+          <div className="lg:hidden">{cta}</div>
+        </>
+      }
+    >
+      <TopBar onBack={() => navigate(solo ? '/' : partnerDone ? '/' : '/invite')} />
+      <PageHead
+        eyebrow={solo ? 'Your answers' : 'Side by side'}
+        title={title}
+        action={<div className="hidden lg:block">{cta}</div>}
+      >
+        {partnerDone
+          ? `${
+              matches === 0
+                ? 'None of your answers match yet'
+                : `${matches} ${matches === 1 ? 'answer matches' : 'answers match'}`
+            }. ${
+              talks
+                ? `${talks} ${talks === 1 ? 'is' : 'are'} worth a talk before the verdict.`
+                : 'Nothing to argue about.'
+            }`
+          : undefined}
+      </PageHead>
 
       {!solo && !partnerDone && (
-        <div className="mt-5 flex gap-3 rounded-card border border-orange bg-peach p-4">
-          <span className="fp-icon-orange shrink-0 bg-white">
+        <div className="mb-5 flex gap-3 rounded-[11px] border border-[#F0B99C] bg-[#FFF6F0] p-4">
+          <span className="fp-icon-orange shrink-0 bg-[#FFDDCB]">
             <AlertIcon />
           </span>
           <div>
@@ -54,19 +71,7 @@ export function Compare({ check, fromPartner }: { check: Check; fromPartner: boo
         </div>
       )}
 
-      <div className="mt-6">
-        <CompareTable check={check} />
-      </div>
-
-      <div className="mt-6">
-        <CostBlock check={check} />
-      </div>
-
-      <div className="mt-8">
-        <Button onClick={() => navigate('/verdict')}>
-          {solo ? 'See my verdict' : 'See our verdict'}
-        </Button>
-      </div>
+      <CompareTable check={check} />
     </Page>
   )
 }

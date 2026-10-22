@@ -6,24 +6,31 @@ import type { VerdictKind } from '../data/verdict'
 import { verdictLabel } from '../data/verdict'
 import { initials } from '../lib/format'
 
-export function Page({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
+// The 1180px page frame from Sala's apps. With an aside, the page is a main
+// column plus a 340px side column on wide screens.
+export function Page({ children, aside }: { children: ReactNode; aside?: ReactNode }) {
   return (
     <div className="min-h-screen">
-      <AppBar wide={wide} />
-      <main
-        className={`mx-auto flex w-full flex-col px-4 pb-16 pt-6 sm:px-6 sm:pt-10 ${wide ? 'max-w-5xl' : 'max-w-xl'}`}
-      >
-        {children}
+      <AppBar />
+      <main className="fp-page">
+        {aside ? (
+          <div className="fp-layout pt-8 sm:pt-10">
+            <div className="flex min-w-0 flex-col">{children}</div>
+            <aside className="space-y-4 lg:sticky lg:top-24">{aside}</aside>
+          </div>
+        ) : (
+          <div className="flex flex-col pt-8 sm:pt-10">{children}</div>
+        )}
       </main>
     </div>
   )
 }
 
 // Navy top bar with the brand mark, shared look with the other apps.
-function AppBar({ wide }: { wide: boolean }) {
+function AppBar() {
   return (
     <header className="fp-topbar">
-      <div className={`fp-topbar-inner ${wide ? 'max-w-5xl' : 'max-w-xl'}`}>
+      <div className="fp-topbar-inner">
         <a href="#/" className="fp-brand">
           <span className="fp-brand-mark" aria-hidden="true" />
           <span>
@@ -35,6 +42,70 @@ function AppBar({ wide }: { wide: boolean }) {
         </a>
       </div>
     </header>
+  )
+}
+
+// Eyebrow, title and copy on the left, an action on the right.
+export function PageHead({
+  eyebrow,
+  title,
+  children,
+  action,
+}: {
+  eyebrow?: string
+  title: ReactNode
+  children?: ReactNode
+  action?: ReactNode
+}) {
+  return (
+    <div className="fp-page-head">
+      <div className="min-w-0">
+        {eyebrow && <span className="fp-eyebrow">{eyebrow}</span>}
+        <h1>{title}</h1>
+        {children && <p>{children}</p>}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  )
+}
+
+// Navy guide card for the side column, with numbered steps.
+export function Guide({
+  eyebrow,
+  title,
+  steps,
+  current,
+  children,
+}: {
+  eyebrow: string
+  title: string
+  steps: string[]
+  current?: number
+  children?: ReactNode
+}) {
+  return (
+    <section className="fp-guide">
+      <span className="fp-eyebrow text-[#90D2D0]">{eyebrow}</span>
+      <h2 className="text-lg leading-snug">{title}</h2>
+      <div className="my-4 h-px bg-white/10" />
+      <ol className="space-y-3">
+        {steps.map((label, i) => {
+          const done = current !== undefined && i < current
+          const here = i === current
+          return (
+            <li key={label} className="flex items-center gap-3">
+              <span
+                className={`fp-guide-num ${here ? 'bg-orange text-white' : done ? 'bg-teal text-white' : ''}`}
+              >
+                {done ? <CheckIcon className="h-3.5 w-3.5" /> : i + 1}
+              </span>
+              <span className={`text-sm ${here ? 'font-bold text-white' : ''}`}>{label}</span>
+            </li>
+          )
+        })}
+      </ol>
+      {children && <div className="mt-5 text-sm">{children}</div>}
+    </section>
   )
 }
 
@@ -77,7 +148,8 @@ export function Button({
     secondary: 'fp-btn fp-btn-secondary',
     quiet: 'fp-btn text-teal underline-offset-4 hover:underline',
   }[variant]
-  const sizing = size === 'lg' ? 'min-h-[52px] px-6 py-3 text-lg' : 'min-h-[40px] px-4 py-2 text-sm'
+  const sizing =
+    size === 'lg' ? 'min-h-[46px] px-5 py-2.5 text-[15px]' : 'min-h-[40px] px-4 py-2 text-sm'
   return (
     <button
       type="button"
@@ -107,7 +179,7 @@ export function OptionButton({
       role={multi ? 'checkbox' : 'radio'}
       aria-checked={selected}
       onClick={onClick}
-      className={`flex min-h-[60px] w-full items-center gap-3 rounded-card border bg-white px-5 py-4 text-left text-lg font-semibold transition-colors ${
+      className={`flex min-h-[54px] w-full items-center gap-3 rounded-[10px] border bg-white px-4 py-3 text-left text-base font-semibold transition-colors ${
         selected
           ? 'border-teal bg-teal-light text-navy shadow-[inset_3px_0_#168c91]'
           : 'border-line text-body hover:border-teal/50'
@@ -128,11 +200,11 @@ export function OptionButton({
 
 export function Progress({ current, total }: { current: number; total: number }) {
   return (
-    <div className="mb-8">
+    <div className="mb-6">
       <p className="fp-eyebrow mb-2">
         Question {current} of {total}
       </p>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-line">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E9EFED]">
         <div
           className="h-full rounded-full bg-orange transition-all duration-300"
           style={{ width: `${(current / total) * 100}%` }}
@@ -187,6 +259,15 @@ export function Avatar({ name, tone = 'teal' }: { name: string; tone?: 'teal' | 
     >
       {initials(name)}
     </span>
+  )
+}
+
+export function Metric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="fp-metric">
+      <p className="text-[13px] font-semibold text-muted">{label}</p>
+      <p className="fp-metric-value">{value}</p>
+    </div>
   )
 }
 

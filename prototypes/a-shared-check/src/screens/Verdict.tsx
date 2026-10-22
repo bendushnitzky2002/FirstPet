@@ -37,13 +37,26 @@ export function Verdict({ check, save, onReset }: Props) {
     })
 
   return (
-    <Page>
+    <Page
+      stage="verdict"
+      aside={
+        <>
+          <PremiumSurvey check={check} save={save} />
+          <div className="fp-card space-y-2 p-4">
+            <Button onClick={() => navigate('/summary')}>Save this as a one-page summary</Button>
+            <Button variant="secondary" onClick={onReset}>
+              Start over
+            </Button>
+          </div>
+        </>
+      }
+    >
       <TopBar onBack={() => navigate('/compare')} />
 
       {v.basedOnOne && (
-        <div className="mb-6 rounded-card border border-orange bg-peach p-4">
+        <div className="mb-5 rounded-[11px] border border-[#F0B99C] bg-[#FFF6F0] p-4">
           <div className="flex gap-3">
-            <span className="fp-icon-orange shrink-0 bg-white">
+            <span className="fp-icon-orange shrink-0 bg-[#FFDDCB]">
               <AlertIcon />
             </span>
             <p className="font-semibold text-navy">
@@ -51,75 +64,68 @@ export function Verdict({ check, save, onReset }: Props) {
             </p>
           </div>
           <div className="mt-3">
-            <Button variant="secondary" onClick={() => navigate('/invite')}>
+            <Button variant="secondary" full={false} onClick={() => navigate('/invite')}>
               Invite your partner
             </Button>
           </div>
         </div>
       )}
 
-      <section className={`rounded-card p-6 sm:p-8 ${tone.bg}`}>
-        <p className="text-sm font-bold uppercase tracking-wide text-body">{tone.label}</p>
-        <h1 className={`mt-2 text-5xl font-extrabold leading-none sm:text-6xl ${tone.text}`}>
-          {v.title}
-        </h1>
+      <section
+        className={`rounded-[14px] border-t-4 p-6 sm:p-8 ${tone.bg} ${v.kind === 'ready' ? 'border-teal' : 'border-orange'}`}
+      >
+        <p className="fp-eyebrow text-muted">{tone.label}</p>
+        <h1 className={`text-4xl leading-none sm:text-5xl ${tone.text}`}>{v.title}</h1>
         <p className="mt-4 text-lg text-navy">{v.summary}</p>
       </section>
 
-      <section className="mt-6">
-        <h2 className="text-xl font-extrabold">Why</h2>
-        <ul className="mt-3 space-y-2">
-          {v.reasons.map((r) => (
-            <li key={r} className="flex gap-3">
-              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-orange" aria-hidden="true" />
-              <span>{r}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {v.todo.length > 0 && (
-        <section className="fp-card mt-6 p-5">
-          <h2 className="text-xl font-extrabold">{v.todoTitle}</h2>
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
+        <section className="fp-card p-5">
+          <h2 className="text-lg">Why</h2>
           <ul className="mt-3 space-y-2">
-            {v.todo.map((t) => {
-              const done = check.checked.includes(t.id)
-              return (
-                <li key={t.id}>
-                  <button
-                    type="button"
-                    role="checkbox"
-                    aria-checked={done}
-                    onClick={() => toggle(t.id)}
-                    className="flex min-h-[48px] w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-canvas"
-                  >
-                    <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 ${
-                        done ? 'border-teal bg-teal text-white' : 'border-line bg-white'
-                      }`}
-                    >
-                      {done && <CheckIcon className="h-4 w-4" />}
-                    </span>
-                    <span
-                      className={done ? 'text-body/70 line-through' : 'font-semibold text-navy'}
-                    >
-                      {t.text}
-                    </span>
-                  </button>
-                </li>
-              )
-            })}
+            {v.reasons.map((r) => (
+              <li key={r} className="flex gap-3">
+                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-orange" aria-hidden="true" />
+                <span>{r}</span>
+              </li>
+            ))}
           </ul>
         </section>
-      )}
 
-      <PremiumSurvey check={check} save={save} />
-
-      <div className="mt-10 space-y-3">
-        <Button onClick={() => navigate('/summary')}>Save this as a one-page summary</Button>
-        <Button variant="secondary" onClick={onReset}>
-          Start over
-        </Button>
+        {v.todo.length > 0 && (
+          <section className="fp-card p-5">
+            <h2 className="text-lg">{v.todoTitle}</h2>
+            <ul className="mt-3 space-y-2">
+              {v.todo.map((t) => {
+                const done = check.checked.includes(t.id)
+                return (
+                  <li key={t.id}>
+                    <button
+                      type="button"
+                      role="checkbox"
+                      aria-checked={done}
+                      onClick={() => toggle(t.id)}
+                      className="flex min-h-[48px] w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-canvas"
+                    >
+                      <span
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 ${
+                          done ? 'border-teal bg-teal text-white' : 'border-line bg-white'
+                        }`}
+                      >
+                        {done && <CheckIcon className="h-4 w-4" />}
+                      </span>
+                      <span
+                        className={done ? 'text-body/70 line-through' : 'font-semibold text-navy'}
+                      >
+                        {t.text}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        )}
       </div>
     </Page>
   )

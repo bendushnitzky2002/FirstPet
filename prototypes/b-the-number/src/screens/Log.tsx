@@ -1,7 +1,7 @@
 import type { State } from '../types'
 import { INTRODUCTIONS, PASS_REASONS } from '../data/introductions'
 import { TIER_LABEL } from '../data/membership'
-import { Button } from '../components/ui'
+import { Button, PageHead } from '../components/ui'
 
 const time = (iso: string) =>
   new Date(iso).toLocaleString('en-US', {
@@ -16,10 +16,11 @@ const time = (iso: string) =>
 export function Log({ state, onReset }: { state: State; onReset: () => void }) {
   return (
     <>
-      <h1 className="text-3xl font-extrabold">Session log</h1>
-      <p className="mt-2">What this browser recorded. For our team, after a test session.</p>
+      <PageHead eyebrow="Team view" title="Session log">
+        What this browser recorded. For our team, after a test session.
+      </PageHead>
 
-      <h2 className="mt-8 text-lg font-extrabold">Join clicks and answers</h2>
+      <h2 className="text-lg font-extrabold">Join clicks and answers</h2>
       {state.joins.length === 0 ? (
         <p className="mt-2 text-sm">No clicks yet.</p>
       ) : (

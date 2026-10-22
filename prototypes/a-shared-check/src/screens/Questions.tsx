@@ -7,10 +7,19 @@ import {
   isAnswered,
   type SharedId,
 } from '../components/SharedQuestion'
-import { Button, OptionButton, Page, Progress, TopBar } from '../components/ui'
+import { Button, Guide, OptionButton, Page, Progress, TopBar } from '../components/ui'
 import { navigate } from '../lib/router'
 
 const STEPS = ['who', 'pet', 'zip', 'hours', 'overnights', 'vet', 'worries'] as const
+const STEP_LABELS = [
+  "Who's deciding",
+  'Pet',
+  'ZIP code',
+  'Hours alone',
+  'Nights away',
+  'A surprise vet bill',
+  'Worries',
+]
 
 type Props = {
   check: Check
@@ -53,7 +62,7 @@ export function Questions({ check, save }: Props) {
           onChange={(e) => updateStarter({ name: e.target.value })}
           placeholder="e.g. Sam"
           autoComplete="given-name"
-          className="mb-6 min-h-[56px] w-full rounded-card border-2 border-line bg-white px-5 text-lg text-navy focus:border-teal focus:outline-none"
+          className="fp-input mb-6 min-h-[50px] w-full px-4 text-base"
         />
         <div className="space-y-3" role="radiogroup" aria-label="Who's deciding">
           {DECIDING_OPTIONS.map((o) => (
@@ -96,7 +105,7 @@ export function Questions({ check, save }: Props) {
         value={check.zip ?? ''}
         onChange={(e) => update({ zip: e.target.value.replace(/\D/g, '').slice(0, 5) })}
         placeholder="5 digits"
-        className="min-h-[64px] w-full rounded-card border-2 border-line bg-white px-5 text-center font-heading text-3xl font-bold tracking-[0.3em] text-navy placeholder:text-lg placeholder:font-normal placeholder:tracking-normal focus:border-teal focus:outline-none"
+        className="fp-input min-h-[60px] w-full max-w-xs px-5 text-center font-heading text-3xl font-bold tracking-[0.3em] placeholder:text-lg placeholder:font-normal placeholder:tracking-normal"
       />
     )
   } else {
@@ -120,15 +129,29 @@ export function Questions({ check, save }: Props) {
   }
 
   return (
-    <Page>
+    <Page
+      stage="answers"
+      aside={
+        <Guide
+          eyebrow="Your check"
+          title="Seven questions, about 5 minutes."
+          steps={STEP_LABELS}
+          current={step}
+        >
+          {check.deciding === 'solo'
+            ? 'Next: we put your answers together and give you a verdict.'
+            : 'Next: we invite your partner to answer four of these, then put you side by side.'}
+        </Guide>
+      }
+    >
       <TopBar onBack={back} />
-      <Progress current={step + 1} total={STEPS.length} />
-      <form onSubmit={onSubmit} className="flex flex-1 flex-col">
-        <h1 className="text-3xl font-extrabold leading-tight">{title}</h1>
-        {help && <p className="mt-2">{help}</p>}
-        <div className="mt-8">{body}</div>
-        <div className="mt-auto pt-10">
-          <Button type="submit" disabled={!canNext}>
+      <form onSubmit={onSubmit} className="fp-card flex flex-col p-6 sm:p-8">
+        <Progress current={step + 1} total={STEPS.length} />
+        <h1 className="text-[28px] leading-tight">{title}</h1>
+        {help && <p className="mt-2 text-muted">{help}</p>}
+        <div className="mt-6 max-w-[640px]">{body}</div>
+        <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
+          <Button type="submit" full={false} disabled={!canNext}>
             {step === STEPS.length - 1 ? 'Done' : 'Next'}
           </Button>
         </div>

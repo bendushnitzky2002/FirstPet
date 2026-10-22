@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Check } from '../types'
-import { Button, CheckIcon, Page, TopBar } from '../components/ui'
+import { Button, CheckIcon, Guide, Page, PageHead } from '../components/ui'
 import { appUrl, navigate } from '../lib/router'
 
 export function Invite({ check }: { check: Check }) {
@@ -22,17 +22,38 @@ export function Invite({ check }: { check: Check }) {
   }
 
   return (
-    <Page>
-      <TopBar />
-      <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl">
-        Your partner should answer too.
-      </h1>
-      <p className="mt-3 text-lg">
+    <Page
+      stage="invite"
+      aside={
+        <>
+          <Guide
+            eyebrow="What happens next"
+            title="Your partner answers four questions."
+            steps={[
+              'They open the link',
+              'They answer about money and schedule',
+              'We put you side by side',
+              'You get your verdict together',
+            ]}
+            current={partnerDone ? 2 : 0}
+          >
+            They only see the money and schedule questions. It takes about 3 minutes.
+          </Guide>
+          <div className="fp-card space-y-2 p-4">
+            <Button onClick={() => navigate('/')}>I'll wait for them</Button>
+            <Button variant="secondary" onClick={() => navigate('/compare')}>
+              Preview the result without them
+            </Button>
+          </div>
+        </>
+      }
+    >
+      <PageHead eyebrow="Invite" title="Your partner should answer too.">
         We saved your answers, {check.starter.name}. Send this so we can put you side by side.
-      </p>
+      </PageHead>
 
       {partnerDone && (
-        <div className="mt-6 flex items-center gap-3 rounded-card border border-teal bg-teal-light p-4">
+        <div className="mb-5 flex items-center gap-3 rounded-[11px] border border-[#B9DCDA] bg-[#F2FAFA] p-4">
           <span className="fp-icon-teal bg-white">
             <CheckIcon />
           </span>
@@ -47,8 +68,8 @@ export function Invite({ check }: { check: Check }) {
         </div>
       )}
 
-      <section className="fp-card mt-8 p-6 text-center">
-        <p className="text-sm font-semibold uppercase tracking-wide text-body">Invite code</p>
+      <section className="fp-card p-6 text-center sm:p-10">
+        <p className="fp-eyebrow">Invite code</p>
         <p className="mt-2 font-heading text-5xl font-extrabold tracking-[0.2em] text-navy sm:text-6xl">
           {check.code}
         </p>
@@ -62,26 +83,16 @@ export function Invite({ check }: { check: Check }) {
           readOnly
           value={link}
           onFocus={(e) => e.target.select()}
-          className="mt-6 w-full truncate rounded-lg border border-line bg-canvas px-4 py-3 text-center text-sm text-body"
+          className="fp-input mx-auto mt-6 block w-full max-w-xl truncate bg-canvas text-center text-sm"
         />
         <div className="mt-3">
-          <Button variant="secondary" onClick={copy}>
+          <Button full={false} onClick={copy}>
             {copied ? 'Copied' : 'Copy link'}
           </Button>
         </div>
-        <p className="mt-4 text-sm">
-          They only see the money and schedule questions. It takes about 3 minutes.
-        </p>
       </section>
 
-      <div className="mt-8 space-y-3">
-        <Button onClick={() => navigate('/')}>I'll wait for them</Button>
-        <Button variant="secondary" onClick={() => navigate('/compare')}>
-          Preview the result without them
-        </Button>
-      </div>
-
-      <p className="mt-8 text-center text-sm">
+      <p className="mt-5 text-center text-sm">
         Trying this on one computer?{' '}
         <a
           href={link}

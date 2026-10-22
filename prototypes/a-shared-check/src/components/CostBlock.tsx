@@ -8,7 +8,8 @@ export function CostBlock({ check }: { check: Check }) {
 
   return (
     <section className="fp-card p-5 sm:p-6">
-      <h2 className="text-xl font-extrabold">First-year cost</h2>
+      <span className="fp-eyebrow">Your local number</span>
+      <h2 className="text-lg">First-year cost</h2>
       <p className="mt-1 text-sm">
         For {petWord} in {c.isDefault ? `ZIP ${c.zip}` : `${c.place} ${c.zip}`}.
       </p>
@@ -43,7 +44,7 @@ export function CostBlock({ check }: { check: Check }) {
 
       <div className="mt-4 flex items-baseline justify-between">
         <p className="font-heading font-bold text-navy">Plan for, with the cushion</p>
-        <p className="font-heading text-2xl font-extrabold text-navy">{money(c.total)}</p>
+        <p className="font-heading text-[27px] font-extrabold text-navy">{money(c.total)}</p>
       </div>
 
       <p className="mt-4 text-xs text-body/80">

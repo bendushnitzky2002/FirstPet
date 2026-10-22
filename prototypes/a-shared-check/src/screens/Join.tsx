@@ -6,10 +6,11 @@ import {
   isAnswered,
   type SharedId,
 } from '../components/SharedQuestion'
-import { Button, LogoMark, Page, Progress, TopBar } from '../components/ui'
+import { Button, Guide, LogoMark, Page, Progress, TopBar } from '../components/ui'
 import { navigate } from '../lib/router'
 
 const STEPS: SharedId[] = ['hours', 'overnights', 'vet', 'worries']
+const STEP_LABELS = ['Hours alone', 'Nights away', 'A surprise vet bill', 'Worries']
 
 type Props = {
   code: string
@@ -31,14 +32,15 @@ export function Join({ code, check, save }: Props) {
   if (!check) {
     return (
       <Page>
-        <TopBar />
-        <h1 className="text-3xl font-extrabold">We couldn't find check {code || 'that code'}.</h1>
-        <p className="mt-4 text-lg">
+        <h1 className="text-[28px] leading-tight">We couldn't find check {code || 'that code'}.</h1>
+        <p className="mt-3 max-w-2xl text-lg">
           In this prototype a check lives in the browser where it started, with no account and no
           server. Open the link in that same browser, or start a check of your own.
         </p>
-        <div className="mt-10 space-y-3">
-          <Button onClick={() => navigate('/')}>Go to the start</Button>
+        <div className="mt-8">
+          <Button full={false} onClick={() => navigate('/')}>
+            Go to the start
+          </Button>
         </div>
       </Page>
     )
@@ -52,14 +54,26 @@ export function Join({ code, check, save }: Props) {
       if (name.trim()) setStep(0)
     }
     return (
-      <Page>
-        <form onSubmit={start} className="flex flex-1 flex-col justify-center py-10">
-          <LogoMark size="lg" />
-          <h1 className="mt-8 text-3xl font-extrabold leading-tight sm:text-4xl">
+      <Page
+        aside={
+          <Guide
+            eyebrow="Your part"
+            title="Four quick questions, about 3 minutes."
+            steps={STEP_LABELS}
+          >
+            Then we put your answers next to {starter}'s.
+          </Guide>
+        }
+      >
+        <form onSubmit={start} className="fp-card flex flex-col p-6 sm:p-8">
+          <LogoMark />
+          <h1 className="mt-5 text-[28px] leading-tight">
             {starter} started a readiness check for your household.
           </h1>
-          <p className="mt-3 text-lg">Four quick questions about money and schedule. No account.</p>
-          <label htmlFor="partner-name" className="mb-2 mt-10 block font-semibold text-navy">
+          <p className="mt-2 text-muted">
+            Four quick questions about money and schedule. No account.
+          </p>
+          <label htmlFor="partner-name" className="mb-2 mt-8 block font-semibold text-navy">
             Your first name
           </label>
           <input
@@ -68,10 +82,10 @@ export function Join({ code, check, save }: Props) {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Alex"
             autoComplete="given-name"
-            className="min-h-[56px] w-full rounded-card border-2 border-line bg-white px-5 text-lg text-navy focus:border-teal focus:outline-none"
+            className="fp-input min-h-[50px] w-full max-w-md px-4"
           />
-          <div className="mt-8">
-            <Button type="submit" disabled={!name.trim()}>
+          <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
+            <Button type="submit" full={false} disabled={!name.trim()}>
               Start
             </Button>
           </div>
@@ -91,21 +105,32 @@ export function Join({ code, check, save }: Props) {
   }
 
   return (
-    <Page>
+    <Page
+      aside={
+        <Guide
+          eyebrow="Your part"
+          title="Four quick questions, about 3 minutes."
+          steps={STEP_LABELS}
+          current={step}
+        >
+          Then we put your answers next to {starter}'s.
+        </Guide>
+      }
+    >
       <TopBar onBack={() => setStep(step - 1)} />
-      <Progress current={step + 1} total={STEPS.length} />
-      <form onSubmit={next} className="flex flex-1 flex-col">
-        <h1 className="text-3xl font-extrabold leading-tight">{SHARED_TITLES[id].title}</h1>
-        {SHARED_TITLES[id].help && <p className="mt-2">{SHARED_TITLES[id].help}</p>}
-        <div className="mt-8">
+      <form onSubmit={next} className="fp-card flex flex-col p-6 sm:p-8">
+        <Progress current={step + 1} total={STEPS.length} />
+        <h1 className="text-[28px] leading-tight">{SHARED_TITLES[id].title}</h1>
+        {SHARED_TITLES[id].help && <p className="mt-2 text-muted">{SHARED_TITLES[id].help}</p>}
+        <div className="mt-6 max-w-[640px]">
           <SharedQuestion
             id={id}
             answers={answers}
             onChange={(p) => setAnswers({ ...answers, ...p })}
           />
         </div>
-        <div className="mt-auto pt-10">
-          <Button type="submit" disabled={!canNext}>
+        <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
+          <Button type="submit" full={false} disabled={!canNext}>
             {step === STEPS.length - 1 ? 'See what we both said' : 'Next'}
           </Button>
         </div>
