@@ -148,16 +148,32 @@
         text-decoration: none;
         box-shadow: 0 8px 28px rgba(20, 45, 78, 0.07);
         transition:
-          transform 0.15s,
-          border-color 0.15s;
+          transform 0.18s ease-out,
+          box-shadow 0.18s ease-out,
+          border-color 0.18s ease-out;
+        animation: rise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .card:nth-child(2) {
+        animation-delay: 0.07s;
+      }
+      .card:nth-child(3) {
+        animation-delay: 0.14s;
+      }
+      .card:active {
+        transform: translateY(0);
       }
       .card.orange {
         border-top-color: var(--orange);
       }
       .card:hover,
       .card:focus-visible {
-        transform: translateY(-2px);
+        transform: translateY(-3px);
         border-color: var(--teal);
+        box-shadow: 0 16px 36px rgba(20, 45, 78, 0.12);
+      }
+      .card:hover .go-arrow,
+      .card:focus-visible .go-arrow {
+        transform: translateX(4px);
       }
       .card.orange:hover,
       .card.orange:focus-visible {
@@ -207,6 +223,29 @@
         font-weight: 800;
         letter-spacing: 0.07em;
         text-transform: uppercase;
+      }
+      .go-arrow {
+        display: inline-block;
+        transition: transform 0.2s ease-out;
+      }
+      .hero {
+        animation: rise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      /* Things rise a few pixels and fade in, like the prototypes */
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 1ms !important;
+        }
       }
       .go {
         margin-top: auto;
@@ -272,7 +311,7 @@
             <span class="label">Try</span> Start a check as Priya, share it with Marcus, and get
             your verdict.
           </p>
-          <span class="go">Open Shared Check &rarr;</span>
+          <span class="go">Open Shared Check <span class="go-arrow">&rarr;</span></span>
         </a>
 
         <a class="card orange" href="b/">
@@ -294,7 +333,7 @@
           <p>
             <span class="label">Try</span> Review a pending introduction, then look at membership.
           </p>
-          <span class="go">Open Pro Network &rarr;</span>
+          <span class="go">Open Pro Network <span class="go-arrow">&rarr;</span></span>
         </a>
 
         <a class="card" href="c/">
@@ -317,7 +356,7 @@
             <span class="label">Try</span> Open an upcoming visit as the counselor, then request a
             check for an applicant.
           </p>
-          <span class="go">Open Shelter Hand-off &rarr;</span>
+          <span class="go">Open Shelter Hand-off <span class="go-arrow">&rarr;</span></span>
         </a>
       </div>
 

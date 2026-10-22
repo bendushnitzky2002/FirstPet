@@ -119,7 +119,7 @@ const bigStyle = {
 
 export function VerdictBlock({ verdict, who }: { verdict: Verdict; who: 'adopter' | 'counselor' }) {
   return (
-    <section className={`rounded-card border-2 p-5 sm:p-6 ${bigStyle[verdict.kind]}`}>
+    <section className={`fp-reveal rounded-card border-2 p-5 sm:p-6 ${bigStyle[verdict.kind]}`}>
       <p className="text-sm font-bold uppercase tracking-wide text-body/80">
         {who === 'adopter' ? 'Your result' : 'Readiness result'}
       </p>

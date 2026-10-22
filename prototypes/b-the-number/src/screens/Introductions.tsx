@@ -53,12 +53,13 @@ export function Introductions({ state, save }: Props) {
         <div className="min-w-0 space-y-5">
           {lastIntro && lastDecision && (
             <div
+              key={`${lastIntro.id}-${lastDecision.kind}`}
               role="status"
-              className="flex flex-wrap items-center justify-between gap-3 rounded-[11px] border border-line bg-white px-5 py-3 shadow-card"
+              className="fp-reveal flex flex-wrap items-center justify-between gap-3 rounded-[11px] border border-line bg-white px-5 py-3 shadow-card"
             >
               <p className="flex items-center gap-2 text-sm">
                 <span className="fp-icon-teal h-7 w-7 shrink-0" aria-hidden="true">
-                  <CheckIcon className="h-4 w-4" />
+                  <CheckIcon className="fp-pop h-4 w-4" />
                 </span>
                 {lastDecision.kind === 'accepted' ? (
                   <span>
@@ -124,7 +125,7 @@ export function Introductions({ state, save }: Props) {
 
         <aside className="space-y-5 lg:sticky lg:top-24">
           {accepted > 0 && (
-            <section className="fp-hero p-6">
+            <section className="fp-hero fp-enter p-6">
               <span className="fp-eyebrow text-[#90D2D0]">Membership</span>
               <h2 className="text-lg leading-snug text-white">
                 Want introductions like {accepted === 1 ? 'this' : 'these'} all year?

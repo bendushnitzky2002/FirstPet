@@ -39,7 +39,7 @@ export function Membership({ state, save }: Props) {
     const tier = state.joins[joined].tier
     const plan = PLANS.find((p) => p.tier === tier)
     return (
-      <div className="max-w-2xl pt-10">
+      <div className="fp-stagger max-w-2xl pt-10">
         <span className="fp-icon-teal h-12 w-12" aria-hidden="true">
           <CheckIcon className="h-6 w-6" />
         </span>
@@ -106,9 +106,9 @@ export function Membership({ state, save }: Props) {
         rather pay.
       </PageHead>
 
-      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="fp-enter grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0">
-          <div className="grid items-stretch gap-5 md:grid-cols-2">
+          <div className="fp-stagger grid items-stretch gap-5 md:grid-cols-2">
             {PLANS.map((plan) => (
               <section
                 key={plan.tier}

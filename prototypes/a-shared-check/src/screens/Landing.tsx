@@ -111,7 +111,7 @@ export function Landing({ check, onStart, onSeed, onReset }: Props) {
         )}
       </section>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+      <div className="fp-stagger mt-5 grid gap-4 sm:grid-cols-3">
         {[
           [
             'Local cost',

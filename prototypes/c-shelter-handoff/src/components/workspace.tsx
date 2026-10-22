@@ -142,7 +142,7 @@ export function Workspace({ section, children }: { section: Section; children: R
             </button>
           ))}
         </nav>
-        <main className="fp-page">{children}</main>
+        <main className="fp-page fp-enter">{children}</main>
       </div>
     </div>
   )

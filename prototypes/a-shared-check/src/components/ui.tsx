@@ -27,11 +27,11 @@ export function Page({
       <main className="fp-page pb-24">
         {aside ? (
           <div className="fp-layout pt-8 sm:pt-10">
-            <div className="flex min-w-0 flex-col">{children}</div>
-            <aside className="space-y-4 lg:sticky lg:top-24">{aside}</aside>
+            <div className="fp-enter flex min-w-0 flex-col">{children}</div>
+            <aside className="fp-enter fp-delay-1 space-y-4 lg:sticky lg:top-24">{aside}</aside>
           </div>
         ) : (
-          <div className="flex flex-col pt-8 sm:pt-10">{children}</div>
+          <div className="fp-enter flex flex-col pt-8 sm:pt-10">{children}</div>
         )}
       </main>
     </div>
@@ -124,9 +124,9 @@ export function Guide({
           return (
             <li key={label} className="flex items-center gap-3">
               <span
-                className={`fp-guide-num ${here ? 'bg-orange text-white' : done ? 'bg-teal text-white' : ''}`}
+                className={`fp-guide-num transition-colors duration-300 ${here ? 'bg-orange text-white' : done ? 'bg-teal text-white' : ''}`}
               >
-                {done ? <CheckIcon className="h-3.5 w-3.5" /> : i + 1}
+                {done ? <CheckIcon className="fp-pop h-3.5 w-3.5" /> : i + 1}
               </span>
               <span className={`text-sm ${here ? 'font-bold text-white' : ''}`}>{label}</span>
             </li>
@@ -225,7 +225,7 @@ export function OptionButton({
           selected ? 'border-teal bg-teal text-white' : 'border-line bg-white'
         }`}
       >
-        {selected && <CheckIcon className="h-4 w-4" />}
+        {selected && <CheckIcon className="fp-pop h-4 w-4" />}
       </span>
       {children}
     </button>
@@ -246,7 +246,7 @@ export function Progress({ current, total }: { current: number; total: number })
         aria-valuenow={current}
       >
         <div
-          className="h-full rounded-full bg-orange transition-all"
+          className="fp-bar h-full rounded-full bg-orange"
           style={{ width: `${(current / total) * 100}%` }}
         />
       </div>

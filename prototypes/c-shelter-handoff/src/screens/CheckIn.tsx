@@ -143,10 +143,12 @@ export function CheckIn({ id }: { id: string }) {
       </button>
       <section className="fp-card mt-2 flex flex-col p-6 sm:p-8">
         <Progress current={step + 1} total={steps.length} />
-        <h1 className="text-[28px] leading-tight">{s.title}</h1>
-        {s.hint && <p className="mt-2 text-muted">{s.hint}</p>}
+        <div key={`title-${step}`} className="fp-step">
+          <h1 className="text-[28px] leading-tight">{s.title}</h1>
+          {s.hint && <p className="mt-2 text-muted">{s.hint}</p>}
+        </div>
 
-        <div className="mt-6 max-w-[640px] space-y-3">
+        <div key={`body-${step}`} className="fp-step mt-6 max-w-[640px] space-y-3">
           {step === 0 &&
             going.map((o) => (
               <OptionButton key={o} selected={c.going === o} onClick={() => set({ going: o })}>

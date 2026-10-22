@@ -147,9 +147,11 @@ export function Questions({ check, save }: Props) {
       <TopBar onBack={back} />
       <form onSubmit={onSubmit} className="fp-card flex flex-col p-6 sm:p-8">
         <Progress current={step + 1} total={STEPS.length} />
-        <h1 className="text-[28px] leading-tight">{title}</h1>
-        {help && <p className="mt-2 text-muted">{help}</p>}
-        <div className="mt-6 max-w-[640px]">{body}</div>
+        <div key={step} className="fp-step">
+          <h1 className="text-[28px] leading-tight">{title}</h1>
+          {help && <p className="mt-2 text-muted">{help}</p>}
+          <div className="mt-6 max-w-[640px]">{body}</div>
+        </div>
         <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
           <Button type="submit" full={false} disabled={!canNext}>
             {step === STEPS.length - 1 ? 'Done' : 'Next'}

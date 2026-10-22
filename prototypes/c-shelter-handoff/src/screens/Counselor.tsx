@@ -127,7 +127,7 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="fp-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Metric label="Checks before a visit" value={rows.length} />
         <Metric label="Ready" value={counts.ready} />
         <Metric label="Ready once" value={counts['ready-once']} />

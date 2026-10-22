@@ -28,7 +28,7 @@ export function Landing() {
           </p>
         </section>
 
-        <div className="mt-5 grid gap-5 md:grid-cols-2">
+        <div className="fp-stagger mt-5 grid gap-5 md:grid-cols-2">
           <Door
             onClick={() => navigate('/start')}
             icon={<HomeIcon />}
@@ -86,7 +86,7 @@ function Door({
     <button
       type="button"
       onClick={onClick}
-      className="fp-card flex w-full items-center gap-4 p-6 text-left transition hover:-translate-y-px hover:border-teal"
+      className="fp-card fp-lift flex w-full items-center gap-4 p-6 text-left hover:border-teal"
     >
       <span className={tone === 'teal' ? 'fp-icon-teal' : 'fp-icon-orange'}>{icon}</span>
       <span className="min-w-0 flex-1">
