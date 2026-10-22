@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { PetCard, StepRail } from '../components/shelter'
-import { Button, CheckIcon, LogoMark, OptionButton, Page, Progress } from '../components/ui'
+import { Button, CheckIcon, Guide, OptionButton, Page, Progress } from '../components/ui'
 import { reviewCheckIn } from '../data/checkin'
 import { getPet, shelter } from '../data/shelter'
 import { navigate } from '../lib/router'
@@ -60,26 +60,22 @@ export function CheckIn({ id }: { id: string }) {
 
   if (step === -1) {
     return (
-      <Page>
-        <div className="flex items-center gap-3">
-          <LogoMark />
-          <p className="font-heading font-extrabold text-navy">{shelter.name}</p>
-        </div>
-        <h1 className="mt-6 text-3xl font-extrabold leading-tight">
+      <Page aside={<PetCard pet={pet} compact />}>
+        <span className="fp-eyebrow">{shelter.name}</span>
+        <h1 className="text-[28px] leading-tight sm:text-[34px]">
           Hi {firstName}. It's been two weeks with {pet.name}.
         </h1>
         <p className="mt-2 text-lg">
           Six quick questions so {shelter.short} can help early if something is hard. About 2
           minutes.
         </p>
-        <div className="mt-6">
+        <section className="fp-card mt-6 p-6">
           <StepRail current={4} />
-        </div>
+        </section>
         <div className="mt-6">
-          <PetCard pet={pet} compact />
-        </div>
-        <div className="mt-8">
-          <Button onClick={() => setStep(0)}>Start the check-in</Button>
+          <Button full={false} onClick={() => setStep(0)}>
+            Start the check-in
+          </Button>
         </div>
       </Page>
     )
@@ -119,7 +115,25 @@ export function CheckIn({ id }: { id: string }) {
   }
 
   return (
-    <Page>
+    <Page
+      aside={
+        <Guide
+          eyebrow={`Week two with ${pet.name}`}
+          title="Six quick questions, about 2 minutes."
+          steps={[
+            'How it is going',
+            'Hours alone',
+            'Surprise costs',
+            'Daily care',
+            'Returning',
+            'Help',
+          ]}
+          current={step}
+        >
+          Your answers go to {shelter.short} so they can help early.
+        </Guide>
+      }
+    >
       <button
         type="button"
         onClick={() => setStep(step - 1)}
@@ -127,79 +141,83 @@ export function CheckIn({ id }: { id: string }) {
       >
         Back
       </button>
-      <div className="mt-2">
+      <section className="fp-card mt-2 flex flex-col p-6 sm:p-8">
         <Progress current={step + 1} total={steps.length} />
-      </div>
-      <h1 className="text-3xl font-extrabold leading-tight">{s.title}</h1>
-      {s.hint && <p className="mt-2">{s.hint}</p>}
+        <h1 className="text-[28px] leading-tight">{s.title}</h1>
+        {s.hint && <p className="mt-2 text-muted">{s.hint}</p>}
 
-      <div className="mt-6 flex-1 space-y-3">
-        {step === 0 &&
-          going.map((o) => (
-            <OptionButton key={o} selected={c.going === o} onClick={() => set({ going: o })}>
-              {o}
-            </OptionButton>
-          ))}
-        {step === 1 && (
-          <HoursSlider
-            value={c.hoursAlone ?? a.answers.hoursAlone}
-            onChange={(v) => set({ hoursAlone: v })}
-          />
-        )}
-        {step === 2 &&
-          surprise.map((o) => (
-            <OptionButton
-              key={o}
-              selected={c.surpriseCost === o}
-              onClick={() => set({ surpriseCost: o })}
-            >
-              {o}
-            </OptionButton>
-          ))}
-        {step === 3 &&
-          holding.map((o) => (
-            <OptionButton
-              key={o}
-              selected={c.careHolding === o}
-              onClick={() => set({ careHolding: o })}
-            >
-              {o}
-            </OptionButton>
-          ))}
-        {step === 4 &&
-          returning.map((o) => (
-            <OptionButton
-              key={o}
-              selected={c.returnThought === o}
-              onClick={() => set({ returnThought: o })}
-            >
-              {o}
-            </OptionButton>
-          ))}
-        {step === 5 &&
-          help.map((o) => {
-            const picked = c.helpWith ?? []
-            const on = picked.includes(o)
-            return (
+        <div className="mt-6 max-w-[640px] space-y-3">
+          {step === 0 &&
+            going.map((o) => (
+              <OptionButton key={o} selected={c.going === o} onClick={() => set({ going: o })}>
+                {o}
+              </OptionButton>
+            ))}
+          {step === 1 && (
+            <HoursSlider
+              value={c.hoursAlone ?? a.answers.hoursAlone}
+              onChange={(v) => set({ hoursAlone: v })}
+            />
+          )}
+          {step === 2 &&
+            surprise.map((o) => (
               <OptionButton
                 key={o}
-                multi
-                selected={on}
-                onClick={() =>
-                  set({ helpWith: on ? picked.filter((x) => x !== o) : [...picked, o] })
-                }
+                selected={c.surpriseCost === o}
+                onClick={() => set({ surpriseCost: o })}
               >
                 {o}
               </OptionButton>
-            )
-          })}
-      </div>
+            ))}
+          {step === 3 &&
+            holding.map((o) => (
+              <OptionButton
+                key={o}
+                selected={c.careHolding === o}
+                onClick={() => set({ careHolding: o })}
+              >
+                {o}
+              </OptionButton>
+            ))}
+          {step === 4 &&
+            returning.map((o) => (
+              <OptionButton
+                key={o}
+                selected={c.returnThought === o}
+                onClick={() => set({ returnThought: o })}
+              >
+                {o}
+              </OptionButton>
+            ))}
+          {step === 5 &&
+            help.map((o) => {
+              const picked = c.helpWith ?? []
+              const on = picked.includes(o)
+              return (
+                <OptionButton
+                  key={o}
+                  multi
+                  selected={on}
+                  onClick={() =>
+                    set({ helpWith: on ? picked.filter((x) => x !== o) : [...picked, o] })
+                  }
+                >
+                  {o}
+                </OptionButton>
+              )
+            })}
+        </div>
 
-      <div className="mt-8">
-        <Button disabled={!s.ok} onClick={() => (last ? submit() : setStep(step + 1))}>
-          {last ? `Send to ${shelter.short}` : 'Next'}
-        </Button>
-      </div>
+        <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
+          <Button
+            full={false}
+            disabled={!s.ok}
+            onClick={() => (last ? submit() : setStep(step + 1))}
+          >
+            {last ? `Send to ${shelter.short}` : 'Next'}
+          </Button>
+        </div>
+      </section>
     </Page>
   )
 }
@@ -215,7 +233,7 @@ function Thanks({ id }: { id: string }) {
         <span className="fp-icon-teal h-14 w-14">
           <CheckIcon className="h-7 w-7" />
         </span>
-        <h1 className="mt-6 text-3xl font-extrabold leading-tight">
+        <h1 className="mt-6 text-[28px] leading-tight sm:text-[34px]">
           Thanks. {shelter.short} will see this today.
         </h1>
         <p className="mt-2 text-lg">
@@ -226,7 +244,7 @@ function Thanks({ id }: { id: string }) {
               : `It sounds like ${pet.name} is settling in. Give them a scratch from us.`}
         </p>
         <div className="mt-8">
-          <Button onClick={() => navigate(`/counselor/a/${id}`)}>
+          <Button full={false} onClick={() => navigate(`/counselor/a/${id}`)}>
             See what the counselor sees
           </Button>
         </div>

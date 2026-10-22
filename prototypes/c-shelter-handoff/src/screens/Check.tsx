@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BackLink, Button, OptionButton, Page, Progress } from '../components/ui'
+import { BackLink, Button, Guide, OptionButton, Page, Progress } from '../components/ui'
 import { getPet, type Pet } from '../data/shelter'
 import { navigate } from '../lib/router'
 import { newId, setState, useStore } from '../lib/storage'
@@ -36,6 +36,17 @@ const steps: Step[] = [
   { key: 'worries', title: () => 'What worries you most?', hint: () => 'Pick any, or none.' },
 ]
 
+const stepLabels = [
+  'Your name',
+  'Who lives with you',
+  'Own or rent',
+  'Hours alone',
+  'Daily care',
+  'When you travel',
+  'A surprise vet bill',
+  'Worries',
+]
+
 const options: Partial<Record<keyof Answers, string[]>> = {
   household: ['Just me', 'Me and a partner', 'Family with kids', 'Roommates'] satisfies Household[],
   home: [
@@ -60,9 +71,11 @@ export function Check() {
   if (!draft) {
     return (
       <Page>
-        <h1 className="text-3xl font-extrabold">There's no check in progress.</h1>
+        <h1 className="text-[28px]">There's no check in progress.</h1>
         <div className="mt-6">
-          <Button onClick={() => navigate('/start')}>Start the check</Button>
+          <Button full={false} onClick={() => navigate('/start')}>
+            Start the check
+          </Button>
         </div>
       </Page>
     )
@@ -130,24 +143,34 @@ export function Check() {
   const last = draft.step === steps.length - 1
 
   return (
-    <Page>
+    <Page
+      aside={
+        <Guide
+          eyebrow={`Readiness check for ${pet.name}`}
+          title="Eight questions, about 5 minutes."
+          steps={stepLabels}
+          current={draft.step}
+        >
+          Next: your result and a first-year cost, sent to your counselor.
+        </Guide>
+      }
+    >
       <BackLink onClick={() => (draft.step === 0 ? navigate('/start') : go(-1))}>Back</BackLink>
-      <div className="mt-2">
+      <section className="fp-card mt-2 flex flex-col p-6 sm:p-8">
         <Progress current={draft.step + 1} total={steps.length} />
-      </div>
+        <h1 className="text-[28px] leading-tight">{step.title(pet)}</h1>
+        {step.hint && <p className="mt-2 text-muted">{step.hint(pet)}</p>}
 
-      <h1 className="text-3xl font-extrabold leading-tight">{step.title(pet)}</h1>
-      {step.hint && <p className="mt-2">{step.hint(pet)}</p>}
+        <div className="mt-6 max-w-[640px] space-y-3">
+          <Field step={step} answers={a} set={set} />
+        </div>
 
-      <div className="mt-6 flex-1 space-y-3">
-        <Field step={step} answers={a} set={set} />
-      </div>
-
-      <div className="mt-8">
-        <Button disabled={!answered} onClick={() => (last ? finish() : go(1))}>
-          {last ? 'See my result' : 'Next'}
-        </Button>
-      </div>
+        <div className="mt-8 flex justify-end border-t border-[#EDF0F3] pt-6">
+          <Button full={false} disabled={!answered} onClick={() => (last ? finish() : go(1))}>
+            {last ? 'See my result' : 'Next'}
+          </Button>
+        </div>
+      </section>
     </Page>
   )
 }
@@ -240,7 +263,7 @@ function TextField({
         setV(e.target.value)
         onChange(e.target.value)
       }}
-      className="w-full rounded-card border-2 border-line bg-white px-5 py-4 text-lg font-semibold text-navy outline-none placeholder:font-normal placeholder:text-body/50 focus:border-teal"
+      className="fp-input min-h-[50px] w-full px-4 text-base font-semibold placeholder:font-normal placeholder:text-body/50"
     />
   )
 }

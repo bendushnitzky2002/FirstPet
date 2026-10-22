@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { ChevronRight, ClipboardIcon, HomeIcon, LogoMark, Page, SampleNote } from '../components/ui'
+import { StepRail } from '../components/shelter'
+import { ChevronRight, ClipboardIcon, HomeIcon, Page, SampleNote } from '../components/ui'
 import { demoApplicants, sampleApplicants, sampleRequests } from '../data/seed'
 import { shelter } from '../data/shelter'
 import { navigate } from '../lib/router'
@@ -11,24 +12,23 @@ export function Landing() {
   return (
     <Page>
       <div className="flex flex-1 flex-col justify-center">
-        <section className="fp-hero p-6 sm:p-8">
+        <section className="fp-hero flex min-h-[280px] flex-col justify-center p-6 sm:p-10">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border border-white/10"
+            className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full border border-white/10"
           />
-          <LogoMark size="lg" />
-          <p className="fp-eyebrow mt-6 text-[#90D2D0]">FirstPet for shelters</p>
-          <h1 className="text-4xl leading-tight text-white">
+          <p className="fp-eyebrow text-[#90D2D0]">FirstPet for shelters</p>
+          <h1 className="max-w-[680px] text-4xl leading-tight text-white sm:text-5xl">
             The readiness check is step one of adoption.
           </h1>
-          <p className="mt-3 text-lg text-[#B9CAD3]">
+          <p className="mt-4 max-w-[680px] text-lg text-[#B9CAD3]">
             Shelters send adopters a free 5-minute check before they visit. Counselors see each
             upcoming visit with the result and anything missing, then a check-in two weeks after the
             pet goes home.
           </p>
         </section>
 
-        <div className="mt-8 space-y-3">
+        <div className="mt-5 grid gap-5 md:grid-cols-2">
           <Door
             onClick={() => navigate('/start')}
             icon={<HomeIcon />}
@@ -45,7 +45,14 @@ export function Landing() {
           />
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-2">
+        <section className="fp-card mt-5 p-6">
+          <span className="fp-eyebrow">How adoption works at {shelter.short}</span>
+          <div className="mt-3">
+            <StepRail current={0} />
+          </div>
+        </section>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
           <SampleNote>
             {shelter.name}, its pets, and its adopters are samples. Nothing leaves this browser.
           </SampleNote>
@@ -79,7 +86,7 @@ function Door({
     <button
       type="button"
       onClick={onClick}
-      className="fp-card flex w-full items-center gap-4 p-5 text-left transition hover:-translate-y-px hover:border-teal"
+      className="fp-card flex w-full items-center gap-4 p-6 text-left transition hover:-translate-y-px hover:border-teal"
     >
       <span className={tone === 'teal' ? 'fp-icon-teal' : 'fp-icon-orange'}>{icon}</span>
       <span className="min-w-0 flex-1">

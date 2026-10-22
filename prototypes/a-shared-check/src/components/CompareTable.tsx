@@ -10,19 +10,25 @@ export function CompareTable({ check, compact = false }: { check: Check; compact
   const cols = solo ? 'grid-cols-1' : 'grid-cols-2'
 
   return (
-    <div>
+    <div className={compact ? '' : 'fp-card overflow-hidden'}>
       <div
-        className={`grid ${cols} gap-3 px-1 pb-3 ${compact ? '' : 'sticky top-0 z-10 bg-canvas pt-3'}`}
+        className={`grid ${cols} gap-3 ${compact ? 'px-1 pb-3' : 'border-b border-[#EDF0F3] bg-[#F7F9FA] px-5 py-3 sm:px-6'}`}
       >
         <NameHead name={check.starter.name} tone="teal" />
         {!solo && <NameHead name={partnerName} tone="orange" muted={!check.partner?.done} />}
       </div>
 
-      <ul className={compact ? 'divide-y divide-line border-y border-line' : 'space-y-3'}>
+      <ul
+        className={
+          compact ? 'divide-y divide-line border-y border-line' : 'divide-y divide-[#EDF0F3]'
+        }
+      >
         {rows.map((r) => (
-          <li key={r.id} className={compact ? 'py-3' : 'fp-card p-4 sm:p-5'}>
+          <li key={r.id} className={compact ? 'py-3' : 'px-5 py-4 sm:px-6'}>
             <div className="mb-2 flex items-center justify-between gap-3">
-              <p className="text-sm font-bold uppercase tracking-wide text-body">{r.label}</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.08em] text-muted">
+                {r.label}
+              </p>
               {r.status === 'match' && (
                 <span className="inline-flex items-center gap-1 text-sm font-semibold text-teal">
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-teal-light">
@@ -32,7 +38,7 @@ export function CompareTable({ check, compact = false }: { check: Check; compact
                 </span>
               )}
               {r.status === 'differ' && (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-orange px-3 py-1 text-sm font-bold text-navy">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-peach px-3 py-1 text-xs font-extrabold text-orange-ink">
                   <ChatIcon /> Talk about this
                 </span>
               )}

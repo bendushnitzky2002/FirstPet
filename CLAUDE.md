@@ -76,6 +76,8 @@ The look follows Sala's Figma Make prototypes (Customer Persona, Shelter Workspa
 - **Buttons:** `fp-btn` plus `fp-btn-primary` (orange), `fp-btn-navy`, `fp-btn-secondary` (white with a border), or `fp-btn-light`. 8px radius, not pills.
 - **Labels:** `fp-eyebrow` for the small teal uppercase label above a heading, `fp-pill` for small uppercase pills.
 - **Cards and panels:** `fp-card` (12px radius, thin border, soft shadow); `fp-hero` for a navy gradient panel; `fp-note` and `fp-warning` for soft teal and peach panels; `fp-input` for text fields.
+- **Layout:** pages use the full 1180px frame like Sala's files, not a narrow column. Wrap content in `fp-page`; start a page with `fp-page-head` (eyebrow, h1, muted line, action on the right); use `fp-layout` for a main column plus a 340px side column on desktop. Side columns hold an `fp-guide` (navy card with numbered steps) or the page's secondary actions. Lists live in a panel: `fp-card` with an `fp-panel-head` and `fp-row` rows. Counts use `fp-metric` cards with a teal bottom strip.
+- **Shelter workspace (C):** the counselor pages use `Workspace` in `src/components/workspace.tsx`: a fixed 248px navy `fp-sidebar` with `fp-side-item` links and counts, and a white `fp-workbar` with "Viewing as" the shelter. Below `lg` the sidebar turns into a tab row.
 - **Icons:** in small rounded tiles. Use `fp-icon-teal` or `fp-icon-orange` around an inline SVG.
 - **Logo:** `packages/theme/logo.png`, imported as `@firstpet/theme/logo.png`: the orange paw mark from Sala's files, a placeholder until the deck logo is dropped in.
 

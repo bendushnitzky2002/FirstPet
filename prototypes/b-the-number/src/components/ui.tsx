@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { PROFILE } from '../data/profile'
 import { navigate } from '../lib/router'
 
 const TABS = [
@@ -7,7 +8,8 @@ const TABS = [
   { path: '/membership', label: 'Membership' },
 ]
 
-// The pro side is a small dashboard: a header with three tabs.
+// The pro side is a small dashboard: a navy bar with the tabs inside it, as in
+// Sala's Customer Persona app, and the 1180px page frame.
 export function Shell({
   path,
   pending,
@@ -17,10 +19,29 @@ export function Shell({
   pending: number
   children: ReactNode
 }) {
+  const nav = (
+    <nav className="fp-nav-inline" aria-label="Main">
+      {TABS.map((t) => (
+        <button
+          key={t.path}
+          type="button"
+          onClick={() => navigate(t.path)}
+          aria-current={path === t.path ? 'page' : undefined}
+          className="fp-nav-tab"
+        >
+          {t.label}
+          {t.path === '/intros' && pending > 0 && (
+            <span className="rounded-full bg-orange px-2 text-xs text-navy">{pending}</span>
+          )}
+        </button>
+      ))}
+    </nav>
+  )
+
   return (
     <div className="min-h-screen">
       <header className="fp-topbar">
-        <div className="fp-topbar-inner max-w-3xl">
+        <div className="fp-topbar-inner">
           <button type="button" onClick={() => navigate('/')} className="fp-brand">
             <span className="fp-brand-mark" aria-hidden="true" />
             <span>
@@ -30,28 +51,21 @@ export function Shell({
               <span className="fp-brand-sub">For professionals</span>
             </span>
           </button>
+          <div className="ml-auto hidden h-full md:block">{nav}</div>
+          <span
+            className="ml-auto grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#D4E5E2] text-[11px] font-extrabold text-navy md:ml-4"
+            title={PROFILE.name}
+          >
+            {PROFILE.name
+              .split(' ')
+              .slice(0, 2)
+              .map((w) => w[0])
+              .join('')}
+          </span>
         </div>
-        <nav className="mx-auto flex max-w-3xl gap-1 px-2 sm:px-3" aria-label="Main">
-          {TABS.map((t) => {
-            const active = path === t.path
-            return (
-              <button
-                key={t.path}
-                type="button"
-                onClick={() => navigate(t.path)}
-                aria-current={active ? 'page' : undefined}
-                className="fp-nav-tab"
-              >
-                {t.label}
-                {t.path === '/intros' && pending > 0 && (
-                  <span className="rounded-full bg-orange px-2 text-xs text-navy">{pending}</span>
-                )}
-              </button>
-            )
-          })}
-        </nav>
+        <div className="overflow-x-auto px-2 md:hidden">{nav}</div>
       </header>
-      <main className="mx-auto w-full max-w-3xl px-4 pb-16 pt-6 sm:px-5 sm:pt-8">{children}</main>
+      <main className="fp-page">{children}</main>
     </div>
   )
 }
@@ -82,7 +96,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`min-h-[48px] px-6 py-2.5 text-base ${full ? 'w-full' : ''} ${styles}`}
+      className={`min-h-[44px] px-5 py-2 text-[15px] ${full ? 'w-full' : ''} ${styles}`}
     >
       {children}
     </button>
@@ -158,5 +172,29 @@ export function ScaleIcon({ className = 'h-5 w-5' }: { className?: string }) {
       <path d="M12 4v16M7 20h10M5 8h14" strokeLinecap="round" />
       <path d="M5 8 2.5 14h5L5 8ZM19 8l-2.5 6h5L19 8Z" strokeLinejoin="round" />
     </svg>
+  )
+}
+
+// Eyebrow, title and copy on the left, an action on the right.
+export function PageHead({
+  eyebrow,
+  title,
+  children,
+  action,
+}: {
+  eyebrow?: string
+  title: ReactNode
+  children?: ReactNode
+  action?: ReactNode
+}) {
+  return (
+    <div className="fp-page-head">
+      <div className="min-w-0">
+        {eyebrow && <span className="fp-eyebrow">{eyebrow}</span>}
+        <h1>{title}</h1>
+        {children && <p>{children}</p>}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
   )
 }

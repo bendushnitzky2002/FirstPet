@@ -6,13 +6,15 @@ import { navigate } from '../lib/router'
 export function NotFound() {
   return (
     <Page>
-      <h1 className="text-3xl font-extrabold">We can't find that adopter.</h1>
-      <p className="mt-2 text-lg">
+      <h1 className="text-[28px]">We can't find that adopter.</h1>
+      <p className="mt-2 max-w-2xl text-lg">
         This prototype keeps everything in one browser, so links only open where the check was
         taken.
       </p>
       <div className="mt-6">
-        <Button onClick={() => navigate('/counselor')}>Go to upcoming visits</Button>
+        <Button full={false} onClick={() => navigate('/counselor')}>
+          Go to upcoming visits
+        </Button>
       </div>
     </Page>
   )

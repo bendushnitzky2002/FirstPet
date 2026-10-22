@@ -1,5 +1,13 @@
 import { useState } from 'react'
-import { Avatar, Button, CheckIcon, ChevronRight, SampleNote, VerdictChip } from '../components/ui'
+import {
+  Avatar,
+  Button,
+  CheckIcon,
+  ChevronRight,
+  Metric,
+  SampleNote,
+  VerdictChip,
+} from '../components/ui'
 import { missingBeforeVisit } from '../data/missing'
 import { getPet, pets, shelter } from '../data/shelter'
 import { decideVerdict } from '../data/verdict'
@@ -46,29 +54,44 @@ export function VisitsTab({
     ...requests.map((r) => ({ kind: 'request' as const, r })),
   ].sort((x, y) => rowTime(x).localeCompare(rowTime(y)))
 
+  const checked = upcoming(applicants)
+  const ready = checked.filter((a) => decideVerdict(a.answers, getPet(a.petId)).kind === 'ready')
+  const gaps = checked.filter((a) => missingBeforeVisit(a.answers, getPet(a.petId)).length > 0)
+
   return (
     <>
-      <p className="mt-6">
-        Every adopter gets a free readiness check before they visit. Here is who is coming in, how
-        ready they are, and what is still missing.
-      </p>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <Metric label="Visits coming up" value={rows.length} />
+        <Metric label="Check not done yet" value={requests.length} />
+        <Metric label="Ready" value={ready.length} />
+        <Metric label="Something missing" value={gaps.length} />
+      </div>
 
-      <RequestCheck />
+      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1.8fr)_minmax(300px,0.75fr)]">
+        <section className="fp-card overflow-hidden">
+          <div className="fp-panel-head">
+            <div>
+              <h2>Who is coming in</h2>
+              <p>Soonest first. Open one to see the full readiness summary.</p>
+            </div>
+          </div>
+          {rows.map((row) =>
+            row.kind === 'check' ? (
+              <CheckedVisit key={row.a.id} a={row.a} />
+            ) : (
+              <RequestedVisit key={row.r.id} r={row.r} />
+            ),
+          )}
+          {rows.length === 0 && (
+            <p className="p-6 text-center text-muted">No visits coming up. Request a check.</p>
+          )}
+        </section>
 
-      <section className="mt-6 space-y-3">
-        {rows.map((row) =>
-          row.kind === 'check' ? (
-            <CheckedVisit key={row.a.id} a={row.a} />
-          ) : (
-            <RequestedVisit key={row.r.id} r={row.r} />
-          ),
-        )}
-        {rows.length === 0 && (
-          <p className="fp-card p-6 text-center">No visits coming up. Request a check above.</p>
-        )}
-      </section>
-
-      <CounterLink />
+        <aside className="space-y-4">
+          <RequestCheck />
+          <CounterLink />
+        </aside>
+      </div>
     </>
   )
 }
@@ -86,7 +109,7 @@ function CheckedVisit({ a }: { a: Applicant }) {
     <button
       type="button"
       onClick={() => navigate(`/counselor/a/${a.id}`)}
-      className="fp-card block w-full p-4 text-left transition-colors hover:border-teal sm:p-5"
+      className="fp-row block px-5 py-4 sm:px-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-2">
         <When iso={a.visitAt} />
@@ -129,7 +152,7 @@ function RequestedVisit({ r }: { r: CheckRequest }) {
   const pet = getPet(r.petId)
   const [copied, setCopied] = useState(false)
   return (
-    <div className="fp-card border-dashed p-4 sm:p-5">
+    <div className="border-b border-[#EDF0F3] bg-[#FCFDFD] px-5 py-4 last:border-b-0 sm:px-6">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <When iso={r.visitAt} />
         <span className="rounded-full border border-line bg-white px-3 py-1 text-xs font-bold">
@@ -203,24 +226,25 @@ function RequestCheck() {
     setName('')
   }
 
-  const field = 'fp-input px-4'
+  const field = 'fp-input min-w-0 px-3 text-sm'
 
   return (
-    <section className="fp-card mt-4 p-5">
-      <h2 className="text-lg font-extrabold">Request a check before a visit</h2>
-      <div className="mt-3 grid gap-2 sm:grid-cols-[1.4fr_1fr_1fr_0.8fr_auto]">
+    <section className="fp-card p-5">
+      <h2 className="text-base">Request a check before a visit</h2>
+      <p className="mt-0.5 text-[13px] text-muted">We copy a personal link for the adopter.</p>
+      <div className="mt-4 grid grid-cols-2 gap-2">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Adopter's name"
           aria-label="Adopter's name"
-          className={field}
+          className={`${field} col-span-2`}
         />
         <select
           value={petId}
           onChange={(e) => setPetId(e.target.value)}
           aria-label="Pet they want to meet"
-          className={field}
+          className={`${field} col-span-2`}
         >
           {available.map((p) => (
             <option key={p.id} value={p.id}>
@@ -242,9 +266,11 @@ function RequestCheck() {
           aria-label="Visit time"
           className={field}
         />
-        <Button size="sm" full={false} disabled={!name.trim() || !date} onClick={request}>
-          Request a check
-        </Button>
+        <div className="col-span-2">
+          <Button size="sm" disabled={!name.trim() || !date} onClick={request}>
+            Request a check
+          </Button>
+        </div>
       </div>
       {sent && (
         <p className="mt-3 rounded-xl bg-teal-light px-4 py-3 text-sm">
@@ -264,29 +290,30 @@ export function CounterLink() {
   const [copied, setCopied] = useState(false)
   const url = linkTo('/start')
   return (
-    <section className="mt-6 flex flex-col gap-3 rounded-card bg-canvas p-5 sm:flex-row sm:items-center">
-      <div className="min-w-0 flex-1">
-        <h2 className="text-base font-extrabold">For walk-ins and your website</h2>
-        <p className="text-sm">One link for everyone. Results show up here.</p>
-        <p className="mt-2 truncate rounded-lg bg-white px-3 py-2 font-mono text-xs text-navy">
-          {url}
-        </p>
-      </div>
-      <div className="flex shrink-0 gap-2">
-        <Button
-          size="sm"
-          variant="secondary"
-          full={false}
+    <section className="fp-guide">
+      <span className="fp-eyebrow text-[#90D2D0]">For walk-ins and your website</span>
+      <h2 className="text-base leading-snug">One link for everyone. Results show up here.</h2>
+      <p className="mt-3 truncate rounded-lg bg-white/10 px-3 py-2 font-mono text-xs text-white">
+        {url}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="fp-btn fp-btn-light min-h-[38px] px-3 text-sm"
           onClick={async () => {
             await copyText(url)
             setCopied(true)
           }}
         >
           {copied ? 'Copied' : 'Copy link'}
-        </Button>
-        <Button size="sm" variant="secondary" full={false} onClick={() => navigate('/start')}>
+        </button>
+        <button
+          type="button"
+          className="fp-btn min-h-[38px] border-white/20 px-3 text-sm text-white hover:bg-white/10"
+          onClick={() => navigate('/start')}
+        >
           Open as an adopter
-        </Button>
+        </button>
       </div>
     </section>
   )
@@ -297,7 +324,7 @@ export function UpgradeTeaser() {
     <button
       type="button"
       onClick={() => navigate('/counselor/plans')}
-      className="mt-6 flex w-full items-center gap-4 rounded-card border border-line bg-white p-5 text-left hover:border-teal"
+      className="fp-card flex w-full items-center gap-4 p-5 text-left hover:border-teal"
     >
       <span className="min-w-0 flex-1">
         <span className="block font-heading text-lg font-extrabold text-navy">
@@ -360,11 +387,7 @@ export function PlansTab() {
 
   return (
     <>
-      <p className="mt-6">
-        The readiness check, summaries, and check-ins are free for shelters. We never charge for an
-        adoption.
-      </p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-2">
         <section className="fp-card flex flex-col p-6">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xl font-extrabold">Free for shelters</h2>
