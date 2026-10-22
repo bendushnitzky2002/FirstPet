@@ -89,7 +89,7 @@ export function Membership({ state, save }: Props) {
 
   return (
     <>
-      <p className="font-heading text-sm font-bold uppercase tracking-wide text-teal">Membership</p>
+      <p className="fp-eyebrow">Membership</p>
       <h1 className="mt-1 text-3xl font-extrabold">One yearly membership. No fee per lead.</h1>
       <p className="mt-2 max-w-2xl">
         Members get every introduction in their area for the year. We never charge per household, so

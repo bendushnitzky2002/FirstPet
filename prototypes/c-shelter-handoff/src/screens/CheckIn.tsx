@@ -123,7 +123,7 @@ export function CheckIn({ id }: { id: string }) {
       <button
         type="button"
         onClick={() => setStep(step - 1)}
-        className="-ml-2 inline-flex h-10 w-fit items-center rounded-full px-2 text-sm font-semibold text-teal hover:bg-teal-light"
+        className="-ml-2 inline-flex h-10 w-fit items-center rounded-lg px-2 text-sm font-bold text-muted hover:text-teal"
       >
         Back
       </button>

@@ -11,18 +11,22 @@ export function Landing() {
   return (
     <Page>
       <div className="flex flex-1 flex-col justify-center">
-        <LogoMark size="lg" />
-        <p className="mt-6 font-heading text-sm font-bold uppercase tracking-wide text-teal">
-          FirstPet for shelters
-        </p>
-        <h1 className="mt-1 text-4xl font-extrabold leading-tight">
-          The readiness check is step one of adoption.
-        </h1>
-        <p className="mt-3 text-lg">
-          Shelters send adopters a free 5-minute check before they visit. Counselors see each
-          upcoming visit with the result and anything missing, then a check-in two weeks after the
-          pet goes home.
-        </p>
+        <section className="fp-hero p-6 sm:p-8">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border border-white/10"
+          />
+          <LogoMark size="lg" />
+          <p className="fp-eyebrow mt-6 text-[#90D2D0]">FirstPet for shelters</p>
+          <h1 className="text-4xl leading-tight text-white">
+            The readiness check is step one of adoption.
+          </h1>
+          <p className="mt-3 text-lg text-[#B9CAD3]">
+            Shelters send adopters a free 5-minute check before they visit. Counselors see each
+            upcoming visit with the result and anything missing, then a check-in two weeks after the
+            pet goes home.
+          </p>
+        </section>
 
         <div className="mt-8 space-y-3">
           <Door
@@ -75,7 +79,7 @@ function Door({
     <button
       type="button"
       onClick={onClick}
-      className="fp-card flex w-full items-center gap-4 p-5 text-left transition-colors hover:border-teal"
+      className="fp-card flex w-full items-center gap-4 p-5 text-left transition hover:-translate-y-px hover:border-teal"
     >
       <span className={tone === 'teal' ? 'fp-icon-teal' : 'fp-icon-orange'}>{icon}</span>
       <span className="min-w-0 flex-1">

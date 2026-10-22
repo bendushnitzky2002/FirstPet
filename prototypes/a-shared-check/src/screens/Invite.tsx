@@ -62,7 +62,7 @@ export function Invite({ check }: { check: Check }) {
           readOnly
           value={link}
           onFocus={(e) => e.target.select()}
-          className="mt-6 w-full truncate rounded-full border border-line bg-canvas px-4 py-3 text-center text-sm text-body"
+          className="mt-6 w-full truncate rounded-lg border border-line bg-canvas px-4 py-3 text-center text-sm text-body"
         />
         <div className="mt-3">
           <Button variant="secondary" onClick={copy}>

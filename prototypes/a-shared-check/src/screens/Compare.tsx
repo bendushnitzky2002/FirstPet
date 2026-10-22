@@ -20,9 +20,7 @@ export function Compare({ check, fromPartner }: { check: Check; fromPartner: boo
   return (
     <Page wide>
       <TopBar onBack={() => navigate(solo ? '/' : partnerDone ? '/' : '/invite')} />
-      <p className="text-sm font-bold uppercase tracking-wide text-teal">
-        {solo ? 'Your answers' : 'Side by side'}
-      </p>
+      <p className="fp-eyebrow">{solo ? 'Your answers' : 'Side by side'}</p>
       <h1 className="mt-1 text-3xl font-extrabold leading-tight sm:text-4xl">{title}</h1>
 
       {partnerDone && (

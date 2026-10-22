@@ -41,20 +41,26 @@ export function Landing({ check, onStart, onSeed, onReset }: Props) {
 
   return (
     <Page>
-      <div className="flex flex-1 flex-col justify-center py-10">
-        <LogoMark size="lg" />
-        <h1 className="mt-8 text-4xl font-extrabold leading-tight sm:text-5xl">
-          Are you ready for a pet?
-        </h1>
-        <p className="mt-4 text-lg">
-          A 10-minute check for your household. No account. The answer can be not yet.
-        </p>
+      <div className="flex flex-1 flex-col justify-center py-6 sm:py-10">
+        <section className="fp-hero p-6 sm:p-8">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full border border-white/10"
+          />
+          <LogoMark size="lg" />
+          <span className="fp-eyebrow mt-6 text-[#90D2D0]">Free readiness check</span>
+          <h1 className="text-4xl leading-tight text-white sm:text-5xl">
+            Are you ready for a pet?
+          </h1>
+          <p className="mt-4 text-lg text-[#B9CAD3]">
+            A 10-minute check for your household. No account. The answer can be not yet.
+          </p>
+          <div className="mt-8">
+            <Button onClick={onStart}>{check ? 'Start a new check' : 'Start the check'}</Button>
+          </div>
+        </section>
 
         {check && <ResumeCard check={check} onReset={onReset} />}
-
-        <div className="mt-10">
-          <Button onClick={onStart}>{check ? 'Start a new check' : 'Start the check'}</Button>
-        </div>
 
         <div className="mt-6 text-center">
           {!showCode ? (
@@ -77,12 +83,12 @@ export function Landing({ check, onStart, onSeed, onReset }: Props) {
                 onChange={(e) => setCode(normalizeCode(e.target.value))}
                 placeholder="6-character code"
                 autoComplete="off"
-                className="min-h-[48px] w-full rounded-full border-2 border-line bg-white px-5 text-center font-heading text-lg font-bold uppercase tracking-[0.3em] text-navy placeholder:text-sm placeholder:font-normal placeholder:tracking-normal focus:border-teal focus:outline-none"
+                className="fp-input min-h-[48px] w-full px-5 text-center font-heading text-lg font-bold uppercase tracking-[0.3em] text-navy placeholder:text-sm placeholder:font-normal placeholder:tracking-normal"
               />
               <button
                 type="submit"
                 disabled={code.length !== 6}
-                className="min-h-[48px] rounded-full bg-teal px-5 font-heading font-bold text-white disabled:bg-line disabled:text-body/60"
+                className="fp-btn fp-btn-primary min-h-[48px] px-5"
               >
                 Join
               </button>
@@ -130,7 +136,7 @@ function ResumeCard({ check, onReset }: { check: Check; onReset: () => void }) {
 
   return (
     <section className="fp-card mt-8 p-5">
-      <p className="text-sm font-semibold uppercase tracking-wide text-teal">
+      <p className="fp-eyebrow">
         Welcome back{check.starter.name ? `, ${check.starter.name}` : ''}
       </p>
       <p className="mb-4 mt-1 font-heading text-xl font-bold text-navy">{title}</p>

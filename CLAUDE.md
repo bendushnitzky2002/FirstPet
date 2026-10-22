@@ -61,19 +61,23 @@ scripts/assemble-site.mjs   collects builds into _site/ for Pages, adds the "swi
 
 Shared across all prototypes. Tokens live in `packages/theme/tailwind-preset.js`; every app uses it as a Tailwind preset and imports `@firstpet/theme/base.css`.
 
-- **Fonts:** Nunito for headings (`font-heading`), Nunito Sans for body (`font-sans`, the default). Loaded from Google Fonts in each `index.html`.
+The look follows Sala's Figma Make prototypes (Customer Persona, Shelter Workspace, Investor/Partner). We only read those files and rebuild the style here; never edit them.
+
+- **Fonts:** Manrope 800 for headings (`font-heading`, tight letter spacing), DM Sans for body (`font-sans`, the default). Loaded from Google Fonts in each `index.html`.
 - **Colors:**
-  - navy `#1F2E4D` (`navy`): headings, primary text emphasis
-  - teal `#1F9BA6` (`teal`): primary actions, links
-  - orange `#F0A43C` (`orange`): accents, warnings, highlights
-  - body gray `#3B475E` (`body`): body text
-  - border `#DDE3E8` (`line`, also the default border color)
-  - background `#FAFBF9` (`canvas`): page background
-  - light teal `#E6F0EF` (`teal-light`)
-  - peach `#FFF3E0` (`peach`)
-- **Cards:** rounded with a thin `#DDE3E8` border. Use the `fp-card` class.
-- **Icons:** in small teal or orange circles. Use `fp-icon-teal` or `fp-icon-orange` around an inline SVG.
-- **Logo:** `packages/theme/logo.png`, imported as `@firstpet/theme/logo.png`. The committed file is a placeholder until the deck logo is dropped in.
+  - navy `#142D4E` (`navy`, `navy-deep` `#0D213A`): top bar, hero panels, headings
+  - orange `#F47B35` (`orange`, `orange-dark`, `orange-ink` `#A4552D` for text on peach): primary buttons, brand mark, active tab underline, highlights
+  - teal `#168C91` (`teal`, `teal-dark`): eyebrows, links, checks, selected states
+  - body `#263D58` (`body`) and muted `#687587` (`muted`): text
+  - border `#DDE3E9` (`line`, also the default border color)
+  - background `#F4F6F5` (`canvas`): page background
+  - light teal `#E7F5F4` (`teal-light`), peach `#FFF0E6` (`peach`)
+- **Top bar:** every app has a navy `fp-topbar` with the orange paw brand mark (`fp-brand`, `fp-brand-mark`, `fp-brand-name`, `fp-brand-sub`). Tabs in it use `fp-nav-tab`, with an orange underline on the active one.
+- **Buttons:** `fp-btn` plus `fp-btn-primary` (orange), `fp-btn-navy`, `fp-btn-secondary` (white with a border), or `fp-btn-light`. 8px radius, not pills.
+- **Labels:** `fp-eyebrow` for the small teal uppercase label above a heading, `fp-pill` for small uppercase pills.
+- **Cards and panels:** `fp-card` (12px radius, thin border, soft shadow); `fp-hero` for a navy gradient panel; `fp-note` and `fp-warning` for soft teal and peach panels; `fp-input` for text fields.
+- **Icons:** in small rounded tiles. Use `fp-icon-teal` or `fp-icon-orange` around an inline SVG.
+- **Logo:** `packages/theme/logo.png`, imported as `@firstpet/theme/logo.png`: the orange paw mark from Sala's files, a placeholder until the deck logo is dropped in.
 
 ## Coding rules
 

@@ -3,23 +3,39 @@ import logo from '@firstpet/theme/logo.png'
 
 export function Page({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   return (
-    <main
-      className={`mx-auto flex min-h-screen w-full flex-col px-5 pb-16 pt-6 sm:pt-10 ${wide ? 'max-w-3xl' : 'max-w-xl'}`}
-    >
-      {children}
-    </main>
+    <div className="min-h-screen">
+      <AppBar />
+      <main
+        className={`mx-auto flex w-full flex-col px-5 pb-16 pt-6 sm:pt-10 ${wide ? 'max-w-3xl' : 'max-w-xl'}`}
+      >
+        {children}
+      </main>
+    </div>
+  )
+}
+
+// Navy top bar with the brand mark, shared look with the other apps.
+function AppBar() {
+  return (
+    <header className="fp-topbar">
+      <div className="fp-topbar-inner max-w-3xl">
+        <a href="#/" className="fp-brand">
+          <span className="fp-brand-mark" aria-hidden="true" />
+          <span>
+            <span className="fp-brand-name">
+              First<span className="text-orange">Pet</span>
+            </span>
+            <span className="fp-brand-sub">Readiness check</span>
+          </span>
+        </a>
+      </div>
+    </header>
   )
 }
 
 export function LogoMark({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
-  const box = size === 'lg' ? 'h-20 w-20 p-2' : 'h-10 w-10 p-1'
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-2xl border border-line bg-white ${box}`}
-    >
-      <img src={logo} alt="FirstPet" className="h-full w-full rounded-xl" />
-    </span>
-  )
+  const box = size === 'lg' ? 'h-16 w-16' : 'h-10 w-10'
+  return <img src={logo} alt="FirstPet" className={`shrink-0 ${box}`} />
 }
 
 export function TopBar({ onBack, right }: { onBack?: () => void; right?: ReactNode }) {
@@ -30,13 +46,11 @@ export function TopBar({ onBack, right }: { onBack?: () => void; right?: ReactNo
           <button
             type="button"
             onClick={onBack}
-            className="-ml-2 inline-flex h-10 items-center gap-1 rounded-full px-2 text-sm font-semibold text-teal hover:bg-teal-light"
+            className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 text-sm font-bold text-teal hover:bg-teal-light"
           >
             <ArrowLeft /> Back
           </button>
-        ) : (
-          <LogoMark />
-        )}
+        ) : null}
       </div>
       {right}
     </div>
@@ -61,16 +75,16 @@ export function Button({
   full = true,
 }: ButtonProps) {
   const styles = {
-    primary: 'bg-teal text-white hover:bg-[#1a8790] disabled:bg-line disabled:text-body/60',
-    secondary: 'border-2 border-teal bg-white text-teal hover:bg-teal-light',
-    quiet: 'text-teal underline-offset-4 hover:underline',
+    primary: 'fp-btn fp-btn-primary',
+    secondary: 'fp-btn fp-btn-secondary',
+    quiet: 'fp-btn text-teal underline-offset-4 hover:underline',
   }[variant]
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`min-h-[52px] rounded-full px-6 py-3 font-heading text-lg font-bold transition-colors disabled:cursor-not-allowed ${full ? 'w-full' : ''} ${styles}`}
+      className={`min-h-[52px] px-6 py-3 text-lg ${full ? 'w-full' : ''} ${styles}`}
     >
       {children}
     </button>
@@ -94,9 +108,9 @@ export function OptionButton({
       role={multi ? 'checkbox' : 'radio'}
       aria-checked={selected}
       onClick={onClick}
-      className={`flex min-h-[60px] w-full items-center gap-3 rounded-card border-2 bg-white px-5 py-4 text-left text-lg font-semibold transition-colors ${
+      className={`flex min-h-[60px] w-full items-center gap-3 rounded-card border bg-white px-5 py-4 text-left text-lg font-semibold transition-colors ${
         selected
-          ? 'border-teal bg-teal-light text-navy'
+          ? 'border-teal bg-teal-light text-navy shadow-[inset_3px_0_#168c91]'
           : 'border-line text-body hover:border-teal/50'
       }`}
     >
@@ -116,7 +130,7 @@ export function OptionButton({
 export function Progress({ current, total }: { current: number; total: number }) {
   return (
     <div className="mb-8">
-      <p className="mb-2 text-sm font-semibold text-body">
+      <p className="fp-eyebrow mb-2">
         Question {current} of {total}
       </p>
       <div
@@ -127,7 +141,7 @@ export function Progress({ current, total }: { current: number; total: number })
         aria-valuenow={current}
       >
         <div
-          className="h-full rounded-full bg-teal transition-all"
+          className="h-full rounded-full bg-orange transition-all"
           style={{ width: `${(current / total) * 100}%` }}
         />
       </div>

@@ -15,7 +15,7 @@ export function Results() {
   return (
     <Page>
       <TopBar onBack={() => navigate('/')} />
-      <p className="text-sm font-bold uppercase tracking-wide text-teal">Team view</p>
+      <p className="fp-eyebrow">Team view</p>
       <h1 className="mt-1 text-3xl font-extrabold">Premium survey results</h1>
       <p className="mt-2">
         Every check that reached a verdict in this browser. Our hypothesis holds if at least{' '}

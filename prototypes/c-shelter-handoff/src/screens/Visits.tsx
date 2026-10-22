@@ -74,11 +74,7 @@ export function VisitsTab({
 }
 
 function When({ iso }: { iso?: string }) {
-  return (
-    <p className="font-heading text-sm font-extrabold uppercase tracking-wide text-teal">
-      {iso ? visitTime(iso) : 'No visit booked yet'}
-    </p>
-  )
+  return <p className="fp-eyebrow">{iso ? visitTime(iso) : 'No visit booked yet'}</p>
 }
 
 function CheckedVisit({ a }: { a: Applicant }) {
@@ -114,13 +110,13 @@ function CheckedVisit({ a }: { a: Applicant }) {
           missing.map((m) => (
             <span
               key={m}
-              className="rounded-full bg-peach px-2.5 py-1 text-xs font-bold text-[#9a5b06]"
+              className="rounded-full bg-peach px-2.5 py-1 text-xs font-bold text-orange-ink"
             >
               Missing: {m}
             </span>
           ))
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-teal-light px-2.5 py-1 text-xs font-bold text-[#13707a]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-teal-light px-2.5 py-1 text-xs font-bold text-teal-dark">
             <CheckIcon className="h-3.5 w-3.5" /> Nothing missing
           </span>
         )}
@@ -150,7 +146,7 @@ function RequestedVisit({ r }: { r: CheckRequest }) {
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-peach px-2.5 py-1 text-xs font-bold text-[#9a5b06]">
+        <span className="rounded-full bg-peach px-2.5 py-1 text-xs font-bold text-orange-ink">
           Missing: Readiness check
         </span>
         <span className="flex-1" />
@@ -207,8 +203,7 @@ function RequestCheck() {
     setName('')
   }
 
-  const field =
-    'min-h-[44px] rounded-full border border-line bg-white px-4 text-navy outline-none focus:border-teal'
+  const field = 'fp-input px-4'
 
   return (
     <section className="fp-card mt-4 p-5">
@@ -373,7 +368,7 @@ export function PlansTab() {
         <section className="fp-card flex flex-col p-6">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xl font-extrabold">Free for shelters</h2>
-            <span className="rounded-full bg-teal-light px-3 py-1 text-xs font-bold text-[#13707a]">
+            <span className="rounded-full bg-teal-light px-3 py-1 text-xs font-bold text-teal-dark">
               Your plan
             </span>
           </div>

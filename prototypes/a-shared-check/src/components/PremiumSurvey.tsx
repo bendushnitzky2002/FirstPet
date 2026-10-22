@@ -12,7 +12,7 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
 
   return (
     <section className="mt-6 rounded-card border-2 border-teal bg-white p-5">
-      <p className="text-sm font-bold uppercase tracking-wide text-teal">One question for us</p>
+      <p className="fp-eyebrow">One question for us</p>
       <h2 className="mt-1 text-xl font-extrabold">Want help after adoption day?</h2>
       <p className="mt-2">
         We're considering a premium plan with post-adoption pet care help for the first months with
@@ -44,14 +44,14 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
             <button
               type="button"
               onClick={() => answer('yes')}
-              className="min-h-[52px] rounded-full bg-teal px-6 py-3 font-heading text-lg font-bold text-white hover:bg-[#1a8790]"
+              className="fp-btn fp-btn-primary min-h-[52px] px-6 py-3 text-lg"
             >
               Yes, I would
             </button>
             <button
               type="button"
               onClick={() => answer('no')}
-              className="min-h-[52px] rounded-full border-2 border-teal bg-white px-6 py-3 font-heading text-lg font-bold text-teal hover:bg-teal-light"
+              className="fp-btn fp-btn-secondary min-h-[52px] px-6 py-3 text-lg"
             >
               No thanks
             </button>

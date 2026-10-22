@@ -8,23 +8,39 @@ import { initials } from '../lib/format'
 
 export function Page({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   return (
-    <main
-      className={`mx-auto flex min-h-screen w-full flex-col px-4 pb-16 pt-6 sm:px-6 sm:pt-10 ${wide ? 'max-w-5xl' : 'max-w-xl'}`}
-    >
-      {children}
-    </main>
+    <div className="min-h-screen">
+      <AppBar wide={wide} />
+      <main
+        className={`mx-auto flex w-full flex-col px-4 pb-16 pt-6 sm:px-6 sm:pt-10 ${wide ? 'max-w-5xl' : 'max-w-xl'}`}
+      >
+        {children}
+      </main>
+    </div>
+  )
+}
+
+// Navy top bar with the brand mark, shared look with the other apps.
+function AppBar({ wide }: { wide: boolean }) {
+  return (
+    <header className="fp-topbar">
+      <div className={`fp-topbar-inner ${wide ? 'max-w-5xl' : 'max-w-xl'}`}>
+        <a href="#/" className="fp-brand">
+          <span className="fp-brand-mark" aria-hidden="true" />
+          <span>
+            <span className="fp-brand-name">
+              First<span className="text-orange">Pet</span>
+            </span>
+            <span className="fp-brand-sub">Shelter hand-off</span>
+          </span>
+        </a>
+      </div>
+    </header>
   )
 }
 
 export function LogoMark({ size = 'sm' }: { size?: 'sm' | 'lg' }) {
-  const box = size === 'lg' ? 'h-20 w-20 p-2' : 'h-10 w-10 p-1'
-  return (
-    <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-2xl border border-line bg-white ${box}`}
-    >
-      <img src={logo} alt="FirstPet" className="h-full w-full rounded-xl" />
-    </span>
-  )
+  const box = size === 'lg' ? 'h-16 w-16' : 'h-10 w-10'
+  return <img src={logo} alt="FirstPet" className={`shrink-0 ${box}`} />
 }
 
 export function BackLink({ onClick, children }: { onClick: () => void; children: ReactNode }) {
@@ -32,7 +48,7 @@ export function BackLink({ onClick, children }: { onClick: () => void; children:
     <button
       type="button"
       onClick={onClick}
-      className="-ml-2 inline-flex h-10 items-center gap-1 rounded-full px-2 text-sm font-semibold text-teal hover:bg-teal-light print:hidden"
+      className="-ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 text-sm font-bold text-muted hover:text-teal print:hidden"
     >
       <ArrowLeft /> {children}
     </button>
@@ -57,9 +73,9 @@ export function Button({
   full = true,
 }: ButtonProps) {
   const styles = {
-    primary: 'bg-teal text-white hover:bg-[#1a8790] disabled:bg-line disabled:text-body/60',
-    secondary: 'border-2 border-teal bg-white text-teal hover:bg-teal-light',
-    quiet: 'text-teal underline-offset-4 hover:underline',
+    primary: 'fp-btn fp-btn-primary',
+    secondary: 'fp-btn fp-btn-secondary',
+    quiet: 'fp-btn text-teal underline-offset-4 hover:underline',
   }[variant]
   const sizing = size === 'lg' ? 'min-h-[52px] px-6 py-3 text-lg' : 'min-h-[40px] px-4 py-2 text-sm'
   return (
@@ -67,7 +83,7 @@ export function Button({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-full font-heading font-bold transition-colors disabled:cursor-not-allowed print:hidden ${sizing} ${full ? 'w-full' : ''} ${styles}`}
+      className={`print:hidden ${sizing} ${full ? 'w-full' : ''} ${styles}`}
     >
       {children}
     </button>
@@ -91,9 +107,9 @@ export function OptionButton({
       role={multi ? 'checkbox' : 'radio'}
       aria-checked={selected}
       onClick={onClick}
-      className={`flex min-h-[60px] w-full items-center gap-3 rounded-card border-2 bg-white px-5 py-4 text-left text-lg font-semibold transition-colors ${
+      className={`flex min-h-[60px] w-full items-center gap-3 rounded-card border bg-white px-5 py-4 text-left text-lg font-semibold transition-colors ${
         selected
-          ? 'border-teal bg-teal-light text-navy'
+          ? 'border-teal bg-teal-light text-navy shadow-[inset_3px_0_#168c91]'
           : 'border-line text-body hover:border-teal/50'
       }`}
     >
@@ -113,12 +129,12 @@ export function OptionButton({
 export function Progress({ current, total }: { current: number; total: number }) {
   return (
     <div className="mb-8">
-      <p className="mb-2 text-sm font-semibold">
+      <p className="fp-eyebrow mb-2">
         Question {current} of {total}
       </p>
       <div className="h-2 w-full overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-teal transition-all duration-300"
+          className="h-full rounded-full bg-orange transition-all duration-300"
           style={{ width: `${(current / total) * 100}%` }}
         />
       </div>
@@ -127,8 +143,8 @@ export function Progress({ current, total }: { current: number; total: number })
 }
 
 const verdictStyle: Record<VerdictKind, string> = {
-  ready: 'bg-teal-light text-[#13707a]',
-  'ready-once': 'bg-peach text-[#9a5b06]',
+  ready: 'bg-teal-light text-teal-dark',
+  'ready-once': 'bg-peach text-orange-ink',
   'not-yet': 'bg-navy text-white',
 }
 
@@ -144,8 +160,8 @@ export function VerdictChip({ kind }: { kind: VerdictKind }) {
 
 const statusStyle: Record<CheckInStatus, string> = {
   call: 'bg-orange text-navy',
-  message: 'bg-peach text-[#9a5b06]',
-  well: 'bg-teal-light text-[#13707a]',
+  message: 'bg-peach text-orange-ink',
+  well: 'bg-teal-light text-teal-dark',
   due: 'border border-line bg-white text-body',
   upcoming: 'border border-line bg-white text-body',
   'not-adopted': 'border border-line bg-white text-body',
@@ -165,8 +181,8 @@ export function Avatar({ name, tone = 'teal' }: { name: string; tone?: 'teal' | 
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-heading text-sm font-extrabold ${
-        tone === 'teal' ? 'bg-teal-light text-teal' : 'bg-peach text-[#9a5b06]'
+      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] font-heading text-sm font-extrabold ${
+        tone === 'teal' ? 'bg-teal-light text-teal' : 'bg-peach text-orange-ink'
       }`}
     >
       {initials(name)}

@@ -8,19 +8,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
+      /* Same tokens as packages/theme, from Sala's Figma Make prototypes */
       :root {
-        --navy: #1f2e4d;
-        --teal: #1f9ba6;
-        --orange: #f0a43c;
-        --body: #3b475e;
-        --border: #dde3e8;
-        --bg: #fafbf9;
-        --teal-light: #e6f0ef;
-        --peach: #fff3e0;
+        --navy: #142d4e;
+        --teal: #168c91;
+        --orange: #f47b35;
+        --orange-ink: #a4552d;
+        --body: #263d58;
+        --muted: #687587;
+        --border: #dde3e9;
+        --bg: #f4f6f5;
+        --teal-light: #e7f5f4;
+        --peach: #fff0e6;
       }
       * {
         box-sizing: border-box;
@@ -29,155 +32,294 @@
         margin: 0;
         background: var(--bg);
         color: var(--body);
-        font-family: 'Nunito Sans', system-ui, sans-serif;
-        line-height: 1.5;
+        font-family: 'DM Sans', system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
       }
+      .topbar {
+        background: var(--navy);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .topbar-inner,
       main {
-        max-width: 760px;
+        max-width: 1080px;
         margin: 0 auto;
-        padding: 56px 20px;
+        padding: 0 20px;
       }
-      header {
+      .topbar-inner {
+        height: 64px;
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 12px;
+        gap: 10px;
       }
-      header img {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px 11px 15px 11px;
+      }
+      .brand-name {
+        font:
+          800 19px/1 'Manrope',
+          system-ui,
+          sans-serif;
+        letter-spacing: -0.04em;
+        color: #fff;
+      }
+      .brand-name span {
+        color: var(--orange);
+      }
+      .brand-sub {
+        display: block;
+        margin-top: 4px;
+        color: #9db1c1;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      main {
+        padding-top: 28px;
+        padding-bottom: 56px;
       }
       h1,
       h2 {
-        font-family: 'Nunito', system-ui, sans-serif;
+        font-family: 'Manrope', system-ui, sans-serif;
+        font-weight: 800;
         color: var(--navy);
         margin: 0;
       }
-      h1 {
-        font-size: 2rem;
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 36px 32px;
+        border-radius: 14px;
+        color: #fff;
+        background: linear-gradient(120deg, var(--navy), #1b5264);
+      }
+      .hero::after {
+        content: '';
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -60px;
+        top: -90px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 50%;
+      }
+      .eyebrow {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--teal);
+        font-size: 12px;
         font-weight: 800;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .hero .eyebrow {
+        color: #90d2d0;
+      }
+      .hero h1 {
+        color: #fff;
+        font-size: clamp(28px, 4vw, 38px);
+        line-height: 1.15;
+        letter-spacing: -0.035em;
       }
       .intro {
-        margin: 0 0 32px;
+        max-width: 640px;
+        margin: 12px 0 0;
+        color: #b9cad3;
+        font-size: 1.05rem;
+      }
+      .cards {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
       }
       .card {
-        display: block;
+        display: flex;
+        flex-direction: column;
         background: #fff;
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 20px 22px;
-        margin-bottom: 16px;
+        border-top: 4px solid var(--teal);
+        border-radius: 12px;
+        padding: 22px;
         color: inherit;
         text-decoration: none;
-        transition: border-color 0.15s;
+        box-shadow: 0 8px 28px rgba(20, 45, 78, 0.07);
+        transition:
+          transform 0.15s,
+          border-color 0.15s;
+      }
+      .card.orange {
+        border-top-color: var(--orange);
       }
       .card:hover,
       .card:focus-visible {
+        transform: translateY(-2px);
         border-color: var(--teal);
+      }
+      .card.orange:hover,
+      .card.orange:focus-visible {
+        border-color: var(--orange);
       }
       .card-head {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 10px;
+        margin-bottom: 14px;
       }
       .badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 999px;
-        font-family: 'Nunito', system-ui, sans-serif;
+        display: inline-grid;
+        place-items: center;
+        flex: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        font-family: 'Manrope', system-ui, sans-serif;
         font-weight: 800;
         background: var(--teal-light);
         color: var(--teal);
       }
       .badge.orange {
         background: var(--peach);
-        color: var(--orange);
+        color: var(--orange-ink);
+      }
+      .card .eyebrow {
+        margin-bottom: 2px;
+        font-size: 11px;
+      }
+      .card h2 {
+        font-size: 1.15rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
       }
       .card p {
-        margin: 4px 0;
+        margin: 0;
+        padding: 10px 0;
+        border-top: 1px solid #e9eeed;
+        font-size: 0.95rem;
       }
       .label {
-        font-weight: 700;
-        color: var(--navy);
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .go {
+        margin-top: auto;
+        padding-top: 14px;
+        color: var(--teal);
+        font-family: 'Manrope', system-ui, sans-serif;
+        font-weight: 800;
       }
       footer {
-        margin-top: 32px;
+        margin-top: 28px;
+        color: var(--muted);
         font-size: 0.9rem;
+      }
+      @media (max-width: 860px) {
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          padding: 28px 22px;
+        }
       }
     </style>
   </head>
   <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <img class="brand-mark" src="logo.png" alt="" />
+        <div>
+          <div class="brand-name">First<span>Pet</span></div>
+          <span class="brand-sub">Prototype hub</span>
+        </div>
+      </div>
+    </header>
     <main>
-      <header>
-        <img src="logo.png" alt="FirstPet logo" />
+      <section class="hero">
+        <span class="eyebrow">Pick a persona</span>
         <h1>Who are you testing as?</h1>
-      </header>
-      <p class="intro">
-        FirstPet is a readiness check for first-time pet adopters. Pick a persona and we will take
-        you through the prototype built for them. You can switch persona at any time with the link
-        in the bottom corner.
-      </p>
+        <p class="intro">
+          FirstPet is a readiness check for first-time pet adopters. Pick a persona and we will take
+          you through the prototype built for them. You can switch persona at any time with the link
+          in the bottom corner.
+        </p>
+      </section>
 
-      <a class="card" href="a/">
-        <div class="card-head">
-          <span class="badge">P</span>
-          <h2>I am Priya, a first-time owner</h2>
-        </div>
-        <p>
-          <span class="label">Prototype:</span> Shared Check. Priya is a first-time co-owner
-          watching her budget.
-        </p>
-        <p>
-          <span class="label">Hypothesis:</span> A free readiness check shared with a partner is
-          enough that at least 1 in 10 people who finish it pick a premium plan.
-        </p>
-        <p>
-          <span class="label">Try:</span> Start a check as Priya, share it with Marcus, and get your
-          verdict.
-        </p>
-      </a>
+      <div class="cards">
+        <a class="card" href="a/">
+          <div class="card-head">
+            <span class="badge">P</span>
+            <div>
+              <span class="eyebrow">Shared Check</span>
+              <h2>I am Priya, a first-time owner</h2>
+            </div>
+          </div>
+          <p>
+            <span class="label">Prototype</span> Shared Check. Priya is a first-time co-owner
+            watching her budget.
+          </p>
+          <p>
+            <span class="label">Hypothesis</span> A free readiness check shared with a partner is
+            enough that at least 1 in 10 people who finish it pick a premium plan.
+          </p>
+          <p>
+            <span class="label">Try</span> Start a check as Priya, share it with Marcus, and get
+            your verdict.
+          </p>
+          <span class="go">Open Shared Check &rarr;</span>
+        </a>
 
-      <a class="card" href="b/">
-        <div class="card-head">
-          <span class="badge orange">D</span>
-          <h2>I am Dana, a pet care professional</h2>
-        </div>
-        <p>
-          <span class="label">Prototype:</span> Pro Network. Dana is a partnership lead at a pet
-          care business.
-        </p>
-        <p>
-          <span class="label">Hypothesis:</span> Professionals want introductions to prepared,
-          consenting households and will pay an annual membership instead of paying per lead.
-        </p>
-        <p>
-          <span class="label">Try:</span> Review a pending introduction, then look at membership.
-        </p>
-      </a>
+        <a class="card orange" href="b/">
+          <div class="card-head">
+            <span class="badge orange">D</span>
+            <div>
+              <span class="eyebrow">Pro Network</span>
+              <h2>I am Dana, a pet care professional</h2>
+            </div>
+          </div>
+          <p>
+            <span class="label">Prototype</span> Pro Network. Dana is a partnership lead at a pet
+            care business.
+          </p>
+          <p>
+            <span class="label">Hypothesis</span> Professionals want introductions to prepared,
+            consenting households and will pay an annual membership instead of paying per lead.
+          </p>
+          <p>
+            <span class="label">Try</span> Review a pending introduction, then look at membership.
+          </p>
+          <span class="go">Open Pro Network &rarr;</span>
+        </a>
 
-      <a class="card" href="c/">
-        <div class="card-head">
-          <span class="badge">C</span>
-          <h2>I am Carla, a shelter counselor</h2>
-        </div>
-        <p>
-          <span class="label">Prototype:</span> Shelter Hand-off. Carla is an adoption coordinator
-          who wants fewer returns.
-        </p>
-        <p>
-          <span class="label">Hypothesis:</span> Shelters make the free check step one of adoption
-          if it reaches them before the visit, and may pay for analytics across adoptions.
-        </p>
-        <p>
-          <span class="label">Try:</span> Open an upcoming visit as the counselor, then request a
-          check for an applicant.
-        </p>
-      </a>
+        <a class="card" href="c/">
+          <div class="card-head">
+            <span class="badge">C</span>
+            <div>
+              <span class="eyebrow">Shelter Hand-off</span>
+              <h2>I am Carla, a shelter counselor</h2>
+            </div>
+          </div>
+          <p>
+            <span class="label">Prototype</span> Shelter Hand-off. Carla is an adoption coordinator
+            who wants fewer returns.
+          </p>
+          <p>
+            <span class="label">Hypothesis</span> Shelters make the free check step one of adoption
+            if it reaches them before the visit, and may pay for analytics across adoptions.
+          </p>
+          <p>
+            <span class="label">Try</span> Open an upcoming visit as the counselor, then request a
+            check for an applicant.
+          </p>
+          <span class="go">Open Shelter Hand-off &rarr;</span>
+        </a>
+      </div>
 
       <footer>
         Duke AIPI, PM Coding course. Prototypes are works in progress and all data is mock data.

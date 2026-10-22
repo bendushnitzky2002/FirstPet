@@ -17,8 +17,8 @@ const apps = [
 // persona chooser. Added here (not in each app) so the three apps stay independent.
 // Plain HTML with inline styles so it does not depend on any app's CSS. Hidden when printing.
 const switchLink = (persona) => `
-<a href="../" class="fp-switch-persona" style="position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid #dde3e8;box-shadow:0 2px 8px rgba(31,46,77,.12);font:600 13px/1.2 'Nunito Sans',system-ui,sans-serif;color:#1f2e4d;text-decoration:none">
-  <span aria-hidden="true" style="color:#1f9ba6">&larr;</span> Testing as ${persona}: switch persona
+<a href="../" class="fp-switch-persona" style="position:fixed;left:16px;bottom:16px;z-index:50;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:#fff;border:1px solid #dde3e9;box-shadow:0 8px 24px rgba(20,45,78,.14);font:700 13px/1.2 'DM Sans',system-ui,sans-serif;color:#142d4e;text-decoration:none">
+  <span aria-hidden="true" style="color:#f47b35">&larr;</span> Testing as ${persona}: switch persona
 </a>
 <style>body{padding-bottom:64px}@media print{.fp-switch-persona{display:none!important}body{padding-bottom:0}}</style>
 `

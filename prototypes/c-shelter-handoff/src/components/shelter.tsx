@@ -101,7 +101,7 @@ export function CostCard({ pet }: { pet: Pet }) {
         </div>
         <div className="text-right">
           <p className="font-heading text-xl font-extrabold text-navy">{money(cost.cushion)}</p>
-          <p className="text-xs font-bold uppercase tracking-wide text-[#9a5b06]">Required</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-orange-ink">Required</p>
         </div>
       </div>
       <div className="mt-3">
