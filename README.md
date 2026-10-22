@@ -51,7 +51,7 @@ packages/theme/              shared Tailwind preset, base styles, logo
 prototypes/a-shared-check/   Prototype A
 prototypes/b-the-number/     Prototype B
 prototypes/c-shelter-handoff/  Prototype C
-site/                        landing page
+site/                        persona chooser landing page
 docs/                        hypotheses, scope cards, prompt logs, presentation outline, demo script
 ```
 

@@ -51,9 +51,9 @@ packages/theme/          shared Tailwind preset, base.css, logo.png
 prototypes/a-shared-check/   Vite + React + TS + Tailwind app, served at /a
 prototypes/b-the-number/     served at /b
 prototypes/c-shelter-handoff/ served at /c
-site/                    plain HTML landing page, served at /
+site/                    plain HTML persona chooser (landing page), served at /
 docs/                    hypotheses, competitors, scope cards, prompt logs, presentation, demo script
-scripts/assemble-site.mjs   collects builds into _site/ for Pages
+scripts/assemble-site.mjs   collects builds into _site/ for Pages, adds the "switch persona" link to each app
 .github/workflows/deploy.yml  builds everything and deploys to GitHub Pages
 ```
 
