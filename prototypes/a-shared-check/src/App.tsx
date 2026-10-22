@@ -10,6 +10,7 @@ import { Join } from './screens/Join'
 import { Compare } from './screens/Compare'
 import { Verdict } from './screens/Verdict'
 import { Summary } from './screens/Summary'
+import { Results } from './screens/Results'
 
 export default function App() {
   const { path, params } = useHashRoute()
@@ -49,6 +50,8 @@ export default function App() {
     const code = params.get('code') ?? ''
     return <Join key={code} code={code} check={loadCheck(code)} save={save} />
   }
+
+  if (path === '/results') return <Results />
 
   if (!check || path === '/') {
     return <Landing check={check} onStart={start} onSeed={seed} onReset={reset} />

@@ -31,4 +31,8 @@ export type Check = {
   partner?: Person
   // Checklist items ticked on the verdict screen.
   checked: string[]
+  // Answer to the premium plan survey under the verdict.
+  premium?: PremiumAnswer
 }
+
+export type PremiumAnswer = 'yes' | 'no'

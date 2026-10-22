@@ -16,7 +16,9 @@ Live path (about two minutes):
 - [ ] Partner tab: type "Marcus", answer 9 hours, 1 to 3 nights, Tight but doable, Cost and Time. Click **See what we both said**.
 - [ ] Side by side: "This is the screen the hypothesis lives on." Point at a teal match, then an orange **Talk about this** row and its nudge. Scroll to the cost block and the required cushion.
 - [ ] Click **See our verdict**: "Ready once a few things change," with a checklist in their words. Tick one item.
+- [ ] Under the verdict, point at **Want help after adoption day?**: "This is our real test. We need at least 10% of households that finish to say yes." Click **Yes, I would**.
 - [ ] Click **Save this as a one-page summary** to show the printable page.
+- [ ] To show the numbers, open `#/results` (for example https://dushben.github.io/FirstPet/a/#/results): completed checks, yes, no, and the share against 10%. Results live in this browser only; **Clear results** resets them before a test session.
 
 If asked about the solo case: on the invite screen, **Preview the result without them** gives a verdict with a banner saying it is based on one person's answers.
 

@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
 import type { Check } from '../types'
 import { getVerdict, type Verdict as VerdictData } from '../data/verdict'
 import { AlertIcon, Button, CheckIcon, Page, TopBar } from '../components/ui'
+import { PremiumSurvey } from '../components/PremiumSurvey'
 import { navigate } from '../lib/router'
+import { recordCompleted } from '../lib/survey'
 
 type Props = {
   check: Check
@@ -21,6 +24,9 @@ export const VERDICT_TONE: Record<
 export function Verdict({ check, save, onReset }: Props) {
   const v = getVerdict(check)
   const tone = VERDICT_TONE[v.kind]
+
+  // Reaching the verdict counts as a completed check for the premium survey.
+  useEffect(() => recordCompleted(check.code), [check.code])
 
   const toggle = (id: string) =>
     save({
@@ -106,6 +112,8 @@ export function Verdict({ check, save, onReset }: Props) {
           </ul>
         </section>
       )}
+
+      <PremiumSurvey check={check} save={save} />
 
       <div className="mt-10 space-y-3">
         <Button onClick={() => navigate('/summary')}>Save this as a one-page summary</Button>
