@@ -32,7 +32,12 @@ export type Tier = 'solo' | 'clinic' | 'per-intro'
 // What a test session records. Read it back on the hidden #/log screen.
 export type JoinClick = { tier: Tier; at: string; answer?: string }
 
+// Locked items a pro asked to see, by introduction. This is how we learn what
+// pros want before they say yes. In the prototype nothing is sent.
+export type Requests = Record<string, SharedItem['key'][]>
+
 export type State = {
   decisions: Record<string, Decision>
   joins: JoinClick[]
+  requests: Requests
 }
