@@ -72,7 +72,7 @@ The look follows Sala's Figma Make prototypes (Customer Persona, Shelter Workspa
   - border `#DDE3E9` (`line`, also the default border color)
   - background `#F4F6F5` (`canvas`): page background
   - light teal `#E7F5F4` (`teal-light`), peach `#FFF0E6` (`peach`)
-- **Top bar:** every app has a navy `fp-topbar` with the orange paw brand mark (`fp-brand`, `fp-brand-mark`, `fp-brand-name`, `fp-brand-sub`). Tabs in it use `fp-nav-tab`, with an orange underline on the active one.
+- **Top bar:** every app has a navy `fp-topbar` with the FirstPet logo as its brand mark (`fp-brand`, `fp-brand-mark`, `fp-brand-name`, `fp-brand-sub`). Tabs in it use `fp-nav-tab`, with an orange underline on the active one.
 - **Buttons:** `fp-btn` plus `fp-btn-primary` (orange), `fp-btn-navy`, `fp-btn-secondary` (white with a border), or `fp-btn-light`. 8px radius, not pills.
 - **Labels:** `fp-eyebrow` for the small teal uppercase label above a heading, `fp-pill` for small uppercase pills.
 - **Cards and panels:** `fp-card` (12px radius, thin border, soft shadow); `fp-hero` for a navy gradient panel; `fp-note` and `fp-warning` for soft teal and peach panels; `fp-input` for text fields.
@@ -80,7 +80,7 @@ The look follows Sala's Figma Make prototypes (Customer Persona, Shelter Workspa
 - **Shelter workspace (C):** the counselor pages use `Workspace` in `src/components/workspace.tsx`: a fixed 248px navy `fp-sidebar` with `fp-side-item` links and counts, and a white `fp-workbar` with "Viewing as" the shelter. Below `lg` the sidebar turns into a tab row.
 - **Motion:** short and quiet, defined in `base.css`. `fp-enter` for a page or panel rising in, `fp-step` for the next question sliding in (key it on the step), `fp-reveal` for a verdict or a fake-door answer panel, `fp-stagger` on a grid so its children arrive one after another, `fp-pop` for a check mark appearing, `fp-lift` for a clickable card, `fp-bar` for a progress bar. Buttons press in on click. Everything is switched off under `prefers-reduced-motion`.
 - **Icons:** in small rounded tiles. Use `fp-icon-teal` or `fp-icon-orange` around an inline SVG.
-- **Logo:** `packages/theme/logo.png`, imported as `@firstpet/theme/logo.png`: the orange paw mark from Sala's files, a placeholder until the deck logo is dropped in.
+- **Logo:** `packages/theme/logo.png`, imported as `@firstpet/theme/logo.png`: the FirstPet logo (dog and cat in front of a teal map pin) with a transparent background. `fp-brand-mark` shows it on a white rounded tile so it reads on navy. `favicon.png` and `apple-touch-icon.png` sit beside it and are linked from every `index.html`.
 
 ## Coding rules
 

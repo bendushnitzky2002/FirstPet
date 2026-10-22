@@ -27,7 +27,9 @@ rmSync(out, { recursive: true, force: true })
 mkdirSync(out, { recursive: true })
 
 cpSync(join(root, 'site'), out, { recursive: true })
-cpSync(join(root, 'packages/theme/logo.png'), join(out, 'logo.png'))
+for (const file of ['logo.png', 'favicon.png', 'apple-touch-icon.png']) {
+  cpSync(join(root, 'packages/theme', file), join(out, file))
+}
 
 for (const app of apps) {
   const dist = join(root, app.dir, 'dist')
