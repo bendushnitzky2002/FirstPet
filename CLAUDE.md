@@ -12,18 +12,19 @@ Team: Justin Winkler (CEO), Caleb McNeill (VP Dev), Sala Bozeman-Dean (VP Sales/
 
 FirstPet is a readiness check for first-time pet adopters. You answer questions about your household (time, money, expectations), get a first-year cost for your ZIP code with an emergency cushion built in, build a care plan with names on it, and receive a verdict: **ready**, **ready once a few things change**, or **not yet**. Where the care plan has gaps, FirstPet points to vetted local pet care professionals.
 
-Business model: owners never pay. Professionals pay an annual membership to be in the vetted network. Shelters are the main channel.
+Business model: the readiness check and the verdict are always free for owners. Professionals pay an annual membership to be in the vetted network. Shelters are the main channel and use the check for free. Each prototype tests one possible paid line with an honest fake door: an owner premium plan (A), a pro membership (B), and shelter analytics (C). See `docs/competitors.md` for how others charge.
 
-### Two hard rules (from customer discovery)
+### Three hard rules (from customer discovery)
 
 1. **The verdict can be "not yet."** Nobody else in the market will say that. Never soften it away.
-2. **No paid ranking. The verdict is never for sale.** Membership gets a professional into the vetted network; it never changes a verdict, an order, or a recommendation.
+2. **No paid ranking. The verdict is never for sale.** Membership gets a professional into the vetted network; it never changes a verdict, an order, or a recommendation. A paid owner or shelter plan never changes a verdict either.
+3. **The check and the verdict are free.** Owners never pay to find out if they are ready, and shelters never pay to use the check. Anything paid comes after the value, as an add-on.
 
 ## Personas
 
-- **Priya and Marcus** (owners, the user). Suburban parents, two kids, first pet. Priya researches; Marcus is the skeptic who wants a number before he agrees. Pain: no local cost number, who does the daily work, too many opinions.
-- **Vicky** (a local vet, stands in for pet care professionals, the payer). Pain: clients arrive unprepared and get surprised by costs. Her real problem is earning a new client's trust, not being found.
-- **Carla** (a shelter adoption counselor, the partner and channel). Pain: adopters have not thought about cost or schedule until they are at the counter, and there is no follow-up before a return happens.
+- **Priya** (Prototype A, the owner). A first-time co-owner watching her budget. She does the research and shares the decision with her partner, Marcus, the skeptic who wants a number before he agrees. Pain: no local cost number, who does the daily work, too many opinions.
+- **Dana** (Prototype B, the professional and payer). A partnership lead at a pet-related organization who wants to reach future pet owners early and be associated with responsible owners. Pain: leads arrive unprepared; the real problem is earning a new client's trust, not being found.
+- **Carla** (Prototype C, the shelter partner and channel). Adoption coordinator at a partner shelter who wants to reduce the shelter's rate of returns. Pain: adopters have not thought about cost or schedule until they are at the counter, and there is no follow-up before a return happens.
 
 ## Customer discovery findings
 
@@ -35,13 +36,13 @@ Business model: owners never pay. Professionals pay an annual membership to be i
 
 ## The three prototypes
 
-| Path | Folder                         | Name             | Persona                                  | Draft hypothesis                                                                                                                                                                                    |
-| ---- | ------------------------------ | ---------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/a` | `prototypes/a-shared-check`    | Shared Check     | Priya and Marcus                         | A couple will finish a readiness check together if one person can start alone, invite the other by link, and see their answers side by side before the verdict.                                     |
-| `/b` | `prototypes/b-the-number`      | The Number       | Vicky's future clients (cost-first path) | Leading with a first-year local cost and emergency cushion, before any other questions, is what moves the skeptic from "no" to "ready once X changes."                                              |
-| `/c` | `prototypes/c-shelter-handoff` | Shelter Hand-off | Carla                                    | Adopters will complete a readiness check when a shelter asks for it as step one of adoption, and a one-page readiness summary plus a week-two check-in is something a counselor would actually use. |
+| Path | Folder                         | Name             | Persona | Hypothesis (short)                                                                                                                                           | Fake door                                                                                      |
+| ---- | ------------------------------ | ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `/a` | `prototypes/a-shared-check`    | Shared Check     | Priya   | A free readiness check shared with a partner earns enough trust that at least 10% of people who finish it pick a premium post-adoption plan.                 | "Premium plan" survey button after the verdict                                                 |
+| `/b` | `prototypes/b-the-number`      | Pro Network      | Dana    | Professionals value introductions to prepared future owners, with the owner's plan shared by consent, and accept an annual membership over paying per lead.  | Membership page (solo and clinic), "Join the network," "What would make our service worth it?" |
+| `/c` | `prototypes/c-shelter-handoff` | Shelter Hand-off | Carla   | Shelters make the free check step one of adoption if it reaches them before the visit and flags what is missing, and may pay for analytics across adoptions. | "Analytics and multi-location" upgrade, "Subscribe now," same one question                     |
 
-Hypotheses are drafts. The source of truth is `docs/hypotheses.md`. The three prototypes must be genuinely different products, not one product with a different color.
+The full hypotheses are in `docs/hypotheses.md`, which is the source of truth. Prototype B's folder keeps its old name (`b-the-number`) so paths and build scripts do not change. The three prototypes must be genuinely different products, not one product with a different color.
 
 ## Repo layout
 
@@ -51,7 +52,7 @@ prototypes/a-shared-check/   Vite + React + TS + Tailwind app, served at /a
 prototypes/b-the-number/     served at /b
 prototypes/c-shelter-handoff/ served at /c
 site/                    plain HTML landing page, served at /
-docs/                    hypotheses, scope cards, prompt logs, presentation, demo script
+docs/                    hypotheses, competitors, scope cards, prompt logs, presentation, demo script
 scripts/assemble-site.mjs   collects builds into _site/ for Pages
 .github/workflows/deploy.yml  builds everything and deploys to GitHub Pages
 ```
@@ -81,6 +82,7 @@ Shared across all prototypes. Tokens live in `packages/theme/tailwind-preset.js`
 - No backend, no auth, no database. State lives in memory or `localStorage` only.
 - No fake backend calls: do not simulate network requests, loading spinners for fake APIs, or `fetch` to made-up endpoints. Read mock data directly.
 - Mock data lives in `src/data/` of each app.
+- Fake doors are honest. A fake door is a paid option that does not exist yet, used to measure interest. It must: show prices as labeled placeholders (or the price we are testing, marked as a test price); say plainly on the next screen that the option is not available yet and that we are measuring interest; never ask for payment details; record the click and the one-question answer in `localStorage` only, never send them anywhere; and never change a verdict, an order, or a recommendation.
 - Never fabricate statistics or quotes. If a number is a placeholder, label it as one in the UI and in code. Do not invent customer quotes or attribute words to real people.
 - Use "we" in any copy.
 - No em dashes anywhere in UI text or docs. Use a colon, comma, period, or parentheses instead.
