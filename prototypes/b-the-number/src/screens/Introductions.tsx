@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Introduction, PassReason, State } from '../types'
+import type { Introduction, PassReason, SharedItem, State } from '../types'
 import { INTRODUCTIONS, PASS_REASONS, VERDICT_LABEL } from '../data/introductions'
 import { navigate } from '../lib/router'
 import { Button, CheckIcon, LockIcon, PageHead } from '../components/ui'
@@ -11,13 +11,29 @@ export function Introductions({ state, save }: Props) {
   const decided = INTRODUCTIONS.filter((i) => state.decisions[i.id])
   const accepted = decided.filter((i) => state.decisions[i.id].kind === 'accepted').length
 
-  const decide = (id: string, decision: State['decisions'][string]) =>
+  // The last decision, so the card that just left the list is confirmed and
+  // can be undone in place.
+  const [last, setLast] = useState<string | null>(null)
+
+  const decide = (id: string, decision: State['decisions'][string]) => {
     save({ ...state, decisions: { ...state.decisions, [id]: decision } })
+    setLast(id)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
   const undo = (id: string) => {
     const decisions = { ...state.decisions }
     delete decisions[id]
     save({ ...state, decisions })
+    if (last === id) setLast(null)
   }
+  const request = (id: string, key: SharedItem['key']) => {
+    const asked = state.requests[id] ?? []
+    if (asked.includes(key)) return
+    save({ ...state, requests: { ...state.requests, [id]: [...asked, key] } })
+  }
+
+  const lastIntro = last ? INTRODUCTIONS.find((i) => i.id === last) : undefined
+  const lastDecision = last ? state.decisions[last] : undefined
 
   return (
     <>
@@ -35,10 +51,50 @@ export function Introductions({ state, save }: Props) {
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-5">
+          {lastIntro && lastDecision && (
+            <div
+              role="status"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-[11px] border border-line bg-white px-5 py-3 shadow-card"
+            >
+              <p className="flex items-center gap-2 text-sm">
+                <span className="fp-icon-teal h-7 w-7 shrink-0" aria-hidden="true">
+                  <CheckIcon className="h-4 w-4" />
+                </span>
+                {lastDecision.kind === 'accepted' ? (
+                  <span>
+                    <strong className="text-navy">Introduced to {lastIntro.household}.</strong> We
+                    sent them your profile and a hello.
+                  </span>
+                ) : (
+                  <span>
+                    <strong className="text-navy">Passed on {lastIntro.household}.</strong> They
+                    will not see it.
+                  </span>
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => undo(lastIntro.id)}
+                className="text-sm font-bold text-teal underline-offset-4 hover:underline"
+              >
+                Undo
+              </button>
+            </div>
+          )}
+          {accepted > 0 && pending.length > 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[11px] bg-navy px-5 py-3 text-white lg:hidden">
+              <p className="text-sm font-semibold">Want introductions like this all year?</p>
+              <Button full={false} onClick={() => navigate('/membership')}>
+                See membership
+              </Button>
+            </div>
+          )}
           {pending.map((intro) => (
             <IntroCard
               key={intro.id}
               intro={intro}
+              requested={state.requests[intro.id] ?? []}
+              onRequest={(key) => request(intro.id, key)}
               onAccept={() => decide(intro.id, { kind: 'accepted', at: new Date().toISOString() })}
               onPass={(reason, detail) =>
                 decide(intro.id, { kind: 'passed', at: new Date().toISOString(), reason, detail })
@@ -46,9 +102,19 @@ export function Introductions({ state, save }: Props) {
             />
           ))}
           {pending.length === 0 && (
-            <p className="fp-card p-8 text-center text-muted">
-              No introductions waiting. We will let you know when a household asks for you.
-            </p>
+            <section className="fp-card p-8 text-center">
+              <h2 className="text-xl">
+                You said yes to {accepted} of {INTRODUCTIONS.length} households.
+              </h2>
+              <p className="mx-auto mt-2 max-w-md text-muted">
+                No introductions waiting. Next, see what it would take to keep getting them.
+              </p>
+              <div className="mt-5 flex justify-center">
+                <Button full={false} onClick={() => navigate('/membership')}>
+                  See membership
+                </Button>
+              </div>
+            </section>
           )}
           <p className="text-xs text-muted">
             Sample households for this prototype. We only introduce households whose verdict is
@@ -135,10 +201,14 @@ export function Introductions({ state, save }: Props) {
 
 function IntroCard({
   intro,
+  requested,
+  onRequest,
   onAccept,
   onPass,
 }: {
   intro: Introduction
+  requested: SharedItem['key'][]
+  onRequest: (key: SharedItem['key']) => void
   onAccept: () => void
   onPass: (reason: PassReason, detail?: string) => void
 }) {
@@ -195,12 +265,28 @@ function IntroCard({
                 <dt className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide">
                   <LockIcon className="h-3.5 w-3.5" /> {item.label}
                 </dt>
-                <dd className="mt-1 text-sm">Not shared</dd>
+                <dd className="mt-1 text-sm">
+                  {requested.includes(item.key) ? (
+                    <span className="font-semibold text-teal">Request noted</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => onRequest(item.key)}
+                      className="font-semibold text-teal underline-offset-4 hover:underline"
+                    >
+                      Not shared. Ask to see this
+                    </button>
+                  )}
+                </dd>
               </div>
             ),
           )}
         </dl>
-        <p className="mt-3 text-xs">They can take back what they shared at any time.</p>
+        <p className="mt-3 text-xs">
+          They can take back what they shared at any time.
+          {requested.length > 0 &&
+            ' In this preview we note what you asked for and do not send it.'}
+        </p>
       </div>
 
       <div className="border-t border-[#EDF0F3] px-6 py-4">

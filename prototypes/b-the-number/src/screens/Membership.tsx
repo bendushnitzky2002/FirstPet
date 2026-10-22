@@ -1,18 +1,23 @@
 import { useState } from 'react'
 import type { State, Tier } from '../types'
-import { PLANS, TIER_LABEL } from '../data/membership'
+import { PLANS } from '../data/membership'
+import { INTRODUCTIONS } from '../data/introductions'
 import { navigate } from '../lib/router'
 import { Button, CheckIcon, PageHead, ScaleIcon } from '../components/ui'
 
 type Props = { state: State; save: (s: State) => void }
 
-// The main test: two annual tiers and a "Join the network" button. A click is
-// recorded (there is no payment) and we ask one question.
+// The main test, an honest fake door: two annual tiers and, with equal
+// weight, the option the hypothesis bets against (paying per introduction).
+// A click is recorded in localStorage, the next screen says plainly that the
+// option is not available yet, and we ask one question. No payment details.
 export function Membership({ state, save }: Props) {
   // Index of the join click this visit is answering, if any.
   const [joined, setJoined] = useState<number | null>(null)
   const [answer, setAnswer] = useState('')
   const [sent, setSent] = useState(false)
+
+  const accepted = Object.values(state.decisions).filter((d) => d.kind === 'accepted').length
 
   const join = (tier: Tier) => {
     const joins = [...state.joins, { tier, at: new Date().toISOString() }]
@@ -20,6 +25,7 @@ export function Membership({ state, save }: Props) {
     setJoined(joins.length - 1)
     setAnswer('')
     setSent(false)
+    window.scrollTo(0, 0)
   }
 
   const submit = () => {
@@ -31,23 +37,28 @@ export function Membership({ state, save }: Props) {
 
   if (joined !== null) {
     const tier = state.joins[joined].tier
+    const plan = PLANS.find((p) => p.tier === tier)
     return (
       <div className="max-w-2xl pt-10">
         <span className="fp-icon-teal h-12 w-12" aria-hidden="true">
           <CheckIcon className="h-6 w-6" />
         </span>
-        <h1 className="mt-4 text-3xl font-extrabold">
-          {tier === 'per-intro' ? 'Thanks, we noted that.' : 'Thanks for raising your hand.'}
-        </h1>
-        <p className="mt-2 text-lg">
-          {tier === 'per-intro'
-            ? 'We are not charging per introduction in this preview, and we wrote down that you would prefer it.'
-            : `We recorded your interest in the ${PLANS.find((p) => p.tier === tier)!.name} membership. Nothing is charged in this preview.`}
-        </p>
+        <h1 className="mt-4 text-3xl font-extrabold">Thanks. We noted your choice.</h1>
+        <div className="fp-warning mt-4 px-5 py-4">
+          <p className="font-bold text-navy">
+            {plan
+              ? `The ${plan.name} membership is not available yet.`
+              : 'Paying per introduction is not available yet.'}
+          </p>
+          <p className="mt-1 text-sm">
+            We are measuring interest before we build it. Nothing was charged, and we will never ask
+            for payment details here.
+          </p>
+        </div>
 
         {!sent ? (
           <form
-            className="fp-card mt-6 p-5"
+            className="fp-card mt-6 p-6"
             onSubmit={(e) => {
               e.preventDefault()
               submit()
@@ -70,9 +81,7 @@ export function Membership({ state, save }: Props) {
             </div>
           </form>
         ) : (
-          <p className="mt-6 rounded-card bg-teal-light px-4 py-3 font-semibold text-navy">
-            Got it. We read every answer.
-          </p>
+          <p className="fp-note mt-6 px-5 py-4 font-semibold">Got it. We read every answer.</p>
         )}
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -89,40 +98,66 @@ export function Membership({ state, save }: Props) {
 
   return (
     <>
-      <PageHead eyebrow="Membership" title="One yearly membership. No fee per lead.">
-        Members get every introduction in their area for the year. We never charge per household, so
-        you can say yes to the ones that fit without counting.
+      <PageHead eyebrow="Membership" title="Keep getting introductions like these.">
+        {accepted > 0
+          ? `Today you said yes to ${accepted} of ${INTRODUCTIONS.length} households. `
+          : ''}
+        Members get every introduction in their area for one yearly fee. Tell us which way you would
+        rather pay.
       </PageHead>
 
-      <div className="grid items-stretch gap-5 lg:grid-cols-[1fr_1fr_340px]">
-        {PLANS.map((plan) => (
-          <section
-            key={plan.tier}
-            className="flex flex-col rounded-[13px] border border-line bg-white p-7 shadow-card"
-          >
-            <h2 className="text-[22px]">{plan.name}</h2>
-            <p className="mt-1 text-sm text-muted">{plan.forWho}</p>
-            <p className="mt-5 font-heading text-[34px] font-extrabold leading-none text-navy">
-              {plan.price}
-            </p>
-            <p className="mt-1 text-sm text-muted">{plan.perMonth}</p>
-            <ul className="mt-5 flex-1 space-y-2 border-t border-line pt-4">
-              {plan.includes.map((item) => (
-                <li key={item} className="flex gap-2 text-[15px]">
-                  <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-teal text-white">
-                    <CheckIcon className="h-3 w-3" />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6">
-              <Button onClick={() => join(plan.tier)}>Join the network</Button>
-            </div>
-          </section>
-        ))}
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0">
+          <div className="grid items-stretch gap-5 md:grid-cols-2">
+            {PLANS.map((plan) => (
+              <section
+                key={plan.tier}
+                className="flex flex-col rounded-[13px] border border-line bg-white p-7 shadow-card"
+              >
+                <span className="fp-pill">Yearly membership</span>
+                <h2 className="mt-3 text-[22px]">{plan.name}</h2>
+                <p className="mt-1 text-sm text-muted">{plan.forWho}</p>
+                <p className="mt-5 font-heading text-[34px] font-extrabold leading-none text-navy">
+                  {plan.price}
+                </p>
+                <p className="mt-1 text-sm text-muted">{plan.perMonth}</p>
+                <ul className="mt-5 flex-1 space-y-2 border-t border-line pt-4">
+                  {plan.includes.map((item) => (
+                    <li key={item} className="flex gap-2 text-[15px]">
+                      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-teal text-white">
+                        <CheckIcon className="h-3 w-3" />
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <Button onClick={() => join(plan.tier)}>Join the network</Button>
+                </div>
+              </section>
+            ))}
+          </div>
 
-        <section className="fp-guide flex flex-col">
+          <section className="mt-5 flex flex-col gap-4 rounded-[13px] border border-line bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="fp-pill bg-peach text-orange-ink">The other way to pay</span>
+              <h2 className="mt-3 text-lg">Pay per introduction</h2>
+              <p className="mt-1 text-sm text-muted">
+                No yearly fee. You pay for each household you accept.
+              </p>
+            </div>
+            <Button variant="secondary" full={false} onClick={() => join('per-intro')}>
+              I would rather pay per introduction
+            </Button>
+          </section>
+
+          <p className="mt-3 text-xs text-muted">
+            Placeholder prices for this prototype. We have not set real prices, including a price
+            per introduction.
+          </p>
+        </div>
+
+        <section className="fp-guide">
           <span className="fp-guide-icon" aria-hidden="true">
             <ScaleIcon />
           </span>
@@ -130,28 +165,10 @@ export function Membership({ state, save }: Props) {
           <h2 className="text-lg leading-snug">The verdict is never for sale.</h2>
           <p className="mt-2 text-sm">
             Not a higher spot in any list, a better verdict for anyone, or a recommendation. Owners
-            never pay.
+            never pay, whichever way you choose.
           </p>
-          <div className="my-5 h-px bg-white/10" />
-          <p className="text-sm font-semibold text-white">Prefer to pay per household?</p>
-          <button
-            type="button"
-            onClick={() => join('per-intro')}
-            className="fp-btn fp-btn-light mt-3 min-h-[44px] px-4 text-sm"
-          >
-            Would you rather pay per introduction? Tell us.
-          </button>
         </section>
       </div>
-      <p className="mt-3 text-xs text-muted">
-        Placeholder prices for this prototype. We have not set real prices.
-      </p>
-
-      {state.joins.length > 0 && (
-        <p className="mt-4 text-sm">
-          Recorded this session: {state.joins.map((j) => TIER_LABEL[j.tier]).join(', ')}.
-        </p>
-      )}
     </>
   )
 }

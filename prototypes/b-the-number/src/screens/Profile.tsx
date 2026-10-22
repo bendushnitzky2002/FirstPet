@@ -134,6 +134,23 @@ export function Profile({ pending, onSeed }: { pending: number; onSeed: () => vo
         </div>
       </div>
 
+      {pending > 0 && (
+        <section className="fp-hero mt-5 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <span className="fp-eyebrow text-[#90D2D0]">Next step</span>
+            <h2 className="text-lg text-white">
+              {pending} {pending === 1 ? 'household has' : 'households have'} asked to meet you.
+            </h2>
+            <p className="mt-1 text-sm text-[#B9C8D8]">
+              See what each one shared, then accept or pass.
+            </p>
+          </div>
+          <Button full={false} onClick={() => navigate('/intros')}>
+            Review introductions
+          </Button>
+        </section>
+      )}
+
       <p className="mt-6 text-xs text-muted">
         Sample profile for this prototype. The business and the other clinics are made up.
       </p>

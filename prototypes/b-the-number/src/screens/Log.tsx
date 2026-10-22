@@ -14,13 +14,41 @@ const time = (iso: string) =>
 // Hidden screen for our team at #/log: what this browser recorded in a test
 // session. Not linked from the app.
 export function Log({ state, onReset }: { state: State; onReset: () => void }) {
+  const membership = state.joins.filter((j) => j.tier !== 'per-intro').length
+  const perIntro = state.joins.length - membership
+  const decisions = Object.values(state.decisions)
+  const accepted = decisions.filter((d) => d.kind === 'accepted').length
+  // Which locked items pros asked to see, most asked first.
+  const asked = new Map<string, number>()
+  for (const [id, keys] of Object.entries(state.requests)) {
+    const intro = INTRODUCTIONS.find((i) => i.id === id)
+    for (const key of keys) {
+      const label = intro?.items.find((i) => i.key === key)?.label ?? key
+      asked.set(label, (asked.get(label) ?? 0) + 1)
+    }
+  }
+  const askedList = [...asked.entries()].sort((a, b) => b[1] - a[1])
+
   return (
     <>
       <PageHead eyebrow="Team view" title="Session log">
         What this browser recorded. For our team, after a test session.
       </PageHead>
 
-      <h2 className="text-lg font-extrabold">Join clicks and answers</h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Metric label="Membership clicks" value={membership} />
+        <Metric label="Per-introduction clicks" value={perIntro} />
+        <Metric label="Introductions accepted" value={`${accepted} of ${INTRODUCTIONS.length}`} />
+        <Metric label="Locked items asked for" value={askedList.reduce((n, [, c]) => n + c, 0)} />
+      </div>
+
+      {askedList.length > 0 && (
+        <p className="mt-4 text-sm">
+          Asked to see: {askedList.map(([label, n]) => `${label} (${n})`).join(', ')}.
+        </p>
+      )}
+
+      <h2 className="mt-8 text-lg font-extrabold">Join clicks and answers</h2>
       {state.joins.length === 0 ? (
         <p className="mt-2 text-sm">No clicks yet.</p>
       ) : (
@@ -56,6 +84,14 @@ export function Log({ state, onReset }: { state: State; onReset: () => void }) {
                     ? `Accepted, ${time(d.at)}`
                     : `Passed, ${time(d.at)}: ${PASS_REASONS.find((r) => r.value === d.reason)!.label}${d.detail ? `. "${d.detail}"` : ''}`}
               </p>
+              {(state.requests[intro.id] ?? []).length > 0 && (
+                <p className="text-sm text-muted">
+                  Asked to see:{' '}
+                  {state.requests[intro.id]
+                    .map((k) => intro.items.find((i) => i.key === k)!.label)
+                    .join(', ')}
+                </p>
+              )}
             </li>
           )
         })}
@@ -67,5 +103,14 @@ export function Log({ state, onReset }: { state: State; onReset: () => void }) {
         </Button>
       </div>
     </>
+  )
+}
+
+function Metric({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="fp-metric">
+      <span className="text-[11px] font-bold uppercase tracking-[0.07em] text-muted">{label}</span>
+      <span className="fp-metric-value">{value}</span>
+    </div>
   )
 }
