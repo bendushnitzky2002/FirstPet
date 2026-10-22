@@ -318,8 +318,10 @@ export function UpgradeTeaser() {
   )
 }
 
-// SAMPLE PRICE. A placeholder for the test, not a decided price.
-const PLACEHOLDER_PRICE = '$49 a month'
+// TEST PRICE. Chosen for the prototype so the Subscribe Now click means
+// something; it is not based on pricing research. Priced per location so it
+// grows with multi-location shelters.
+const TEST_PRICE = '$49'
 
 const freeFeatures = [
   'A readiness check link for every adopter',
@@ -382,8 +384,11 @@ export function PlansTab() {
 
         <section className="flex flex-col rounded-card border-2 border-orange bg-white p-6">
           <h2 className="text-xl font-extrabold">Analytics and multi-location</h2>
-          <p className="mt-1 font-heading text-3xl font-extrabold text-navy">{PLACEHOLDER_PRICE}</p>
-          <p className="text-sm">Placeholder price for this prototype.</p>
+          <p className="mt-1 font-heading text-3xl font-extrabold text-navy">
+            {TEST_PRICE}
+            <span className="ml-1 text-base font-bold text-body">a month per location</span>
+          </p>
+          <p className="text-sm">Test price for this prototype.</p>
           <p className="mt-3 text-sm font-semibold text-navy">Everything in Free, plus:</p>
           <FeatureList items={paidFeatures} />
           <div className="mt-auto pt-6">
