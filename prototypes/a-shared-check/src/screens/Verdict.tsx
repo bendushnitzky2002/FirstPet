@@ -74,7 +74,7 @@ export function Verdict({ check, save, onReset }: Props) {
       )}
 
       <section
-        className={`rounded-[14px] border-t-4 p-6 sm:p-8 ${tone.bg} ${v.kind === 'ready' ? 'border-teal' : 'border-orange'}`}
+        className={`fp-reveal rounded-[14px] border-t-4 p-6 sm:p-8 ${tone.bg} ${v.kind === 'ready' ? 'border-teal' : 'border-orange'}`}
       >
         <p className="fp-eyebrow text-muted">{tone.label}</p>
         <h1 className={`text-4xl leading-none sm:text-5xl ${tone.text}`}>{v.title}</h1>
@@ -96,7 +96,7 @@ export function Verdict({ check, save, onReset }: Props) {
         </div>
       </section>
 
-      <div className="mt-5 grid gap-5 xl:grid-cols-2">
+      <div className="fp-stagger mt-5 grid gap-5 xl:grid-cols-2">
         <section className="fp-card p-5">
           <h2 className="text-lg">Why</h2>
           <ul className="mt-3 space-y-2">
@@ -122,14 +122,14 @@ export function Verdict({ check, save, onReset }: Props) {
                       role="checkbox"
                       aria-checked={done}
                       onClick={() => toggle(t.id)}
-                      className="flex min-h-[48px] w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-canvas"
+                      className="flex min-h-[48px] w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-canvas"
                     >
                       <span
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 ${
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${
                           done ? 'border-teal bg-teal text-white' : 'border-line bg-white'
                         }`}
                       >
-                        {done && <CheckIcon className="h-4 w-4" />}
+                        {done && <CheckIcon className="fp-pop h-4 w-4" />}
                       </span>
                       <span
                         className={done ? 'text-body/70 line-through' : 'font-semibold text-navy'}

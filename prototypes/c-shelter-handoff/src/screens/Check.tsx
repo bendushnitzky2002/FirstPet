@@ -158,10 +158,12 @@ export function Check() {
       <BackLink onClick={() => (draft.step === 0 ? navigate('/start') : go(-1))}>Back</BackLink>
       <section className="fp-card mt-2 flex flex-col p-6 sm:p-8">
         <Progress current={draft.step + 1} total={steps.length} />
-        <h1 className="text-[28px] leading-tight">{step.title(pet)}</h1>
-        {step.hint && <p className="mt-2 text-muted">{step.hint(pet)}</p>}
+        <div key={`title-${draft.step}`} className="fp-step">
+          <h1 className="text-[28px] leading-tight">{step.title(pet)}</h1>
+          {step.hint && <p className="mt-2 text-muted">{step.hint(pet)}</p>}
+        </div>
 
-        <div className="mt-6 max-w-[640px] space-y-3">
+        <div key={`body-${draft.step}`} className="fp-step mt-6 max-w-[640px] space-y-3">
           <Field step={step} answers={a} set={set} />
         </div>
 

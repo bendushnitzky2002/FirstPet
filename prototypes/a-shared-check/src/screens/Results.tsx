@@ -36,7 +36,7 @@ export function Results() {
         if at least {PREMIUM_THRESHOLD * 100}% of completed checks pick Premium.
       </PageHead>
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <section className="fp-stagger grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Stat label="Completed" value={completed} />
         <Stat label="Picked Premium" value={yes} />
         <Stat label="Said no" value={no} />

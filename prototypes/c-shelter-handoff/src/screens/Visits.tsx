@@ -60,7 +60,7 @@ export function VisitsTab({
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="fp-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Metric label="Visits coming up" value={rows.length} />
         <Metric label="Check not done yet" value={requests.length} />
         <Metric label="Ready" value={ready.length} />
@@ -329,7 +329,7 @@ export function UpgradeTeaser() {
     <button
       type="button"
       onClick={() => navigate('/counselor/plans')}
-      className="fp-card flex w-full items-center gap-4 p-5 text-left hover:border-teal"
+      className="fp-card fp-lift flex w-full items-center gap-4 p-5 text-left hover:border-teal"
     >
       <span className="min-w-0 flex-1">
         <span className="block font-heading text-lg font-extrabold text-navy">
@@ -392,7 +392,7 @@ export function PlansTab() {
 
   return (
     <>
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="fp-stagger grid gap-5 md:grid-cols-2">
         <section className="fp-card flex flex-col p-6">
           <div className="flex items-center justify-between gap-2">
             <h2 className="text-xl font-extrabold">Free for shelters</h2>
@@ -417,7 +417,7 @@ export function PlansTab() {
           <div className="mt-auto pt-6">
             {stage === 'offer' && <Button onClick={subscribe}>Subscribe Now</Button>}
             {stage === 'ask' && (
-              <div className="rounded-xl bg-peach p-4">
+              <div className="fp-reveal rounded-xl bg-peach p-4">
                 <p className="font-bold text-navy">
                   Thanks. We are not taking payment yet. One question:
                 </p>
@@ -432,7 +432,7 @@ export function PlansTab() {
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-xl border border-line bg-white p-3 outline-none focus:border-teal"
+                  className="mt-2 w-full rounded-xl border border-line bg-white p-3 outline-none transition-colors focus:border-teal"
                 />
                 <div className="mt-2">
                   <Button size="sm" disabled={!answer.trim()} onClick={send}>
@@ -442,8 +442,8 @@ export function PlansTab() {
               </div>
             )}
             {stage === 'thanks' && (
-              <p className="flex gap-2 rounded-xl bg-teal-light p-4 font-semibold text-navy">
-                <CheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
+              <p className="fp-reveal flex gap-2 rounded-xl bg-teal-light p-4 font-semibold text-navy">
+                <CheckIcon className="fp-pop mt-0.5 h-5 w-5 shrink-0 text-teal" />
                 Thanks. We read every answer, and it shapes what we build next for {shelter.short}.
               </p>
             )}

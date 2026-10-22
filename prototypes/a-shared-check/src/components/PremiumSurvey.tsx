@@ -75,7 +75,7 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
           </p>
         </>
       ) : (
-        <div className="mt-5 rounded-lg bg-white p-4 text-body">
+        <div className="fp-reveal mt-5 rounded-lg bg-white p-4 text-body">
           <p className="font-heading font-extrabold text-navy">
             {check.premium === 'yes' ? 'Premium is not available yet.' : 'Got it, thanks.'}
           </p>
@@ -86,8 +86,8 @@ export function PremiumSurvey({ check, save }: { check: Check; save: (c: Check) 
           </p>
 
           {check.worthIt ? (
-            <div className="mt-3 flex items-start gap-2 rounded-lg bg-teal-light px-3 py-2 text-sm text-navy">
-              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-teal" />
+            <div className="fp-enter mt-3 flex items-start gap-2 rounded-lg bg-teal-light px-3 py-2 text-sm text-navy">
+              <CheckIcon className="fp-pop mt-0.5 h-4 w-4 shrink-0 text-teal" />
               <span>Thanks. We saved your answer.</span>
             </div>
           ) : (

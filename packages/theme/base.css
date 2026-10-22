@@ -67,7 +67,7 @@
   }
   /* Tabs in the top bar: orange underline on the active one */
   .fp-nav-tab {
-    @apply flex h-12 shrink-0 items-center gap-2 whitespace-nowrap border-b-[3px] border-transparent px-3 pt-[3px] text-sm font-bold text-[#AEBDCA] hover:text-white;
+    @apply flex h-12 shrink-0 items-center gap-2 whitespace-nowrap border-b-[3px] border-transparent px-3 pt-[3px] text-sm font-bold text-[#AEBDCA] transition-colors duration-200 hover:text-white;
   }
   /* Tabs that sit inside the 64px bar on wide screens */
   .fp-nav-inline {
@@ -91,7 +91,7 @@
 
   /* Buttons: 8px radius, orange primary, navy and white secondaries */
   .fp-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-transparent font-heading font-extrabold transition duration-150 hover:-translate-y-px disabled:cursor-not-allowed disabled:hover:translate-y-0;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-transparent font-heading font-extrabold transition duration-150 ease-out hover:-translate-y-px active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:active:scale-100;
   }
   .fp-btn-primary {
     @apply bg-orange text-white shadow-cta hover:bg-orange-dark disabled:bg-line disabled:text-muted disabled:shadow-none;
@@ -108,7 +108,7 @@
 
   /* Text field */
   .fp-input {
-    @apply min-h-[44px] rounded-lg border border-[#CED9D7] bg-white px-3 text-navy outline-none focus:border-teal focus:ring-[3px] focus:ring-teal/10;
+    @apply min-h-[44px] rounded-lg border border-[#CED9D7] bg-white px-3 text-navy outline-none transition-[border-color,box-shadow] duration-150 focus:border-teal focus:ring-[3px] focus:ring-teal/10;
   }
 
   /* Navy hero panel with a soft gradient */
@@ -159,7 +159,7 @@
   }
   /* A clickable row inside a panel, with a teal edge on hover */
   .fp-row {
-    @apply w-full border-b border-[#EDF0F3] bg-white text-left last:border-b-0 hover:bg-[#FAFCFC] hover:shadow-[inset_3px_0_#168c91];
+    @apply w-full border-b border-[#EDF0F3] bg-white text-left transition-[background-color,box-shadow] duration-150 last:border-b-0 hover:bg-[#FAFCFC] hover:shadow-[inset_3px_0_#168c91];
   }
   /* Navy guide card for the side column */
   .fp-guide {
@@ -202,5 +202,143 @@
   }
   .fp-workbar {
     @apply sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b border-line bg-white px-4 sm:px-6 lg:justify-end lg:px-10 print:hidden;
+  }
+}
+
+/* Motion. Short and quiet: things rise a few pixels and fade in, clickable
+   cards lift on hover, buttons press in. Everything here is switched off for
+   people who ask for reduced motion (see the end of this section). */
+@keyframes fp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fp-slide {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+@keyframes fp-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+@keyframes fp-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+}
+@keyframes fp-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@layer components {
+  /* A page or panel entering: fade in and rise 8px */
+  .fp-enter {
+    animation: fp-rise 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  /* The next question in a step-by-step flow slides in from the right */
+  .fp-step {
+    animation: fp-slide 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  /* The verdict: a slightly slower rise, then its lines follow one by one */
+  .fp-reveal {
+    animation: fp-reveal 560ms cubic-bezier(0.16, 0.8, 0.24, 1) both;
+  }
+  .fp-reveal li {
+    animation: fp-rise 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: 260ms;
+  }
+  .fp-reveal li:nth-child(2) {
+    animation-delay: 320ms;
+  }
+  .fp-reveal li:nth-child(3) {
+    animation-delay: 380ms;
+  }
+  .fp-reveal li:nth-child(4) {
+    animation-delay: 440ms;
+  }
+  .fp-reveal li:nth-child(n + 5) {
+    animation-delay: 500ms;
+  }
+  /* Children of a list or grid rise in, one after another */
+  .fp-stagger > * {
+    animation: fp-rise 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .fp-stagger > :nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .fp-stagger > :nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .fp-stagger > :nth-child(4) {
+    animation-delay: 150ms;
+  }
+  .fp-stagger > :nth-child(5) {
+    animation-delay: 200ms;
+  }
+  .fp-stagger > :nth-child(n + 6) {
+    animation-delay: 250ms;
+  }
+  /* Delay a single element so a side column follows the main one */
+  .fp-delay-1 {
+    animation-delay: 80ms;
+  }
+  .fp-delay-2 {
+    animation-delay: 160ms;
+  }
+  /* A check mark or badge appearing */
+  .fp-pop {
+    animation: fp-pop 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .fp-fade {
+    animation: fp-fade 240ms ease-out both;
+  }
+  /* A clickable card: lifts 2px and the shadow deepens on hover */
+  .fp-lift {
+    transition:
+      transform 180ms ease-out,
+      box-shadow 180ms ease-out,
+      border-color 180ms ease-out;
+  }
+  .fp-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(20, 45, 78, 0.11);
+  }
+  .fp-lift:active {
+    transform: translateY(0);
+  }
+  /* An arrow inside a link or button nudges right on hover */
+  .fp-nudge {
+    @apply inline-block transition-transform duration-200 ease-out;
+  }
+  :hover > .fp-nudge,
+  :hover > * > .fp-nudge {
+    transform: translateX(3px);
+  }
+  /* Progress bars fill smoothly */
+  .fp-bar {
+    transition: width 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -65,7 +65,9 @@ export function Shell({
         </div>
         <div className="overflow-x-auto px-2 md:hidden">{nav}</div>
       </header>
-      <main className="fp-page">{children}</main>
+      <main key={path} className="fp-page fp-enter">
+        {children}
+      </main>
     </div>
   )
 }

@@ -35,7 +35,7 @@ export function Log({ state, onReset }: { state: State; onReset: () => void }) {
         What this browser recorded. For our team, after a test session.
       </PageHead>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="fp-stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Metric label="Membership clicks" value={membership} />
         <Metric label="Per-introduction clicks" value={perIntro} />
         <Metric label="Introductions accepted" value={`${accepted} of ${INTRODUCTIONS.length}`} />
