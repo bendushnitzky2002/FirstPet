@@ -1,24 +1,30 @@
 import { useSyncExternalStore } from 'react'
-import { sampleApplicants } from '../data/seed'
-import type { Applicant, Draft } from '../types'
+import { sampleApplicants, sampleRequests } from '../data/seed'
+import type { Applicant, CheckRequest, Draft, UpgradeInterest } from '../types'
 
 // All state lives in localStorage so the demo survives a refresh. One key
 // holds the shelter's adopter list and the adopter's in-progress check.
-const KEY = 'firstpet-c:v1'
+const KEY = 'firstpet-c:v2'
 
 export type State = {
   applicants: Applicant[]
+  requests: CheckRequest[]
+  upgrade: UpgradeInterest
   draft?: Draft
+}
+
+function fresh(applicants = sampleApplicants(), requests = sampleRequests()): State {
+  return { applicants, requests, upgrade: { clicks: [], answers: [] } }
 }
 
 function load(): State {
   try {
     const raw = localStorage.getItem(KEY)
-    if (raw) return JSON.parse(raw) as State
+    if (raw) return { ...fresh(), ...(JSON.parse(raw) as Partial<State>) }
   } catch {
     // Fall through to fresh sample data.
   }
-  return { applicants: sampleApplicants() }
+  return fresh()
 }
 
 let state: State = load()
@@ -55,8 +61,9 @@ export function updateApplicant(id: string, update: (a: Applicant) => Applicant)
   }))
 }
 
-export function resetTo(applicants: Applicant[]) {
-  state = { applicants }
+// Reset the sample data. What the team recorded about Subscribe Now stays.
+export function resetTo(applicants: Applicant[], requests: CheckRequest[]) {
+  state = { ...fresh(applicants, requests), upgrade: state.upgrade }
   emit()
 }
 

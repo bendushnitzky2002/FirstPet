@@ -6,6 +6,7 @@ import {
   BackLink,
   Button,
   CalendarIcon,
+  CheckIcon,
   ChatIcon,
   Page,
   PrintIcon,
@@ -13,9 +14,10 @@ import {
   VerdictChip,
 } from '../components/ui'
 import { checkInDue, reviewCheckIn } from '../data/checkin'
+import { missingBeforeVisit } from '../data/missing'
 import { getPet, shelter } from '../data/shelter'
 import { decideVerdict } from '../data/verdict'
-import { day, when } from '../lib/format'
+import { day, visitTime, when } from '../lib/format'
 import { linkTo, navigate } from '../lib/router'
 import { newId, updateApplicant, useStore } from '../lib/storage'
 import type { Applicant } from '../types'
@@ -34,7 +36,9 @@ export function ApplicantSummary({ id }: { id: string }) {
 
   return (
     <Page wide>
-      <BackLink onClick={() => navigate('/counselor')}>All adopters</BackLink>
+      <BackLink onClick={() => navigate(a.adoptedAt ? '/counselor/checkins' : '/counselor')}>
+        {a.adoptedAt ? 'Week-two check-ins' : 'Upcoming visits'}
+      </BackLink>
 
       <header className="mt-2 flex flex-wrap items-center gap-4">
         <Avatar name={a.answers.name} tone={verdict.kind === 'ready' ? 'teal' : 'orange'} />
@@ -43,6 +47,11 @@ export function ApplicantSummary({ id }: { id: string }) {
           <p>
             for {pet.name}, {pet.description}. Check {a.id}, {when(a.submittedAt).toLowerCase()}.
           </p>
+          {a.visitAt && !a.adoptedAt && (
+            <p className="font-heading text-sm font-extrabold uppercase tracking-wide text-teal">
+              Visit: {visitTime(a.visitAt)}
+            </p>
+          )}
         </div>
         <VerdictChip kind={verdict.kind} />
       </header>
@@ -57,6 +66,8 @@ export function ApplicantSummary({ id }: { id: string }) {
               change a result.
             </span>
           </p>
+
+          {!a.adoptedAt && <Missing items={missingBeforeVisit(a.answers, pet)} />}
 
           <VerdictBlock verdict={verdict} who="counselor" />
 
@@ -120,6 +131,29 @@ export function ApplicantSummary({ id }: { id: string }) {
         </aside>
       </div>
     </Page>
+  )
+}
+
+// What the adopter still needs to bring or settle before the visit.
+function Missing({ items }: { items: string[] }) {
+  if (!items.length)
+    return (
+      <p className="flex gap-2 rounded-card border border-teal bg-white px-4 py-3 font-semibold text-navy">
+        <CheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-teal" />
+        Nothing missing before the visit.
+      </p>
+    )
+  return (
+    <section className="rounded-card border-2 border-orange bg-peach p-5">
+      <h2 className="text-lg font-extrabold">Missing before the visit</h2>
+      <ul className="mt-2 flex flex-wrap gap-2">
+        {items.map((m) => (
+          <li key={m} className="rounded-full bg-white px-3 py-1 text-sm font-bold text-navy">
+            {m}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 

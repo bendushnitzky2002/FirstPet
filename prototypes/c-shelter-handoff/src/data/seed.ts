@@ -1,4 +1,4 @@
-import type { Activity, Applicant } from '../types'
+import type { Activity, Applicant, CheckRequest } from '../types'
 
 // SAMPLE DATA. Made-up adopters for the counselor workspace. The list and
 // applicant summary layout are adapted from Sala's "FirstPet Shelter
@@ -13,6 +13,10 @@ function ago(days: number, hour = 10, minute = 0): string {
   return d.toISOString()
 }
 
+function ahead(days: number, hour: number, minute = 0): string {
+  return ago(-days, hour, minute)
+}
+
 function act(id: string, at: string, title: string, detail: string): Activity {
   return { id, at, title, detail }
 }
@@ -23,6 +27,7 @@ export function sampleApplicants(): Applicant[] {
       id: 'PM4K2Q',
       petId: 'biscuit',
       submittedAt: ago(0, 9, 42),
+      visitAt: ahead(1, 10, 0),
       answers: {
         name: 'Priya and Marcus',
         household: 'Family with kids',
@@ -39,6 +44,7 @@ export function sampleApplicants(): Applicant[] {
       id: 'JC7H3M',
       petId: 'luna',
       submittedAt: ago(1, 15, 16),
+      visitAt: ahead(0, 15, 30),
       answers: {
         name: 'Jamie Chen',
         household: 'Just me',
@@ -55,6 +61,7 @@ export function sampleApplicants(): Applicant[] {
       id: 'RP2N8D',
       petId: 'biscuit',
       submittedAt: ago(2, 11, 5),
+      visitAt: ahead(2, 14, 0),
       answers: {
         name: 'Riley Park',
         household: 'Roommates',
@@ -180,6 +187,26 @@ export function sampleApplicants(): Applicant[] {
   ]
 }
 
+// Checks the shelter asked for that the adopter has not done yet.
+export function sampleRequests(): CheckRequest[] {
+  return [
+    {
+      id: 'CA5R7N',
+      name: 'Chris Alvarez',
+      petId: 'hank',
+      visitAt: ahead(1, 11, 30),
+      sentAt: ago(1, 16, 0),
+    },
+    {
+      id: 'PN3J8W',
+      name: 'Pat Nguyen',
+      petId: 'luna',
+      visitAt: ahead(3, 13, 0),
+      sentAt: ago(0, 8, 30),
+    },
+  ]
+}
+
 // The "ddd" rehearsal seed adds one adopter who just finished the check at
 // home, on top of the sample list, so the demo can start in the workspace.
 export function demoApplicants(): Applicant[] {
@@ -189,6 +216,7 @@ export function demoApplicants(): Applicant[] {
       id: 'DW9X2B',
       petId: 'biscuit',
       submittedAt: now,
+      visitAt: ahead(0, 16, 30),
       answers: {
         name: 'Dana Whitfield',
         household: 'Me and a partner',

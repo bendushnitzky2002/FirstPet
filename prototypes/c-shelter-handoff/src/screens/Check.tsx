@@ -93,25 +93,36 @@ export function Check() {
       worries: a.worries ?? [],
     }
     const now = new Date().toISOString()
-    setState((s) => ({
-      applicants: [
-        {
-          id,
-          petId: draft.petId,
-          answers,
-          submittedAt: now,
-          activity: [
-            {
-              id: 'a1',
-              at: now,
-              title: 'Readiness check done',
-              detail: 'Shared with Maple Street.',
-            },
-          ],
-        },
-        ...s.applicants,
-      ],
-    }))
+    setState((s) => {
+      // A check the shelter requested keeps its visit time and leaves the request list.
+      const request = s.requests.find((r) => r.id === draft.requestId)
+      const activity = [
+        { id: 'a1', at: now, title: 'Readiness check done', detail: 'Shared with Maple Street.' },
+      ]
+      if (request)
+        activity.unshift({
+          id: 'a0',
+          at: request.sentAt,
+          title: 'Check requested',
+          detail: 'Maple Street sent the link.',
+        })
+      return {
+        ...s,
+        draft: undefined,
+        requests: s.requests.filter((r) => r.id !== draft.requestId),
+        applicants: [
+          {
+            id,
+            petId: draft.petId,
+            answers,
+            submittedAt: now,
+            visitAt: request?.visitAt,
+            activity,
+          },
+          ...s.applicants,
+        ],
+      }
+    })
     navigate(`/done/${id}`)
   }
 

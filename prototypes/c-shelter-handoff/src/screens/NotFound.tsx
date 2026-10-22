@@ -12,7 +12,7 @@ export function NotFound() {
         taken.
       </p>
       <div className="mt-6">
-        <Button onClick={() => navigate('/counselor')}>Go to the adopter list</Button>
+        <Button onClick={() => navigate('/counselor')}>Go to upcoming visits</Button>
       </div>
     </Page>
   )

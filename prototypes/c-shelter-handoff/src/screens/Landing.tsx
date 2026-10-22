@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { ChevronRight, ClipboardIcon, HomeIcon, LogoMark, Page, SampleNote } from '../components/ui'
-import { demoApplicants, sampleApplicants } from '../data/seed'
+import { demoApplicants, sampleApplicants, sampleRequests } from '../data/seed'
 import { shelter } from '../data/shelter'
 import { navigate } from '../lib/router'
 import { resetTo } from '../lib/storage'
@@ -19,8 +19,9 @@ export function Landing() {
           The readiness check is step one of adoption.
         </h1>
         <p className="mt-3 text-lg">
-          Adopters take a 5-minute check before they visit. Counselors get a one-page summary, then
-          a check-in two weeks after the pet goes home.
+          Shelters send adopters a free 5-minute check before they visit. Counselors see each
+          upcoming visit with the result and anything missing, then a check-in two weeks after the
+          pet goes home.
         </p>
 
         <div className="mt-8 space-y-3">
@@ -36,7 +37,7 @@ export function Landing() {
             icon={<ClipboardIcon />}
             tone="orange"
             title="I'm an adoption counselor"
-            text="See today's adopters, their summaries, and week-two check-ins."
+            text="Upcoming visits, week-two check-ins, and plans."
           />
         </div>
 
@@ -46,7 +47,7 @@ export function Landing() {
           </SampleNote>
           <button
             type="button"
-            onClick={() => resetTo(sampleApplicants())}
+            onClick={() => resetTo(sampleApplicants(), sampleRequests())}
             className="text-xs font-semibold text-teal underline-offset-4 hover:underline"
           >
             Reset sample data
@@ -102,7 +103,7 @@ function useDemoShortcut() {
       presses.current = [...presses.current.filter((t) => now - t < 1500), now]
       if (presses.current.length >= 3) {
         presses.current = []
-        resetTo(demoApplicants())
+        resetTo(demoApplicants(), sampleRequests())
         navigate('/counselor')
       }
     }

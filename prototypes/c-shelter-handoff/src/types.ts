@@ -55,13 +55,31 @@ export type Applicant = {
   petId: string
   answers: Answers
   submittedAt: string
+  // When the adopter is booked to visit the shelter, if a visit is booked.
+  visitAt?: string
   adoptedAt?: string
   checkIn?: CheckIn
   note?: string
   activity: Activity[]
 }
 
+// A check the shelter asked for that the adopter has not finished yet.
+export type CheckRequest = {
+  id: string
+  name: string
+  petId: string
+  visitAt: string
+  sentAt: string
+}
+
+// What we record when a counselor clicks Subscribe Now. Local only.
+export type UpgradeInterest = {
+  clicks: string[]
+  answers: { at: string; text: string }[]
+}
+
 export type Draft = {
+  requestId?: string
   petId: string
   step: number
   answers: Partial<Answers>

@@ -3,7 +3,6 @@ import {
   AlertIcon,
   Avatar,
   BackLink,
-  Button,
   ChevronRight,
   LogoMark,
   Page,
@@ -15,15 +14,17 @@ import { checkInDue, daysUntil, reviewCheckIn, type CheckInStatus } from '../dat
 import { getPet, shelter } from '../data/shelter'
 import { decideVerdict, type VerdictKind } from '../data/verdict'
 import { day, when } from '../lib/format'
-import { linkTo, navigate } from '../lib/router'
+import { navigate } from '../lib/router'
 import { useStore } from '../lib/storage'
 import type { Applicant } from '../types'
+import { PlansTab, upcoming, UpgradeTeaser, VisitsTab } from './Visits'
 
 // The counselor's workspace. The adopter list and its layout are adapted from
 // Sala's Shelter Workspace prototype, rebuilt around the readiness verdict and
 // the week-two check-in.
 
-type Tab = 'adopters' | 'checkins'
+export const tabs = ['visits', 'adopters', 'checkins', 'plans'] as const
+export type Tab = (typeof tabs)[number]
 
 function lastActivity(a: Applicant): string {
   return (
@@ -35,7 +36,7 @@ function lastActivity(a: Applicant): string {
 }
 
 export function Counselor({ tab }: { tab: Tab }) {
-  const { applicants } = useStore()
+  const { applicants, requests } = useStore()
   const reviews = applicants.map((a) => ({ a, r: reviewCheckIn(a) }))
   const toCall = reviews.filter((x) => x.r.status === 'call')
   const needsAttention = reviews.filter(
@@ -57,16 +58,30 @@ export function Counselor({ tab }: { tab: Tab }) {
         </div>
       </header>
 
-      <nav className="mt-6 flex gap-1 border-b border-line" aria-label="Workspace">
-        <TabLink active={tab === 'adopters'} onClick={() => navigate('/counselor')}>
-          Adopters <Count n={applicants.length} />
+      <nav
+        className="-mx-4 mt-6 flex gap-1 overflow-x-auto border-b border-line px-4 sm:mx-0 sm:px-0"
+        aria-label="Workspace"
+      >
+        <TabLink active={tab === 'visits'} onClick={() => navigate('/counselor')}>
+          <span className="hidden sm:inline">Upcoming visits</span>
+          <span className="sm:hidden">Visits</span>{' '}
+          <Count n={upcoming(applicants).length + requests.length} />
         </TabLink>
         <TabLink active={tab === 'checkins'} onClick={() => navigate('/counselor/checkins')}>
-          Week-two check-ins {needsAttention > 0 && <Count n={needsAttention} hot />}
+          <span className="hidden sm:inline">Week-two check-ins</span>
+          <span className="sm:hidden">Check-ins</span>{' '}
+          {needsAttention > 0 && <Count n={needsAttention} hot />}
+        </TabLink>
+        <TabLink active={tab === 'adopters'} onClick={() => navigate('/counselor/adopters')}>
+          <span className="hidden sm:inline">All adopters</span>
+          <span className="sm:hidden">Adopters</span>
+        </TabLink>
+        <TabLink active={tab === 'plans'} onClick={() => navigate('/counselor/plans')}>
+          Plans
         </TabLink>
       </nav>
 
-      {toCall.length > 0 && (
+      {toCall.length > 0 && tab !== 'plans' && (
         <button
           type="button"
           onClick={() => navigate(`/counselor/a/${toCall[0].a.id}`)}
@@ -91,11 +106,10 @@ export function Counselor({ tab }: { tab: Tab }) {
         </button>
       )}
 
-      {tab === 'adopters' ? (
-        <AdoptersTab applicants={applicants} />
-      ) : (
-        <CheckInsTab reviews={reviews} />
-      )}
+      {tab === 'visits' && <VisitsTab applicants={applicants} requests={requests} />}
+      {tab === 'adopters' && <AdoptersTab applicants={applicants} />}
+      {tab === 'checkins' && <CheckInsTab reviews={reviews} />}
+      {tab === 'plans' && <PlansTab />}
     </Page>
   )
 }
@@ -114,7 +128,7 @@ function TabLink({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className={`-mb-px inline-flex items-center gap-2 border-b-2 px-3 py-3 font-heading text-sm font-bold sm:text-base ${
+      className={`-mb-px inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 font-heading text-sm font-bold sm:text-base ${
         active ? 'border-teal text-navy' : 'border-transparent text-body/70 hover:text-navy'
       }`}
     >
@@ -166,8 +180,6 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
         <Metric label="Ready once" value={counts['ready-once']} />
         <Metric label="Not yet" value={counts['not-yet']} />
       </div>
-
-      <CounterLink />
 
       <section className="fp-card mt-6 overflow-hidden">
         <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center">
@@ -244,44 +256,6 @@ function Metric({ label, value }: { label: string; value: number }) {
   )
 }
 
-// The link the shelter puts on its website, adoption emails, and counter
-// tablet. This is how the shelter "asks for it as step one."
-function CounterLink() {
-  const [copied, setCopied] = useState(false)
-  const url = linkTo('/start')
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      window.prompt('Copy this link', url)
-    }
-  }
-  return (
-    <section className="fp-card mt-6 flex flex-col gap-4 p-5 sm:flex-row sm:items-center">
-      <div className="min-w-0 flex-1">
-        <h2 className="text-lg font-extrabold">Ask every adopter to start here</h2>
-        <p className="text-sm">
-          Put this link in your adoption emails and on the counter tablet. Results show up in this
-          list.
-        </p>
-        <p className="mt-2 truncate rounded-lg bg-canvas px-3 py-2 font-mono text-xs text-navy">
-          {url}
-        </p>
-      </div>
-      <div className="flex shrink-0 gap-2">
-        <Button size="sm" full={false} onClick={copy}>
-          {copied ? 'Copied' : 'Copy link'}
-        </Button>
-        <Button size="sm" variant="secondary" full={false} onClick={() => navigate('/start')}>
-          Open as an adopter
-        </Button>
-      </div>
-    </section>
-  )
-}
-
 const statusOrder: CheckInStatus[] = ['call', 'message', 'due', 'upcoming', 'well']
 
 function CheckInsTab({
@@ -338,6 +312,7 @@ function CheckInsTab({
           </p>
         )}
       </section>
+      <UpgradeTeaser />
       <div className="mt-4">
         <SampleNote>Sample adopters. Dates move with today so check-ins are always due.</SampleNote>
       </div>

@@ -2,20 +2,30 @@ import { useState } from 'react'
 import { PetCard, StepRail } from '../components/shelter'
 import { BackLink, Button, CheckIcon, LogoMark, Page } from '../components/ui'
 import { getPet, pets, shelter } from '../data/shelter'
+import { day, time } from '../lib/format'
 import { navigate } from '../lib/router'
 import { setState, useStore } from '../lib/storage'
 
 // What the adopter sees when the shelter sends them the link (or hands them a
 // tablet at the counter). The shelter is the one asking, not FirstPet.
-export function AdopterStart({ petId }: { petId?: string }) {
-  const { draft } = useStore()
+export function AdopterStart({ petId, requestId }: { petId?: string; requestId?: string }) {
+  const { draft, requests } = useStore()
+  const request = requests.find((r) => r.id === requestId)
   const available = pets.filter((p) => p.available)
   const [chosen, setChosen] = useState(petId ?? draft?.petId ?? available[0].id)
   const pet = getPet(chosen)
-  const canResume = draft && draft.step > 0
+  const canResume = draft && draft.step > 0 && draft.requestId === request?.id
 
   const start = () => {
-    setState((s) => ({ ...s, draft: { petId: chosen, step: 0, answers: {} } }))
+    setState((s) => ({
+      ...s,
+      draft: {
+        petId: chosen,
+        requestId: request?.id,
+        step: 0,
+        answers: request ? { name: request.name } : {},
+      },
+    }))
     navigate('/check')
   }
 
@@ -31,6 +41,12 @@ export function AdopterStart({ petId }: { petId?: string }) {
         </div>
       </div>
 
+      {request && (
+        <p className="mt-6 rounded-card bg-teal-light px-4 py-3 font-semibold text-navy">
+          Hi {request.name.split(' ')[0]}. Your visit is {day(new Date(request.visitAt))} at{' '}
+          {time(new Date(request.visitAt))}.
+        </p>
+      )}
       <h1 className="mt-6 text-3xl font-extrabold leading-tight">
         Before you visit, we ask every adopter to take a readiness check.
       </h1>
@@ -60,7 +76,7 @@ export function AdopterStart({ petId }: { petId?: string }) {
 
       <ul className="mt-6 space-y-2">
         {[
-          'No account. Your answers go only to ' + shelter.short + '.',
+          'Free. No account. Your answers go only to ' + shelter.short + '.',
           `We'll give you a first-year cost for ${pet.name}.`,
           "The answer can be not yet. If it is, we'll say what would change it.",
         ].map((t) => (
