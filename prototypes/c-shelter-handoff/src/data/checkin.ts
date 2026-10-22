@@ -11,11 +11,13 @@ const DAY = 24 * 60 * 60 * 1000
 // How many more hours alone than planned counts as a change worth a call.
 const HOURS_DRIFT_FOR_CALL = 2
 
-export type CheckInStatus = 'call' | 'message' | 'well' | 'due' | 'upcoming' | 'not-adopted'
+export type CheckInStatus =
+  'call' | 'message' | 'followed' | 'well' | 'due' | 'upcoming' | 'not-adopted'
 
 export const statusLabel: Record<CheckInStatus, string> = {
   call: 'Call this week',
   message: 'Send a note',
+  followed: 'Followed up',
   well: 'Doing well',
   due: 'Waiting for reply',
   upcoming: 'Scheduled',
@@ -58,8 +60,10 @@ export function reviewCheckIn(a: Applicant, now = new Date()): CheckInReview {
     message.push(`Daily care plan (${a.answers.dailyCare}): ${c.careHolding.toLowerCase()}`)
   if (c.helpWith.length) message.push(`Asked for help with: ${c.helpWith.join(', ').toLowerCase()}`)
 
-  if (call.length) return { status: 'call', reasons: [...call, ...message] }
-  if (message.length) return { status: 'message', reasons: message }
+  // Once the counselor has followed up, the flag stays visible but stops asking for action.
+  const done = a.followedUp ? 'followed' : undefined
+  if (call.length) return { status: done ?? 'call', reasons: [...call, ...message] }
+  if (message.length) return { status: done ?? 'message', reasons: message }
   return { status: 'well', reasons: ['Settling in well and the plan is holding'] }
 }
 

@@ -233,6 +233,7 @@ export function VerdictChip({ kind }: { kind: VerdictKind }) {
 const statusStyle: Record<CheckInStatus, string> = {
   call: 'bg-orange text-navy',
   message: 'bg-peach text-orange-ink',
+  followed: 'border border-teal bg-white text-teal-dark',
   well: 'bg-teal-light text-teal-dark',
   due: 'border border-line bg-white text-body',
   upcoming: 'border border-line bg-white text-body',

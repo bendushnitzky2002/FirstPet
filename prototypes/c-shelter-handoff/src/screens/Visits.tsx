@@ -129,6 +129,11 @@ function CheckedVisit({ a }: { a: Applicant }) {
         <ChevronRight className="hidden h-5 w-5 shrink-0 text-teal sm:block" />
       </div>
       <div className="mt-3 flex flex-wrap gap-1.5">
+        {a.askedAt && missing.length > 0 && (
+          <span className="rounded-full border border-teal bg-white px-2.5 py-1 text-xs font-bold text-teal-dark">
+            Asked {when(a.askedAt).toLowerCase()}
+          </span>
+        )}
         {missing.length ? (
           missing.map((m) => (
             <span
@@ -181,7 +186,7 @@ function RequestedVisit({ r }: { r: CheckRequest }) {
             setCopied(true)
           }}
         >
-          {copied ? 'Link copied' : 'Request a check'}
+          {copied ? 'Link copied' : 'Copy link again'}
         </Button>
         <Button
           size="sm"
