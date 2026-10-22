@@ -6,12 +6,12 @@ FirstPet is a readiness check for first-time pet adopters. This repo holds our t
 
 Placeholders until GitHub Pages is live.
 
-| Page                                   | Link                                  |
-| -------------------------------------- | ------------------------------------- |
-| Landing page                           | https://dushben.github.io/FirstPet/   |
-| A: Shared Check (Priya and Marcus)     | https://dushben.github.io/FirstPet/a/ |
-| B: The Number (Vicky's future clients) | https://dushben.github.io/FirstPet/b/ |
-| C: Shelter Hand-off (Carla)            | https://dushben.github.io/FirstPet/c/ |
+| Page                        | Link                                  |
+| --------------------------- | ------------------------------------- |
+| Landing page                | https://dushben.github.io/FirstPet/   |
+| A: Shared Check (Priya)     | https://dushben.github.io/FirstPet/a/ |
+| B: Pro Network (Dana)       | https://dushben.github.io/FirstPet/b/ |
+| C: Shelter Hand-off (Carla) | https://dushben.github.io/FirstPet/c/ |
 
 ## Run locally
 
@@ -20,7 +20,7 @@ Requires Node 22 (see `.nvmrc`; with nvm, run `nvm use`).
 ```
 npm install
 npm run dev:a    # Shared Check at http://localhost:5173
-npm run dev:b    # The Number at http://localhost:5174
+npm run dev:b    # Pro Network at http://localhost:5174
 npm run dev:c    # Shelter Hand-off at http://localhost:5175
 ```
 
@@ -51,7 +51,7 @@ packages/theme/              shared Tailwind preset, base styles, logo
 prototypes/a-shared-check/   Prototype A
 prototypes/b-the-number/     Prototype B
 prototypes/c-shelter-handoff/  Prototype C
-site/                        landing page
+site/                        persona chooser landing page
 docs/                        hypotheses, scope cards, prompt logs, presentation outline, demo script
 ```
 
@@ -60,7 +60,7 @@ docs/                        hypotheses, scope cards, prompt logs, presentation 
 | Area                          | Owner |
 | ----------------------------- | ----- |
 | Prototype A: Shared Check     |       |
-| Prototype B: The Number       |       |
+| Prototype B: Pro Network      |       |
 | Prototype C: Shelter Hand-off |       |
 | Landing page and deploy       |       |
 | Hypotheses and scope cards    |       |
