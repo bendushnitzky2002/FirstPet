@@ -17,7 +17,7 @@ import { day, when } from '../lib/format'
 import { navigate } from '../lib/router'
 import { useStore } from '../lib/storage'
 import type { Applicant } from '../types'
-import { PlansTab, UpgradeTeaser, VisitsTab } from './Visits'
+import { PlansTab, UpgradeLink, UpgradeTeaser, VisitsTab } from './Visits'
 
 // The counselor's workspace. The adopter list and its layout are adapted from
 // Sala's Shelter Workspace prototype, rebuilt around the readiness verdict and
@@ -71,6 +71,14 @@ export function Counselor({ tab }: { tab: Tab }) {
           </span>
           <ChevronRight className="h-5 w-5 shrink-0 text-navy" />
         </button>
+      )}
+      {/* The moment the upgrade's value is felt: a flag that may come before a
+          return. One quiet link, not a banner. */}
+      {toCall.length > 0 && tab !== 'plans' && (
+        <p className="-mt-3 mb-5 px-1 text-sm text-muted">
+          Which check-in answers came before past returns?{' '}
+          <UpgradeLink from="flag">See Analytics and multi-location</UpgradeLink>
+        </p>
       )}
 
       {tab === 'visits' && <VisitsTab applicants={applicants} requests={requests} />}
@@ -133,6 +141,10 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
         <Metric label="Ready once" value={counts['ready-once']} />
         <Metric label="Not yet" value={counts['not-yet']} />
       </div>
+      <p className="mt-3 text-sm text-muted">
+        Return rate by readiness result: part of Analytics and multi-location (not built yet).{' '}
+        <UpgradeLink from="adopters">See plans</UpgradeLink>
+      </p>
 
       <section className="fp-card mt-5 overflow-hidden">
         <div className="flex flex-col gap-3 border-b border-line px-5 py-4 sm:flex-row sm:items-center">

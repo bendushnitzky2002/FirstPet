@@ -4,7 +4,12 @@ import type { State } from '../types'
 // refresh and can be read back on #/log.
 const KEY = 'firstpet-b-network'
 
-export const emptyState = (): State => ({ decisions: {}, joins: [], requests: {} })
+export const emptyState = (): State => ({
+  decisions: {},
+  joins: [],
+  requests: {},
+  views: [],
+})
 
 export function loadState(): State {
   try {

@@ -11,11 +11,24 @@ const time = (iso: string) =>
     minute: '2-digit',
   })
 
+const ENTRY_LABEL: Record<string, string> = {
+  nav: 'top tab',
+  'side-card': 'side card after an accept',
+  banner: 'small-screen banner',
+  'all-decided': 'note after the last decision',
+}
+
 // Hidden screen for our team at #/log: what this browser recorded in a test
 // session. Not linked from the app.
 export function Log({ state, onReset }: { state: State; onReset: () => void }) {
   const membership = state.joins.filter((j) => j.tier !== 'per-intro').length
   const perIntro = state.joins.length - membership
+  // One choice per tester: the first option clicked is the one that counts.
+  const first = state.joins[0]
+  const fromCounts = state.views.reduce<Record<string, number>>((acc, v) => {
+    acc[v.from] = (acc[v.from] ?? 0) + 1
+    return acc
+  }, {})
   const decisions = Object.values(state.decisions)
   const accepted = decisions.filter((d) => d.kind === 'accepted').length
   // Which locked items pros asked to see, most asked first.
@@ -35,12 +48,25 @@ export function Log({ state, onReset }: { state: State; onReset: () => void }) {
         What this browser recorded. For our team, after a test session.
       </PageHead>
 
-      <div className="fp-stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="fp-stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Metric label="Membership page views" value={state.views.length} />
+        <Metric label="First choice" value={first ? TIER_LABEL[first.tier] : 'None yet'} />
         <Metric label="Membership clicks" value={membership} />
         <Metric label="Per-introduction clicks" value={perIntro} />
         <Metric label="Introductions accepted" value={`${accepted} of ${INTRODUCTIONS.length}`} />
         <Metric label="Locked items asked for" value={askedList.reduce((n, [, c]) => n + c, 0)} />
       </div>
+
+      <p className="mt-4 text-sm">
+        Count the first choice for each tester; later clicks are exploring.{' '}
+        {state.perIntroFirst === undefined
+          ? ''
+          : `Pay per introduction was shown ${state.perIntroFirst ? 'first' : 'last'}. `}
+        {state.views.length > 0 &&
+          `Reached the page from: ${Object.entries(fromCounts)
+            .map(([k, n]) => `${ENTRY_LABEL[k] ?? k} (${n})`)
+            .join(', ')}.`}
+      </p>
 
       {askedList.length > 0 && (
         <p className="mt-4 text-sm">

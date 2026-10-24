@@ -7,6 +7,7 @@ import { CheckIn } from './screens/CheckIn'
 import { Counselor, tabs, type Tab } from './screens/Counselor'
 import { Landing } from './screens/Landing'
 import { PrintSummary } from './screens/PrintSummary'
+import { UpgradeLog } from './screens/Visits'
 
 // Routes (hash based):
 //   #/                      two doors: adopter or counselor
@@ -20,6 +21,7 @@ import { PrintSummary } from './screens/PrintSummary'
 //   #/counselor/a/:id       one adopter's readiness summary
 //   #/summary/:id           printable one-page summary
 //   #/checkin/:id           the adopter's week-two check-in
+//   #/log                   team view: upgrade views, clicks, and answers
 export default function App() {
   const { path, parts } = useHashRoute()
   return <div key={path}>{screen(parts)}</div>
@@ -40,6 +42,8 @@ function screen([first, second, third]: string[]) {
       return <PrintSummary id={second ?? ''} />
     case 'checkin':
       return <CheckIn id={second ?? ''} />
+    case 'log':
+      return <UpgradeLog />
     default:
       return <Landing />
   }

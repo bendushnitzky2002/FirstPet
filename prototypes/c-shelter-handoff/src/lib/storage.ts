@@ -14,13 +14,22 @@ export type State = {
 }
 
 function fresh(applicants = sampleApplicants(), requests = sampleRequests()): State {
-  return { applicants, requests, upgrade: { clicks: [], answers: [] } }
+  return { applicants, requests, upgrade: { views: [], clicks: [], answers: [] } }
 }
 
 function load(): State {
   try {
     const raw = localStorage.getItem(KEY)
-    if (raw) return { ...fresh(), ...(JSON.parse(raw) as Partial<State>) }
+    if (raw) {
+      const saved = JSON.parse(raw) as Partial<State>
+      const base = fresh()
+      // Older saves kept clicks as bare timestamps and had no views.
+      const upgrade = { ...base.upgrade, ...saved.upgrade }
+      upgrade.clicks = upgrade.clicks.map((c) =>
+        typeof c === 'string' ? { at: c, from: 'nav' as const } : c,
+      )
+      return { ...base, ...saved, upgrade }
+    }
   } catch {
     // Fall through to fresh sample data.
   }

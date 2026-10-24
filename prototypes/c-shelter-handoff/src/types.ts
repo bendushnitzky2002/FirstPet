@@ -76,9 +76,15 @@ export type CheckRequest = {
   sentAt: string
 }
 
-// What we record when a counselor clicks Subscribe Now. Local only.
+// How a counselor reached the upgrade: the Plans tab, the link under the
+// "Call this week" flag, the line on All adopters, or the check-ins card.
+export type UpgradeEntry = 'nav' | 'flag' | 'adopters' | 'teaser'
+
+// What we record about the upgrade. Local only. Views count each time the
+// paid card is shown, so clicks can be read against people who saw it.
 export type UpgradeInterest = {
-  clicks: string[]
+  views: { at: string; from: UpgradeEntry }[]
+  clicks: { at: string; from: UpgradeEntry }[]
   answers: { at: string; text: string }[]
 }
 

@@ -42,15 +42,12 @@ export function Verdict({ check, save, onReset }: Props) {
     <Page
       stage="verdict"
       aside={
-        <>
-          <PremiumSurvey check={check} save={save} />
-          <div className="fp-card space-y-2 p-4">
-            <Button onClick={() => navigate('/summary')}>Save this as a one-page summary</Button>
-            <Button variant="secondary" onClick={onReset}>
-              Start over
-            </Button>
-          </div>
-        </>
+        <div className="fp-card space-y-2 p-4">
+          <Button onClick={() => navigate('/summary')}>Save this as a one-page summary</Button>
+          <Button variant="secondary" onClick={onReset}>
+            Start over
+          </Button>
+        </div>
       }
     >
       <TopBar onBack={() => navigate('/compare')} />
@@ -143,6 +140,12 @@ export function Verdict({ check, save, onReset }: Props) {
             </ul>
           </section>
         )}
+      </div>
+
+      {/* Premium comes after the verdict and the plan, as the next step of the
+          same story, in the same place on desktop and mobile. */}
+      <div className="mt-5">
+        <PremiumSurvey check={check} save={save} from="verdict" />
       </div>
     </Page>
   )

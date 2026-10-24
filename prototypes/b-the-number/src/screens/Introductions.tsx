@@ -84,9 +84,9 @@ export function Introductions({ state, save }: Props) {
           )}
           {accepted > 0 && pending.length > 0 && (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-[11px] bg-navy px-5 py-3 text-white lg:hidden">
-              <p className="text-sm font-semibold">Want introductions like this all year?</p>
-              <Button full={false} onClick={() => navigate('/membership')}>
-                See membership
+              <p className="text-sm font-semibold">Want more introductions like this?</p>
+              <Button full={false} onClick={() => navigate('/membership?from=banner')}>
+                See how you'd pay
               </Button>
             </div>
           )}
@@ -108,11 +108,12 @@ export function Introductions({ state, save }: Props) {
                 You said yes to {accepted} of {INTRODUCTIONS.length} households.
               </h2>
               <p className="mx-auto mt-2 max-w-md text-muted">
-                No introductions waiting. Next, see what it would take to keep getting them.
+                No introductions waiting. Next, tell us how you would want to pay to keep getting
+                them.
               </p>
               <div className="mt-5 flex justify-center">
-                <Button full={false} onClick={() => navigate('/membership')}>
-                  See membership
+                <Button full={false} onClick={() => navigate('/membership?from=all-decided')}>
+                  See how you'd pay
                 </Button>
               </div>
             </section>
@@ -128,10 +129,12 @@ export function Introductions({ state, save }: Props) {
             <section className="fp-hero fp-enter p-6">
               <span className="fp-eyebrow text-[#90D2D0]">Membership</span>
               <h2 className="text-lg leading-snug text-white">
-                Want introductions like {accepted === 1 ? 'this' : 'these'} all year?
+                Want more introductions like {accepted === 1 ? 'this' : 'these'}?
               </h2>
               <div className="mt-4">
-                <Button onClick={() => navigate('/membership')}>See membership</Button>
+                <Button onClick={() => navigate('/membership?from=side-card')}>
+                  See how you'd pay
+                </Button>
               </div>
             </section>
           )}

@@ -1,17 +1,36 @@
-import { useState } from 'react'
-import type { State, Tier } from '../types'
-import { PLANS } from '../data/membership'
+import { useEffect, useState } from 'react'
+import type { MembershipEntry, State, Tier } from '../types'
+import { BREAK_EVEN, PLANS } from '../data/membership'
 import { INTRODUCTIONS } from '../data/introductions'
 import { navigate } from '../lib/router'
 import { Button, CheckIcon, PageHead, ScaleIcon } from '../components/ui'
 
 type Props = { state: State; save: (s: State) => void }
 
-// The main test, an honest fake door: two annual tiers and, with equal
-// weight, the option the hypothesis bets against (paying per introduction).
-// A click is recorded in localStorage, the next screen says plainly that the
-// option is not available yet, and we ask one question. No payment details.
+const ENTRIES: MembershipEntry[] = ['nav', 'side-card', 'banner', 'all-decided']
+
+function entryFromHash(): MembershipEntry {
+  const from = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('from')
+  return ENTRIES.find((e) => e === from) ?? 'nav'
+}
+
+// The main test, an honest fake door: two annual tiers and the option the
+// hypothesis bets against (paying per introduction), as three equal cards with
+// the same price treatment and the same button. Pay per introduction is shown
+// first or last at random per tester. A click is recorded in localStorage, the
+// next screen says plainly that the option is not available yet, and we ask
+// one question. No payment details.
 export function Membership({ state, save }: Props) {
+  // Record the view once per visit to this page, with how the pro got here.
+  useEffect(() => {
+    save({
+      ...state,
+      views: [...state.views, { at: new Date().toISOString(), from: entryFromHash() }],
+      perIntroFirst: state.perIntroFirst ?? Math.random() < 0.5,
+    })
+    // Only on arrival.
+  }, [])
+
   // Index of the join click this visit is answering, if any.
   const [joined, setJoined] = useState<number | null>(null)
   const [answer, setAnswer] = useState('')
@@ -46,9 +65,9 @@ export function Membership({ state, save }: Props) {
         <h1 className="mt-4 text-3xl font-extrabold">Thanks. We noted your choice.</h1>
         <div className="fp-warning mt-4 px-5 py-4">
           <p className="font-bold text-navy">
-            {plan
-              ? `The ${plan.name} membership is not available yet.`
-              : 'Paying per introduction is not available yet.'}
+            {tier === 'per-intro' || !plan
+              ? 'Paying per introduction is not available yet.'
+              : `The ${plan.name} membership is not available yet.`}
           </p>
           <p className="mt-1 text-sm">
             We are measuring interest before we build it. Nothing was charged, and we will never ask
@@ -96,77 +115,70 @@ export function Membership({ state, save }: Props) {
     )
   }
 
+  const perIntro = PLANS.filter((p) => p.tier === 'per-intro')
+  const yearly = PLANS.filter((p) => p.tier !== 'per-intro')
+  const plans = state.perIntroFirst ? [...perIntro, ...yearly] : [...yearly, ...perIntro]
+
   return (
     <>
-      <PageHead eyebrow="Membership" title="Keep getting introductions like these.">
+      <PageHead
+        eyebrow="Membership"
+        title="How would you want to pay for introductions like these?"
+      >
         {accepted > 0
           ? `Today you said yes to ${accepted} of ${INTRODUCTIONS.length} households. `
           : ''}
-        Members get every introduction in their area for one yearly fee. Tell us which way you would
-        rather pay.
+        Every option gets the same introductions in the same order. Pick the one you would choose.
       </PageHead>
 
-      <div className="fp-enter grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="min-w-0">
-          <div className="fp-stagger grid items-stretch gap-5 md:grid-cols-2">
-            {PLANS.map((plan) => (
-              <section
-                key={plan.tier}
-                className="flex flex-col rounded-[13px] border border-line bg-white p-7 shadow-card"
-              >
-                <span className="fp-pill">Yearly membership</span>
-                <h2 className="mt-3 text-[22px]">{plan.name}</h2>
-                <p className="mt-1 text-sm text-muted">{plan.forWho}</p>
-                <p className="mt-5 font-heading text-[34px] font-extrabold leading-none text-navy">
-                  {plan.price}
-                </p>
-                <p className="mt-1 text-sm text-muted">{plan.perMonth}</p>
-                <ul className="mt-5 flex-1 space-y-2 border-t border-line pt-4">
-                  {plan.includes.map((item) => (
-                    <li key={item} className="flex gap-2 text-[15px]">
-                      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-teal text-white">
-                        <CheckIcon className="h-3 w-3" />
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <Button onClick={() => join(plan.tier)}>Join the network</Button>
-                </div>
-              </section>
-            ))}
-          </div>
-
-          <section className="mt-5 flex flex-col gap-4 rounded-[13px] border border-line bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <span className="fp-pill bg-peach text-orange-ink">The other way to pay</span>
-              <h2 className="mt-3 text-lg">Pay per introduction</h2>
-              <p className="mt-1 text-sm text-muted">
-                No yearly fee. You pay for each household you accept.
+      <div className="fp-enter">
+        <div className="fp-stagger grid items-stretch gap-5 md:grid-cols-3">
+          {plans.map((plan) => (
+            <section
+              key={plan.tier}
+              className="flex flex-col rounded-[13px] border border-line bg-white p-7 shadow-card"
+            >
+              <span className="fp-pill">{plan.kind}</span>
+              <h2 className="mt-3 text-[22px]">{plan.name}</h2>
+              <p className="mt-1 text-sm text-muted">{plan.forWho}</p>
+              <p className="mt-5 font-heading text-[30px] font-extrabold leading-none text-navy">
+                {plan.price}
               </p>
-            </div>
-            <Button variant="secondary" full={false} onClick={() => join('per-intro')}>
-              I would rather pay per introduction
-            </Button>
-          </section>
-
-          <p className="mt-3 text-xs text-muted">
-            Placeholder prices for this prototype. We have not set real prices, including a price
-            per introduction.
-          </p>
+              <p className="mt-1 text-sm text-muted">{plan.perMonth}</p>
+              <ul className="mt-5 flex-1 space-y-2 border-t border-line pt-4">
+                {plan.includes.map((item) => (
+                  <li key={item} className="flex gap-2 text-[15px]">
+                    <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-teal text-white">
+                      <CheckIcon className="h-3 w-3" />
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6">
+                <Button onClick={() => join(plan.tier)}>Join the network</Button>
+              </div>
+            </section>
+          ))}
         </div>
 
-        <section className="fp-guide">
-          <span className="fp-guide-icon" aria-hidden="true">
+        <p className="mt-4 text-sm text-muted">
+          At these prices, {BREAK_EVEN} accepted households a year cost the same as Solo.
+          Placeholder prices for this prototype: we have not set real prices for any option.
+        </p>
+
+        <section className="fp-guide mt-6 flex flex-col gap-4 sm:flex-row sm:items-start">
+          <span className="fp-guide-icon shrink-0 sm:mb-0" aria-hidden="true">
             <ScaleIcon />
           </span>
-          <span className="fp-eyebrow text-[#90D2D0]">What membership never buys</span>
-          <h2 className="text-lg leading-snug">The verdict is never for sale.</h2>
-          <p className="mt-2 text-sm">
-            Not a higher spot in any list, a better verdict for anyone, or a recommendation. Owners
-            never pay, whichever way you choose.
-          </p>
+          <div>
+            <span className="fp-eyebrow text-[#90D2D0]">What no option buys</span>
+            <h2 className="text-lg leading-snug">The verdict is never for sale.</h2>
+            <p className="mt-2 text-sm">
+              Not a higher spot in any list, a better verdict for anyone, or a recommendation.
+              Owners never pay, whichever way you choose.
+            </p>
+          </div>
         </section>
       </div>
     </>
