@@ -142,7 +142,7 @@ function AdoptersTab({ applicants }: { applicants: Applicant[] }) {
         <Metric label="Not yet" value={counts['not-yet']} />
       </div>
       <p className="mt-3 text-sm text-muted">
-        Return rate by readiness result: part of Analytics and multi-location (not built yet).{' '}
+        Your return rate by readiness result comes with Analytics and multi-location.{' '}
         <UpgradeLink from="adopters">See plans</UpgradeLink>
       </p>
 

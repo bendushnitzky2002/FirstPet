@@ -163,8 +163,8 @@ export function Membership({ state, save }: Props) {
         </div>
 
         <p className="mt-4 text-sm text-muted">
-          At these prices, {BREAK_EVEN} accepted households a year cost the same as Solo.
-          Placeholder prices for this prototype: we have not set real prices for any option.
+          At these prices, {BREAK_EVEN} accepted households a year cost the same as Solo. Prices
+          shown are placeholders.
         </p>
 
         <section className="fp-guide mt-6 flex flex-col gap-4 sm:flex-row sm:items-start">

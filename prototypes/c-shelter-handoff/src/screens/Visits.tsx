@@ -446,7 +446,7 @@ export function PlansTab() {
             {TEST_PRICE}
             <span className="ml-1 text-base font-bold text-body">a month per location</span>
           </p>
-          <p className="text-sm">Test price for this prototype.</p>
+          <p className="text-sm">Test price.</p>
           <p className="mt-3 text-sm font-semibold text-navy">Everything in Free, plus:</p>
           <FeatureList items={paidFeatures} />
           <ReportPreview />
@@ -516,7 +516,7 @@ function ReportPreview() {
         <span className="block h-2 w-1/2 rounded bg-line" />
       </div>
       <figcaption className="mt-3 text-xs font-semibold text-muted">
-        Preview of a monthly report: not built yet, no real data.
+        Sample monthly report layout. No real data.
       </figcaption>
     </figure>
   )

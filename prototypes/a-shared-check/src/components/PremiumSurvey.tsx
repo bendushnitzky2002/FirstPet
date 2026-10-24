@@ -14,7 +14,8 @@ import { CheckIcon } from './ui'
 // is not based on pricing research. Labeled as a test price in the UI.
 const TEST_PRICE = '$9 a month'
 
-// What we are considering for Premium. Proposed features, not a product.
+// What Premium includes, stated as a product. Premium does not exist yet; the
+// screen after a click says so.
 const PREMIUM_IDEAS = [
   'A week-by-week plan for your first 90 days together',
   'Check-ins at week two and month three to catch problems early',
@@ -28,11 +29,11 @@ function planHook(check: Check): string | null {
   const longDays = people.some((p) => (p.hoursAlone ?? 0) >= 8)
   const tightVet = people.some((p) => p.vetCost && p.vetCost !== 'fine')
   if (longDays && tightVet)
-    return 'You listed long weekdays and a tight vet budget. Premium would check in early and help you find care for the long days.'
+    return 'You listed long weekdays and a tight vet budget. Premium checks in early and finds care for the long days.'
   if (longDays)
-    return 'You listed long weekdays. Premium would help you find care for those days and check in on how the plan holds up.'
+    return 'You listed long weekdays. Premium finds care for those days and checks in on how the plan holds up.'
   if (tightVet)
-    return 'You listed a tight vet budget. Premium would check in at week two and month three, before small problems get expensive.'
+    return 'You listed a tight vet budget. Premium checks in at week two and month three, before small problems get expensive.'
   return null
 }
 
@@ -83,8 +84,8 @@ export function PremiumSurvey({ check, save, from }: Props) {
       <h2 className="text-xl">FirstPet Premium</h2>
       <p className="mt-2 text-sm">
         {kind === 'not-yet'
-          ? "Your plan gets you to ready. Once you adopt, we're considering a premium plan with post-adoption pet care help. Here's what we have in mind:"
-          : "Your plan gets you to adoption day. We're considering a premium plan that picks up from there. Here's what we have in mind:"}
+          ? 'Your plan gets you to ready. Once you adopt, Premium takes it from there:'
+          : 'Your plan gets you to adoption day. Premium takes it from there:'}
       </p>
       <ul className="mt-3 space-y-2">
         {PREMIUM_IDEAS.map((idea) => (
@@ -104,7 +105,7 @@ export function PremiumSurvey({ check, save, from }: Props) {
 
       {!check.premium ? (
         <>
-          <p className="mt-5 font-semibold text-navy">Would you sign up for Premium?</p>
+          <p className="mt-5 font-semibold text-navy">Want Premium for life after adoption day?</p>
           {/* Equal weight on purpose: a styled "yes" would inflate the rate. */}
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <button
@@ -112,7 +113,7 @@ export function PremiumSurvey({ check, save, from }: Props) {
               onClick={() => answer('yes')}
               className="fp-btn fp-btn-secondary min-h-[46px] px-5"
             >
-              I'd sign up for Premium
+              Get Premium
             </button>
             <button
               type="button"
@@ -171,7 +172,7 @@ export function PremiumSurvey({ check, save, from }: Props) {
             onClick={() => answer(check.premium === 'yes' ? 'no' : 'yes')}
             className="mt-3 text-xs font-semibold text-teal underline-offset-4 hover:underline"
           >
-            {check.premium === 'yes' ? 'Change to not for me' : "Change to I'd sign up"}
+            {check.premium === 'yes' ? 'Change to not for me' : 'Change to get Premium'}
           </button>
         </div>
       )}
