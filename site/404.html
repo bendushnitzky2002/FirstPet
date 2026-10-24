@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FirstPet: Page not found</title>
+    <script>
+      // GitHub Pages serves this page for any missing path. Links copied out of chat apps,
+      // slides or Canvas often pick up invisible characters (a zero-width space shows up as
+      // %E2%80%8B at the end of the URL). Strip them and go to the page that was meant.
+      ;(function () {
+        var invisible = /[\u200B-\u200F\u2060\uFEFF\u00AD]/g
+        var path
+        try {
+          path = decodeURIComponent(location.pathname)
+        } catch (e) {
+          path = location.pathname
+        }
+        var clean = path.replace(invisible, '')
+        if (clean !== path) {
+          location.replace(clean + location.search.replace(invisible, '') + location.hash.replace(invisible, ''))
+        }
+      })()
+    </script>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: #f4f6f5;
+        color: #263d58;
+        font: 400 16px/1.5 'DM Sans', system-ui, sans-serif;
+        text-align: center;
+      }
+      h1 {
+        margin: 0 0 8px;
+        color: #142d4e;
+        font: 800 28px/1.2 'Manrope', system-ui, sans-serif;
+      }
+      a {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        background: #f47b35;
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>We could not find that page</h1>
+      <p>The link may be mistyped or cut off. Start from the persona chooser instead.</p>
+      <a id="home" href="/">Go to FirstPet</a>
+    </main>
+    <script>
+      // This page can be served at any depth, so build the home link from the site's base
+      // path (the repo name on github.io) instead of a relative URL.
+      var segment = location.pathname.split('/')[1]
+      if (location.hostname.endsWith('github.io') && segment) {
+        document.getElementById('home').href = '/' + segment + '/'
+      }
+    </script>
+  </body>
+</html>
