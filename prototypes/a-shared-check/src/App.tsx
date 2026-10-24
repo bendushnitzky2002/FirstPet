@@ -72,7 +72,7 @@ export default function App() {
     case '/verdict':
       return <Verdict check={check} save={save} onReset={reset} />
     case '/summary':
-      return <Summary check={check} />
+      return <Summary check={check} save={save} />
     default:
       return <Landing check={check} onStart={start} onSeed={seed} onReset={reset} />
   }

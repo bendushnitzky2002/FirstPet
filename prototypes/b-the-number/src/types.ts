@@ -32,6 +32,13 @@ export type Tier = 'solo' | 'clinic' | 'per-intro'
 // What a test session records. Read it back on the hidden #/log screen.
 export type JoinClick = { tier: Tier; at: string; answer?: string }
 
+// How a pro reached the membership page: the top tab, the side card after an
+// accept, the small-screen banner, or the note after the last decision.
+export type MembershipEntry = 'nav' | 'side-card' | 'banner' | 'all-decided'
+
+// Each time the membership page opens, so clicks can be read against views.
+export type MembershipView = { at: string; from: MembershipEntry }
+
 // Locked items a pro asked to see, by introduction. This is how we learn what
 // pros want before they say yes. In the prototype nothing is sent.
 export type Requests = Record<string, SharedItem['key'][]>
@@ -40,4 +47,8 @@ export type State = {
   decisions: Record<string, Decision>
   joins: JoinClick[]
   requests: Requests
+  views: MembershipView[]
+  // Whether pay per introduction is shown first or last for this tester. Set
+  // at random on the first view so position does not favor one option.
+  perIntroFirst?: boolean
 }

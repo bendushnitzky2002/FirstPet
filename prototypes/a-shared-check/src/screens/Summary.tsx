@@ -3,13 +3,16 @@ import { getVerdict } from '../data/verdict'
 import { PET_OPTIONS } from '../data/questions'
 import { CompareTable } from '../components/CompareTable'
 import { CostBlock } from '../components/CostBlock'
+import { useState } from 'react'
+import { PremiumSurvey } from '../components/PremiumSurvey'
 import { Button, LogoMark, TopBar } from '../components/ui'
 import { navigate } from '../lib/router'
 import { VERDICT_TONE } from './Verdict'
 
 // Printable one-page summary. The buttons hide when printing.
-export function Summary({ check }: { check: Check }) {
+export function Summary({ check, save }: { check: Check; save: (c: Check) => void }) {
   const v = getVerdict(check)
+  const [premiumOpen, setPremiumOpen] = useState(false)
   const people = [check.starter.name, ...(check.partner?.done ? [check.partner.name] : [])].join(
     ' and ',
   )
@@ -89,6 +92,26 @@ export function Summary({ check }: { check: Check }) {
           </section>
         </div>
       </article>
+
+      {/* Second, quiet entry to the Premium question. The household shares this
+          page with the partner, so it reaches the second decision maker. Still
+          one answer per household. Hidden when printing. */}
+      <div className="mt-6 print:hidden">
+        {premiumOpen ? (
+          <PremiumSurvey check={check} save={save} from="summary" />
+        ) : (
+          <p className="text-sm text-muted">
+            Thinking about life after adoption day?{' '}
+            <button
+              type="button"
+              onClick={() => setPremiumOpen(true)}
+              className="font-bold text-teal underline-offset-4 hover:underline"
+            >
+              Tell us if Premium would help
+            </button>
+          </p>
+        )}
+      </div>
     </main>
   )
 }

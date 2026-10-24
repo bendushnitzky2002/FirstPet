@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Avatar,
   Button,
@@ -15,7 +15,7 @@ import { copyText } from '../lib/clipboard'
 import { visitTime, when } from '../lib/format'
 import { linkTo, navigate } from '../lib/router'
 import { newId, setState, useStore } from '../lib/storage'
-import type { Applicant, CheckRequest } from '../types'
+import type { Applicant, CheckRequest, UpgradeEntry } from '../types'
 
 // Upcoming visits: who is coming in, how ready they are, and what is still
 // missing, so the readiness check reaches the counselor before the visit.
@@ -324,11 +324,32 @@ export function CounterLink() {
   )
 }
 
+const UPGRADE_ENTRIES: UpgradeEntry[] = ['nav', 'flag', 'adopters', 'teaser']
+
+function entryFromHash(): UpgradeEntry {
+  const from = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('from')
+  return UPGRADE_ENTRIES.find((e) => e === from) ?? 'nav'
+}
+
+// A quiet text link to the upgrade, placed where Carla feels the problem it
+// would solve. No badge, no banner, no urgency.
+export function UpgradeLink({ from, children }: { from: UpgradeEntry; children: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => navigate(`/counselor/plans?from=${from}`)}
+      className="text-sm font-bold text-teal underline-offset-4 hover:underline"
+    >
+      {children}
+    </button>
+  )
+}
+
 export function UpgradeTeaser() {
   return (
     <button
       type="button"
-      onClick={() => navigate('/counselor/plans')}
+      onClick={() => navigate('/counselor/plans?from=teaser')}
       className="fp-card fp-lift flex w-full items-center gap-4 p-5 text-left hover:border-teal"
     >
       <span className="min-w-0 flex-1">
@@ -366,14 +387,28 @@ const paidFeatures = [
 
 // The test: does a shelter click Subscribe Now, and what would make it worth it?
 export function PlansTab() {
-  const { upgrade } = useStore()
   const [stage, setStage] = useState<'offer' | 'ask' | 'thanks'>('offer')
   const [answer, setAnswer] = useState('')
+  const [from] = useState(entryFromHash)
+
+  // The paid card is on screen as soon as this tab opens: count the view.
+  useEffect(() => {
+    setState((s) => ({
+      ...s,
+      upgrade: {
+        ...s.upgrade,
+        views: [...s.upgrade.views, { at: new Date().toISOString(), from }],
+      },
+    }))
+  }, [from])
 
   const subscribe = () => {
     setState((s) => ({
       ...s,
-      upgrade: { ...s.upgrade, clicks: [...s.upgrade.clicks, new Date().toISOString()] },
+      upgrade: {
+        ...s.upgrade,
+        clicks: [...s.upgrade.clicks, { at: new Date().toISOString(), from }],
+      },
     }))
     setStage('ask')
   }
@@ -414,12 +449,17 @@ export function PlansTab() {
           <p className="text-sm">Test price for this prototype.</p>
           <p className="mt-3 text-sm font-semibold text-navy">Everything in Free, plus:</p>
           <FeatureList items={paidFeatures} />
+          <ReportPreview />
           <div className="mt-auto pt-6">
             {stage === 'offer' && <Button onClick={subscribe}>Subscribe Now</Button>}
             {stage === 'ask' && (
               <div className="fp-reveal rounded-xl bg-peach p-4">
                 <p className="font-bold text-navy">
-                  Thanks. We are not taking payment yet. One question:
+                  Analytics and multi-location is not available yet.
+                </p>
+                <p className="mt-1 text-sm">
+                  We are measuring interest before we build it. Nothing was charged, and we will
+                  never ask for payment details here. One question:
                 </p>
                 <label
                   htmlFor="worth-it"
@@ -451,24 +491,98 @@ export function PlansTab() {
         </section>
       </div>
 
-      <details className="mt-6 text-sm">
-        <summary className="cursor-pointer text-body/80">
-          For our test: {upgrade.clicks.length} Subscribe Now{' '}
-          {upgrade.clicks.length === 1 ? 'click' : 'clicks'} and {upgrade.answers.length}{' '}
-          {upgrade.answers.length === 1 ? 'answer' : 'answers'} recorded in this browser
-        </summary>
-        <ul className="mt-2 space-y-1">
-          {upgrade.answers.map((x) => (
-            <li key={x.at} className="rounded-lg bg-white px-3 py-2">
-              <span className="text-xs text-body/70">{when(x.at)}:</span> {x.text}
-            </li>
-          ))}
-        </ul>
-      </details>
-      <div className="mt-2">
+      <div className="mt-4">
         <SampleNote>Nothing is charged and nothing leaves this browser.</SampleNote>
       </div>
     </>
+  )
+}
+
+// What the monthly report might look like: shapes only, no numbers, so we
+// show the idea without inventing statistics.
+function ReportPreview() {
+  return (
+    <figure
+      className="mt-5 rounded-xl border border-dashed border-line bg-canvas p-4"
+      aria-hidden="true"
+    >
+      <div className="flex h-20 items-end gap-2">
+        {[45, 70, 30, 85, 55, 40].map((h, i) => (
+          <span key={i} className="flex-1 rounded-t bg-line" style={{ height: `${h}%` }} />
+        ))}
+      </div>
+      <div className="mt-3 space-y-1.5">
+        <span className="block h-2 w-3/4 rounded bg-line" />
+        <span className="block h-2 w-1/2 rounded bg-line" />
+      </div>
+      <figcaption className="mt-3 text-xs font-semibold text-muted">
+        Preview of a monthly report: not built yet, no real data.
+      </figcaption>
+    </figure>
+  )
+}
+
+const ENTRY_LABEL: Record<UpgradeEntry, string> = {
+  nav: 'Plans tab',
+  flag: 'link under the "Call this week" flag',
+  adopters: 'line on All adopters',
+  teaser: 'card on check-ins',
+}
+
+// Team view at #/log, not linked from the app: what this browser recorded
+// about the upgrade. Kept off the Plans tab so counts never sway a tester.
+export function UpgradeLog() {
+  const { upgrade } = useStore()
+  const count = (list: { from: UpgradeEntry }[]) =>
+    UPGRADE_ENTRIES.map((e) => [e, list.filter((x) => x.from === e).length] as const).filter(
+      ([, n]) => n > 0,
+    )
+  const first = upgrade.clicks[0]
+  return (
+    <main className="fp-page py-10">
+      <p className="fp-eyebrow">Team view</p>
+      <h1 className="text-3xl">Analytics upgrade: session log</h1>
+      <p className="mt-2 text-muted">
+        What this browser recorded. Count one click per tester: the first one.
+      </p>
+      <div className="fp-stagger mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Metric label="Saw the upgrade" value={upgrade.views.length} />
+        <Metric label="Subscribe Now clicks" value={upgrade.clicks.length} />
+        <Metric label="Answers" value={upgrade.answers.length} />
+      </div>
+      <section className="fp-card mt-5 space-y-2 p-5 text-sm">
+        <p>
+          <strong className="text-navy">First click:</strong>{' '}
+          {first ? `${when(first.at)}, from the ${ENTRY_LABEL[first.from]}` : 'None yet'}
+        </p>
+        <p>
+          <strong className="text-navy">Views by entry:</strong>{' '}
+          {count(upgrade.views)
+            .map(([e, n]) => `${ENTRY_LABEL[e]} (${n})`)
+            .join(', ') || 'None yet'}
+        </p>
+        <p>
+          <strong className="text-navy">Clicks by entry:</strong>{' '}
+          {count(upgrade.clicks)
+            .map(([e, n]) => `${ENTRY_LABEL[e]} (${n})`)
+            .join(', ') || 'None yet'}
+        </p>
+      </section>
+      <section className="fp-card mt-5 p-5">
+        <h2 className="text-lg">What would make our service worth it</h2>
+        {upgrade.answers.length ? (
+          <ul className="mt-3 divide-y divide-line">
+            {upgrade.answers.map((x) => (
+              <li key={x.at} className="py-2 text-sm">
+                <span className="text-xs text-muted">{when(x.at)}:</span> {x.text}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-muted">No answers yet.</p>
+        )}
+      </section>
+    </main>
   )
 }
 

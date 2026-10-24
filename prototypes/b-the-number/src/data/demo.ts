@@ -13,5 +13,6 @@ export function demoState(): State {
     },
     joins: [],
     requests: { taylor: ['budget', 'schedule'] },
+    views: [],
   }
 }
