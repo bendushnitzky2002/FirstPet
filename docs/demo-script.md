@@ -17,7 +17,7 @@ Live path (about two minutes):
 - [ ] Side by side: "This is the screen the hypothesis lives on." Point at a teal match, then an orange **Talk about this** row and its nudge. Scroll to the cost block and the required cushion.
 - [ ] Click **See our verdict**: "Ready once a few things change," with a checklist in their words. Tick one item.
 - [ ] Point at the year-one total in the verdict panel: "Priya watches the budget, so the number sits right next to the verdict."
-- [ ] Scroll below the to-do list to **FirstPet Premium**: "This is our real test. We need at least 10% of households that finish to pick it." Point at the test price and the line tied to their own plan. Click **I'd sign up for Premium**, show that it says Premium is not available yet, and type an answer to "what would make Premium worth it." The one-page summary has a second, quiet link to the same question.
+- [ ] Scroll below the to-do list to **FirstPet Premium**: "This is our real test. We need at least 10% of households that finish to pick it." Point at the test price and the line tied to their own plan. Click **Get Premium**, show that it says Premium is not available yet, and type an answer to "what would make Premium worth it." The one-page summary has a second, quiet link to the same question.
 - [ ] Click **Save this as a one-page summary** to show the printable page.
 - [ ] To show the numbers, open `#/results` (for example https://dushben.github.io/FirstPet/a/#/results): completed checks, how many saw Premium, Premium picks, no thanks, the share against 10% (and against those who saw it), the split by verdict, and the written answers to "what would make Premium worth it." Results live in this browser only; **Clear results** resets them before a test session.
 

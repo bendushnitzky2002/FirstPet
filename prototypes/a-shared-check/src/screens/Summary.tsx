@@ -101,13 +101,13 @@ export function Summary({ check, save }: { check: Check; save: (c: Check) => voi
           <PremiumSurvey check={check} save={save} from="summary" />
         ) : (
           <p className="text-sm text-muted">
-            Thinking about life after adoption day?{' '}
+            Premium takes over after adoption day.{' '}
             <button
               type="button"
               onClick={() => setPremiumOpen(true)}
               className="font-bold text-teal underline-offset-4 hover:underline"
             >
-              Tell us if Premium would help
+              See Premium
             </button>
           </p>
         )}
