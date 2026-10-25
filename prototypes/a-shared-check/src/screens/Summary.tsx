@@ -5,7 +5,7 @@ import { CompareTable } from '../components/CompareTable'
 import { CostBlock } from '../components/CostBlock'
 import { useState } from 'react'
 import { PremiumSurvey } from '../components/PremiumSurvey'
-import { Button, LogoMark, TopBar } from '../components/ui'
+import { Button, LogoMark, SparkleIcon, TopBar } from '../components/ui'
 import { navigate } from '../lib/router'
 import { VERDICT_TONE } from './Verdict'
 
@@ -105,8 +105,9 @@ export function Summary({ check, save }: { check: Check; save: (c: Check) => voi
             <button
               type="button"
               onClick={() => setPremiumOpen(true)}
-              className="font-bold text-teal underline-offset-4 hover:underline"
+              className="inline-flex items-center gap-1 font-bold text-orange-ink underline-offset-4 hover:underline"
             >
+              <SparkleIcon className="fp-sparkle h-4 w-4" />
               See Premium
             </button>
           </p>

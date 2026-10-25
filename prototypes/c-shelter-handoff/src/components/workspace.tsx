@@ -4,7 +4,7 @@ import { shelter } from '../data/shelter'
 import { navigate } from '../lib/router'
 import { useStore } from '../lib/storage'
 import { upcoming } from '../screens/Visits'
-import { CalendarIcon, ChatIcon, CheckIcon, ClipboardIcon, HomeIcon } from './ui'
+import { CalendarIcon, ChatIcon, ClipboardIcon, HomeIcon, SparkleIcon } from './ui'
 
 // The counselor's workspace shell, rebuilt from Sala's Shelter Workspace
 // prototype: a navy sidebar with the sections, a white top bar with the
@@ -41,7 +41,12 @@ export function Workspace({ section, children }: { section: Section; children: R
       icon: <ClipboardIcon />,
       count: applicants.length,
     },
-    { id: 'plans', label: 'Plans', short: 'Plans', icon: <CheckIcon /> },
+    {
+      id: 'plans',
+      label: 'Plans',
+      short: 'Plans',
+      icon: <SparkleIcon className="fp-sparkle" />,
+    },
   ]
   const go = (id: Section) => navigate(id === 'visits' ? '/counselor' : `/counselor/${id}`)
 
