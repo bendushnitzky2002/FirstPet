@@ -133,6 +133,8 @@ type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'quiet'
   size?: 'lg' | 'sm'
   full?: boolean
+  // Extra classes, such as fp-shimmer on a paid option.
+  className?: string
 }
 
 export function Button({
@@ -142,6 +144,7 @@ export function Button({
   variant = 'primary',
   size = 'lg',
   full = true,
+  className = '',
 }: ButtonProps) {
   const styles = {
     primary: 'fp-btn fp-btn-primary',
@@ -155,7 +158,7 @@ export function Button({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`print:hidden ${sizing} ${full ? 'w-full' : ''} ${styles}`}
+      className={`print:hidden ${sizing} ${full ? 'w-full' : ''} ${styles} ${className}`}
     >
       {children}
     </button>
@@ -418,6 +421,16 @@ export function PrintIcon({ className = 'h-5 w-5' }: IconProps) {
       strokeWidth="2"
     >
       <path d="M7 9V4h10v5M7 17H5v-6h14v6h-2M7 14h10v6H7z" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// Four-point sparkle for paid options. Pair with fp-sparkle to twinkle.
+export function SparkleIcon({ className = 'h-4 w-4' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2c.4 3.9 2.1 6.6 6.4 7.6.5.1.5.7 0 .8-4.3 1-6 3.7-6.4 7.6-.4-3.9-2.1-6.6-6.4-7.6-.5-.1-.5-.7 0-.8C9.9 8.6 11.6 5.9 12 2Z" />
+      <path d="M19 15c.2 1.6.9 2.6 2.6 3-1.7.4-2.4 1.4-2.6 3-.2-1.6-.9-2.6-2.6-3 1.7-.4 2.4-1.4 2.6-3Z" />
     </svg>
   )
 }

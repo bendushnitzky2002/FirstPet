@@ -30,6 +30,7 @@ export function Shell({
           className="fp-nav-tab"
         >
           {t.label}
+          {t.path === '/membership' && <SparkleIcon className="fp-sparkle h-3.5 w-3.5" />}
           {t.path === '/intros' && pending > 0 && (
             <span className="rounded-full bg-orange px-2 text-xs text-navy">{pending}</span>
           )}
@@ -79,6 +80,8 @@ type ButtonProps = {
   variant?: 'primary' | 'secondary'
   type?: 'button' | 'submit'
   full?: boolean
+  // Extra classes, such as fp-shimmer on a paid option.
+  className?: string
 }
 
 export function Button({
@@ -88,6 +91,7 @@ export function Button({
   variant = 'primary',
   type = 'button',
   full = true,
+  className = '',
 }: ButtonProps) {
   const styles = {
     primary: 'fp-btn fp-btn-primary',
@@ -98,7 +102,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`min-h-[44px] px-5 py-2 text-[15px] ${full ? 'w-full' : ''} ${styles}`}
+      className={`min-h-[44px] px-5 py-2 text-[15px] ${full ? 'w-full' : ''} ${styles} ${className}`}
     >
       {children}
     </button>
@@ -198,5 +202,15 @@ export function PageHead({
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
+  )
+}
+
+// Four-point sparkle for paid options. Pair with fp-sparkle to twinkle.
+export function SparkleIcon({ className = 'h-4 w-4' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2c.4 3.9 2.1 6.6 6.4 7.6.5.1.5.7 0 .8-4.3 1-6 3.7-6.4 7.6-.4-3.9-2.1-6.6-6.4-7.6-.5-.1-.5-.7 0-.8C9.9 8.6 11.6 5.9 12 2Z" />
+      <path d="M19 15c.2 1.6.9 2.6 2.6 3-1.7.4-2.4 1.4-2.6 3-.2-1.6-.9-2.6-2.6-3 1.7-.4 2.4-1.4 2.6-3Z" />
+    </svg>
   )
 }

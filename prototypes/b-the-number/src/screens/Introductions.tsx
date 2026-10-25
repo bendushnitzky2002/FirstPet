@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Introduction, PassReason, SharedItem, State } from '../types'
 import { INTRODUCTIONS, PASS_REASONS, VERDICT_LABEL } from '../data/introductions'
 import { navigate } from '../lib/router'
-import { Button, CheckIcon, LockIcon, PageHead } from '../components/ui'
+import { Button, CheckIcon, LockIcon, PageHead, SparkleIcon } from '../components/ui'
 
 type Props = { state: State; save: (s: State) => void }
 
@@ -126,13 +126,20 @@ export function Introductions({ state, save }: Props) {
 
         <aside className="space-y-5 lg:sticky lg:top-24">
           {accepted > 0 && (
-            <section className="fp-hero fp-enter p-6">
-              <span className="fp-eyebrow text-[#90D2D0]">Membership</span>
+            <section className="fp-hero fp-enter fp-glow p-6">
+              <span className="fp-eyebrow inline-flex items-center gap-1.5 text-[#90D2D0]">
+                <SparkleIcon className="fp-sparkle h-3.5 w-3.5" />
+                Membership
+              </span>
               <h2 className="text-lg leading-snug text-white">
                 Want more introductions like {accepted === 1 ? 'this' : 'these'}?
               </h2>
               <div className="mt-4">
-                <Button onClick={() => navigate('/membership?from=side-card')}>
+                <Button
+                  className="fp-shimmer"
+                  onClick={() => navigate('/membership?from=side-card')}
+                >
+                  <SparkleIcon className="h-4 w-4" />
                   See how you'd pay
                 </Button>
               </div>

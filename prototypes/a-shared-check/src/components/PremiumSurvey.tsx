@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Check, PremiumAnswer } from '../types'
 import { getVerdict } from '../data/verdict'
 import { recordPremium, recordSeen, recordWorthIt, type PremiumEntry } from '../lib/survey'
-import { CheckIcon } from './ui'
+import { CheckIcon, SparkleIcon } from './ui'
 
 // Fake door for our hypothesis: after the verdict, does this household pick a
 // premium post-adoption plan? Premium does not exist. Per the fake door rules
@@ -77,11 +77,22 @@ export function PremiumSurvey({ check, save, from }: Props) {
   }
 
   return (
-    <section ref={ref} className="fp-card border-t-4 border-t-teal p-6">
-      <p className="fp-eyebrow">
-        {kind === 'not-yet' ? "When you're ready" : 'After adoption day'}
-      </p>
-      <h2 className="text-xl">FirstPet Premium</h2>
+    <section ref={ref} className="fp-card fp-glow border-t-4 border-t-orange p-6">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="fp-eyebrow">
+            {kind === 'not-yet' ? "When you're ready" : 'After adoption day'}
+          </p>
+          <h2 className="flex items-center gap-2 text-xl">
+            FirstPet Premium
+            <SparkleIcon className="fp-sparkle h-5 w-5" />
+          </h2>
+        </div>
+        <span className="fp-tag">
+          <SparkleIcon className="h-3 w-3" />
+          Premium
+        </span>
+      </div>
       <p className="mt-2 text-sm">
         {kind === 'not-yet'
           ? 'Your plan gets you to ready. Once you adopt, Premium takes it from there:'
@@ -106,13 +117,17 @@ export function PremiumSurvey({ check, save, from }: Props) {
       {!check.premium ? (
         <>
           <p className="mt-5 font-semibold text-navy">Want Premium for life after adoption day?</p>
-          {/* Equal weight on purpose: a styled "yes" would inflate the rate. */}
+          {/* Get Premium is highlighted (Ben's call, 2026-10-25) so the offer
+              is noticed. "Not for me" stays the same size, right beside it.
+              This can lift the yes rate a little, so compare results only
+              with sessions run on the same design. */}
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => answer('yes')}
-              className="fp-btn fp-btn-secondary min-h-[46px] px-5"
+              className="fp-btn fp-btn-primary fp-shimmer min-h-[46px] gap-2 px-5"
             >
+              <SparkleIcon className="fp-sparkle h-4 w-4 text-white" />
               Get Premium
             </button>
             <button

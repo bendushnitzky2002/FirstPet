@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Metric,
   SampleNote,
+  SparkleIcon,
   VerdictChip,
 } from '../components/ui'
 import { missingBeforeVisit } from '../data/missing'
@@ -338,8 +339,9 @@ export function UpgradeLink({ from, children }: { from: UpgradeEntry; children: 
     <button
       type="button"
       onClick={() => navigate(`/counselor/plans?from=${from}`)}
-      className="text-sm font-bold text-teal underline-offset-4 hover:underline"
+      className="inline-flex items-center gap-1 text-sm font-bold text-orange-ink underline-offset-4 hover:underline"
     >
+      <SparkleIcon className="fp-sparkle h-3.5 w-3.5" />
       {children}
     </button>
   )
@@ -350,8 +352,11 @@ export function UpgradeTeaser() {
     <button
       type="button"
       onClick={() => navigate('/counselor/plans?from=teaser')}
-      className="fp-card fp-lift flex w-full items-center gap-4 p-5 text-left hover:border-teal"
+      className="fp-card fp-lift fp-glow flex w-full items-center gap-4 p-5 text-left hover:border-orange"
     >
+      <span className="fp-icon-orange shrink-0" aria-hidden="true">
+        <SparkleIcon className="fp-sparkle h-5 w-5" />
+      </span>
       <span className="min-w-0 flex-1">
         <span className="block font-heading text-lg font-extrabold text-navy">
           Which answers come before a return?
@@ -440,8 +445,14 @@ export function PlansTab() {
           <FeatureList items={freeFeatures} />
         </section>
 
-        <section className="flex flex-col rounded-card border-2 border-orange bg-white p-6">
-          <h2 className="text-xl font-extrabold">Analytics and multi-location</h2>
+        <section className="fp-glow flex flex-col rounded-card border-2 border-orange bg-white p-6">
+          <div className="flex items-start justify-between gap-2">
+            <h2 className="flex items-center gap-2 text-xl font-extrabold">
+              Analytics and multi-location
+              <SparkleIcon className="fp-sparkle h-5 w-5" />
+            </h2>
+            <span className="fp-tag">Upgrade</span>
+          </div>
           <p className="mt-1 font-heading text-3xl font-extrabold text-navy">
             {TEST_PRICE}
             <span className="ml-1 text-base font-bold text-body">a month per location</span>
@@ -451,7 +462,12 @@ export function PlansTab() {
           <FeatureList items={paidFeatures} />
           <ReportPreview />
           <div className="mt-auto pt-6">
-            {stage === 'offer' && <Button onClick={subscribe}>Subscribe Now</Button>}
+            {stage === 'offer' && (
+              <Button className="fp-shimmer" onClick={subscribe}>
+                <SparkleIcon className="fp-sparkle h-4 w-4 text-white" />
+                Subscribe Now
+              </Button>
+            )}
             {stage === 'ask' && (
               <div className="fp-reveal rounded-xl bg-peach p-4">
                 <p className="font-bold text-navy">

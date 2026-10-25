@@ -3,7 +3,7 @@ import type { MembershipEntry, State, Tier } from '../types'
 import { BREAK_EVEN, PLANS } from '../data/membership'
 import { INTRODUCTIONS } from '../data/introductions'
 import { navigate } from '../lib/router'
-import { Button, CheckIcon, PageHead, ScaleIcon } from '../components/ui'
+import { Button, CheckIcon, PageHead, ScaleIcon, SparkleIcon } from '../components/ui'
 
 type Props = { state: State; save: (s: State) => void }
 
@@ -131,7 +131,16 @@ export function Membership({ state, save }: Props) {
         Every option gets the same introductions in the same order. Pick the one you would choose.
       </PageHead>
 
+      {/* The whole offer is highlighted, never one option over another: the
+          test compares membership with paying per introduction, so all three
+          cards and buttons stay identical. */}
       <div className="fp-enter">
+        <div className="fp-glow mb-5 flex flex-wrap items-center gap-3 rounded-[13px] bg-peach px-5 py-3">
+          <SparkleIcon className="fp-sparkle h-5 w-5" />
+          <p className="font-semibold text-navy">
+            Join the network to keep getting prepared households like these.
+          </p>
+        </div>
         <div className="fp-stagger grid items-stretch gap-5 md:grid-cols-3">
           {plans.map((plan) => (
             <section
@@ -156,7 +165,10 @@ export function Membership({ state, save }: Props) {
                 ))}
               </ul>
               <div className="mt-6">
-                <Button onClick={() => join(plan.tier)}>Join the network</Button>
+                <Button className="fp-shimmer" onClick={() => join(plan.tier)}>
+                  <SparkleIcon className="fp-sparkle h-4 w-4 text-white" />
+                  Join the network
+                </Button>
               </div>
             </section>
           ))}
